@@ -1,0 +1,23 @@
+./bin/simSpec mac/run.mac conf/filename output_root_file output_text_file
+
+anakyzere event-base
+
+no beam-rich 
+
+PID1 downstream
+PID2 upstream
+
+vd :virtual detector
+
+output:
+
+
+Ana: output tree -> analysis tree
+Analyzer : (home)/Analyzer : smearing
+
+
+s_BFT.cc -> develop asano
+
+
+
+
