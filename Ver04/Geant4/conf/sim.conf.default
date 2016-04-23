@@ -1,0 +1,189 @@
+#
+# Configuration file
+#
+######################################################
+### Geometry
+######################################################
+DCGEO:    param/param_Geom001
+# Target Size X,Y,Z in mm for Box shape
+# Target Size R,0,Z in mm for Cylinder shape
+TGTSIZ:   100.0  0.0  570.0
+# Target Material Effect (1->Yes, 0->No)
+TGTM:   0
+# Wire Chamber InActive Area
+# ->Only 20 GeV/c beam condition
+WCHOLE: 0
+#
+#Detector type
+#Simple detector: 0
+#Real   detector: 1
+DETTYPE: 0
+#
+######################################################
+### Materials
+######################################################
+# 1 Vacuum 2 Air 3 He Gas 4 Ar Gas 5 Ar+C2H6(50:50) Gas
+# 6 Ar+iso-C4H10 (80:20) Gas 7 P10 Gas
+#  
+# 11 Fe 12 SUS316L 13 Al 14 Pb 15 Brass
+# Followings are assumed only target material
+# 21 Liq-H2 22 Liq-D2 23 Lig-He 24 Li 25 Be 26 B-10
+# 27 B-11 28 C  29 LiO 30 LiN 31 Water 
+# 32 Polyethylene 33 PET
+######################################################
+# World
+MTWORLD: 2
+# DC Gas (upstream)
+MTDCGAS1: 6
+# DC Gas (downstream)
+MTDCGAS2: 6
+# Magnet Gap
+MTMAGGAP: 3
+# PMT 
+MTPMT: 11
+# PMT Box
+MTPMTBOX: 11
+# Target (or TGTMATER )
+MTTGT: 21
+#
+######################################################
+### Field
+######################################################
+FLDMAP:   param/FMMap02.dat (positive pol.)
+MAPSCALE: 1.4
+#
+#####################################################
+### Physicis Process (1->Yes, 0->No)
+######################################################
+DECAY:  1
+EM:     1
+HADRON: 1
+#
+######################################################
+## Stepping Action (1->Yes, 0->No)
+######################################################
+SPECSTOP:  1
+SPECGSTOP: 1
+NUSTOP:    1
+GSTOP:     1
+ESTOP:     1
+#
+######################################################
+### PrimaryGeneratorAction 
+######################################################
+# REACTION mode
+REACTION: 20
+#
+#  1    Beam GaussInUV         GaussInXY <- Mainly used
+#  2    Beam GaussInUV         UniformInXY
+#  3    Beam UniformInUV       UniformInXY
+#  4    Beam UniformInUV       GaussInXY
+#  5    Beam UniformInThetaPhi UniformInXY
+#  6    Beam UniformInThetaPhi GaussInXY
+#
+# 20	pi- p -> Yc+ D*- FS: K+ pi- pi- (No Decay)
+# 21    pi- p -> Yc+ D*- FS: All state  
+# 22    pi- p -> Yc+ D** FS: All state
+# 23    pi- p -> Yc+ D*- FS: K+ pi- pi+ pi- pi- (No Decay)
+# 24	pi- p -> Yc+ D*- FS: K+ pi- pi-, Yc+ decay pi+ pi- (No Decay)
+# 25	pi- p -> Yc+ D*- FS: K+ pi- pi+ pi- pi-, Yc+ decay pi+ pi- (No Decay)
+#
+# 30    pi- p -> Lambdac+ D*- FS: All state  
+# 31    pi- p -> Yc+ D*- FS: All state  
+# 32    pi- p -> Lambdac+ D** FS: All state  
+# 33    pi- p -> Lambdac+ D*- pi0 FS: All state  
+#
+# 40    pi- p -> D Dbar N : FS All state & All state (D*- included chs)
+# 41    pi- p -> M(ccbar) n : FS All state
+#
+# 50    pi- p -> Xi*- K*0 K+: Isotoropic 
+# 51    pi- p -> Xi*- K*0 K+: Y* state
+# 52    K- p -> Xi*- K+
+# 53    K- p -> Xi*- K*+
+# 54    K- p -> Xi*0 K*0 
+#
+# 60    pi- p -> Lambda*0 K*0
+# 61    pi- p -> Sigma*0 K*0
+# 62    pi- p -> Sigma*- K*+
+#
+# 100   pi- p -> JAM BG
+#
+# ParticleID for Beam
+BPART:  1
+# 0 geantino 1 pi-  2 pi+ 3 K- 4 K+ 5 Mu- 6 Mu+
+# 7 e-  8 e+ 9 gamma 10 proton  11 neutron
+# 12 pi0  13 Nu_e  15 Lambda  16 K0  17 K0bar
+# 18 K0S  19 K0L  20 Sigma0  21 Sigma- 22 Sigma+ 
+# 23 Xi-  24 Xi0  25 Omega-  26 Eta  27 EtaPrime
+#
+# CenterValue HalfWidth for Uniform
+# CenterValue SigmaWidth for Gauss
+# mm GeV/c
+#BEAMX:  0.0  00.00
+#BEAMY:  0.0  00.00
+#BEAMZ:  0.0  00.00
+#BEAMU:  0.0   0.30
+#BEAMV:  0.0   0.00
+BEAMP: 20.0   0.80
+BEAMX:  0.0  14.00
+BEAMY:  0.0  12.00
+BEAMZ:  0.0 570.00
+BEAMU:  0.0   0.0045
+BEAMV:  0.0   0.0060
+#
+# Beam momentum condition for Reaction mode:1
+# 0 Beam from target center
+# 1 Beam from upstream
+GENEBEAM: 0
+# 0 Input momentum
+# 1 Fixed momentum 
+# 0.2-1.0 GeV/c by 0.1 GeV/c step
+# 1.0-2.0 GeV/c by 0.2 GeV/c step
+# 2.0-3.0 GeV/c by 0.4 GeV/c step
+# 3.0-4.0 GeV/c by 0.5 GeV/c step
+# 4.0-10  GeV/c by 1.0 GeV/c step
+# 10-20 GeV/c by 2.0 GeV/c step
+# ->Total 30 steps
+MOMBEAM:  0
+#
+#######################
+# Angular range for UniformInThetaPhi in degree
+ANGRANGE:  0.0   180.0
+# Scattering angle distribution
+# 1 ISOTROPIC in CM 
+# 2 exp(bt) in CM
+CMANGLE: 2
+# Recoil Mass (B.W. width)
+RMASS:    2.286
+RMWIDTH:  0.0
+#
+######################################################
+### JAMData
+######################################################
+MAXJAMEVENT: 1000000
+#JAMDATA: data_JAM/KSBG01_5_1_1.dat.gz
+#JAMDATA: data_JAM/DSBG73_20_0.dat.gz
+#JAMDATA: data_JAM1/DSBG74_20_1_1.dat.gz
+#
+DATACUT: 0
+#0 No data cut
+#1 (K+, pi-, pi-) mode selection
+#2 (pi+, pi-, pi-) mode selection
+#3 (p, pi-, pi-) mode selection
+#4 (K+, pi-, pi-, pi+, pi-) mode selection
+#5 (K+, pi-, pi-) mode selection for BNL data
+#6 K*0 (K+, pi-) mode selection
+#
+######################################################
+### EvtGenData
+######################################################
+EVTGENDATA1: param/DECAY_2010_1.DEC
+EVTGENDATA2: param/evt.pdl
+#
+######################################################
+### SensitiveDetector 
+######################################################
+DETECTALL:   1
+DETROOTFILL: 1
+#
+# End of File 
