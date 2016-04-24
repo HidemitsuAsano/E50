@@ -1,0 +1,22 @@
+###
+# Conf.file
+###
+#
+####Analysis mode
+# Type0 tracker: 0
+# TypeA tracker: 1
+ANAMODE: 1
+#
+####Geometry File
+TRGEO:  param/param_DetGeom001_ana
+#
+#
+####Parameters
+#
+#Tracker position resolution: sigma [mm]
+SFTRESOL: 0.2887
+#
+#Counter time resolution: sigma [ns]
+T0RESOL:  0.100
+#
+# End of File

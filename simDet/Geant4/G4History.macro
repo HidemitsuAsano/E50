@@ -1,0 +1,5 @@
+/run/verbose 1
+/tracking/storeTrajectory 1
+/run/initialize
+/run/particle/setCut 0.1 cm
+/run/beamOn 1000
