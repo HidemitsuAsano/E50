@@ -6,4 +6,4 @@
 *.d
 *.so
 *.out
-
+simDet/Geant4/bin/*
