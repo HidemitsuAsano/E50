@@ -208,6 +208,8 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     
     G4VisAttributes *FiberLayerAttrib =
       new G4VisAttributes( G4Colour::G4Colour( 0.0, 1.0, 1.0 ) );//Cyan
+    G4VisAttributes *FiberDeadAttrib =
+      new G4VisAttributes( G4Colour::G4Colour( 1.0, 0.0, 0.0 ) );//Red
     G4VisAttributes *FiberFrameAttrib =
       new G4VisAttributes( G4Colour::G4Colour( 0.3, 0.3, 0.3 ) );//Blac
     
@@ -217,6 +219,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     // 			     &G4VisAttributes::Invisible );
 
     r_SF1->SetVisAttributes( FiberLayerAttrib, 
+           FiberDeadAttrib,
 			     &G4VisAttributes::Invisible,
 			     &G4VisAttributes::Invisible,
 			     &G4VisAttributes::Invisible );
