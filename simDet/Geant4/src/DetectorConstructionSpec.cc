@@ -63,7 +63,7 @@ DetectorConstructionSpec::ConstructPayload( void )
   G4Box *solidWorld =
     new G4Box( "WorldBox", 0.5*m, 0.5*m, 0.5*m );
 
-  G4LogicalVolume *logWorld =
+  G4LogicalVolume *logWorld =  //Containes all info of volume except position
     new G4LogicalVolume( solidWorld, mList_->Air, "World", 0, 0, 0, false );
   logWorld->SetVisAttributes( G4VisAttributes::Invisible );
 
