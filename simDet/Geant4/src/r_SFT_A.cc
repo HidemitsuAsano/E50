@@ -5,6 +5,9 @@
   -> Fiber + Frame
 
   2016/4  K.Shirotori
+
+  rev. Apr. 26th H.Asano
+            added dead area around a fiber
 */
 
 #include "r_SFT_A.hh"
@@ -77,6 +80,9 @@ r_SFT_A::r_SFT_A( const G4String & Cname,
   G4double BaseThick = rSFT_BoxThick*12.0 + 20.0*mm;
 
   G4double width = LaysizeX;//+LaysizeY*tan(tilted);
+  G4double livewidth = LaysizeX*rSFT_livefraction;
+  G4double thickness = Laythickness;
+  G4double livethickness = Laythickness*rSFT_livefraction;
   G4double FrameSize = rSFT_FramesizeX;
   G4double FrameT = rSFT_FrameThick;
 
@@ -88,12 +94,21 @@ r_SFT_A::r_SFT_A( const G4String & Cname,
     new G4Box( Cname_+"Area", FrameSize/2., LaysizeY/2., BaseThick/2.+0.001*mm );
   
   G4Box *solidLayerX = 
-    new G4Box( Cname_+"LayerX", LaysizeX/2., LaysizeY/2.,Laythickness/2. );
+    new G4Box( Cname_+"LayerX", width/2., LaysizeY/2.,thickness/2. );
   G4Para *solidLayerU = 
-    new G4Para( Cname_+"LayerU", width/2., LaysizeY/2., Laythickness/2.,
+    new G4Para( Cname_+"LayerU", width/2., LaysizeY/2., thickness/2.,
 		(-1.)*tilted, 0.0*degree, 0.0*degree  );
   G4Para *solidLayerV = 
-    new G4Para( Cname_+"LayerV", width/2., LaysizeY/2., Laythickness/2.,
+    new G4Para( Cname_+"LayerV", width/2., LaysizeY/2., thickness/2.,
+		tilted, 0.0*degree, 0.0*degree );
+  
+  G4Box *solidLayerX_live = 
+    new G4Box( Cname_+"LayerX_live", livewidth/2., LaysizeY/2.,livethickness/2. );
+  G4Para *solidLayerU_live = 
+    new G4Para( Cname_+"LayerU_live", livewidth/2., LaysizeY/2., livethickness/2.,
+		(-1.)*tilted, 0.0*degree, 0.0*degree  );
+  G4Para *solidLayerV_live = 
+    new G4Para( Cname_+"LayerV_live", livewidth/2., LaysizeY/2., livethickness/2.,
 		tilted, 0.0*degree, 0.0*degree );
   
   G4SubtractionSolid *solidFrame =
@@ -106,11 +121,18 @@ r_SFT_A::r_SFT_A( const G4String & Cname,
   logArea   = 
     new G4LogicalVolume( solidArea,  matArea, Cname_+"Area",   0, 0, 0 );
   logLayerX = 
-    new G4LogicalVolume( solidLayerX, matScin, Cname_+"LayerX", 0, 0, 0 );
+    new G4LogicalVolume( solidLayerX, matScin, Cname_+"LayerX", 0, 0, 0 );//actual material of dead area ? 
   logLayerU = 
     new G4LogicalVolume( solidLayerU, matScin, Cname_+"LayerU", 0, 0, 0 );
   logLayerV = 
     new G4LogicalVolume( solidLayerV, matScin, Cname_+"LayerV", 0, 0, 0 );
+  
+  logLayerX_live = 
+    new G4LogicalVolume( solidLayerX_live, matScin, Cname_+"LayerX_live", 0, 0, 0 );
+  logLayerU_live = 
+    new G4LogicalVolume( solidLayerU_live, matScin, Cname_+"LayerU_live", 0, 0, 0 );
+  logLayerV_live = 
+    new G4LogicalVolume( solidLayerV_live, matScin, Cname_+"LayerV_live", 0, 0, 0 );
   
   G4VPhysicalVolume *physBox =
     new G4PVPlacement( G4Transform3D( rotMat,
@@ -208,6 +230,43 @@ r_SFT_A::r_SFT_A( const G4String & Cname,
     
     // Layer1
     new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer1*mm ),
+    		       Cname_+"Layer1", logLayerX_live, physArea, false, 1000*id1+id );
+    // Layer2
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer2*mm ),
+    		       Cname_+"Layer2", logLayerU_live, physArea, false, 1000*id2+id );
+    // Layer3
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer3*mm ),
+    		       Cname_+"Layer3", logLayerV_live, physArea, false, 1000*id3+id );
+    // Layer4
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer4*mm ),
+    		       Cname_+"Layer4", logLayerX_live, physArea, false, 1000*id4+id );
+    // Layer5
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer5*mm ),
+    		       Cname_+"Layer5", logLayerU_live, physArea, false, 1000*id5+id );
+    // Layer6
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer6*mm ),
+    		       Cname_+"Layer6", logLayerV_live, physArea, false, 1000*id6+id );
+    // Layer7
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer7*mm ),
+    		       Cname_+"Layer7", logLayerU_live, physArea, false, 1000*id7+id );
+    // Layer8
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer8*mm ),
+    		       Cname_+"Layer8", logLayerV_live, physArea, false, 1000*id8+id );
+    // Layer9
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer9*mm ),
+    		       Cname_+"Layer9", logLayerX_live, physArea, false, 1000*id9+id );
+    // Layer10
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer10*mm ),
+    		       Cname_+"Layer10", logLayerU_live, physArea, false, 1000*id10+id );
+    // Layer11
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer11*mm ),
+    		       Cname_+"Layer11", logLayerV_live, physArea, false, 1000*id11+id );
+    // Layer12
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer12*mm ),
+    		       Cname_+"Layer12", logLayerX_live, physArea, false, 1000*id12+id );
+    
+    // Layer1
+    new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer1*mm ),
     		       Cname_+"Layer1", logLayerX, physArea, false, 1000*id1+id );
     // Layer2
     new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer2*mm ),
@@ -260,7 +319,7 @@ void r_SFT_A::SetVisAttributes( const G4VisAttributes *attLayer,
 
 void r_SFT_A::SetSensitiveDetector( G4VSensitiveDetector *SD )
 {
-  logLayerX->SetSensitiveDetector(SD);
-  logLayerU->SetSensitiveDetector(SD);
-  logLayerV->SetSensitiveDetector(SD);
+  logLayerX_live->SetSensitiveDetector(SD);
+  logLayerU_live->SetSensitiveDetector(SD);
+  logLayerV_live->SetSensitiveDetector(SD);
 }
