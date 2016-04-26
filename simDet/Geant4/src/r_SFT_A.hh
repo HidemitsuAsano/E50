@@ -56,6 +56,7 @@ private:
   G4String Cname_;
   G4LogicalVolume *logBox, *logFrame, *logArea;
   G4LogicalVolume *logLayerX, *logLayerU, *logLayerV;
+  G4LogicalVolume *logLayerX_live, *logLayerU_live, *logLayerV_live;
   
 public:
   void SetVisAttributes( const G4VisAttributes *attLayer,
