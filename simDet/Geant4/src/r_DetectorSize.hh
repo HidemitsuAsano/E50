@@ -21,6 +21,7 @@ static const G4double rSFT_FramesizeX =  200.0*mm;
 static const G4double rSFT_BoxThick   =   30.0*mm;
 static const G4double rSFT_FrameThick =   30.0*mm;
 
+static const G4double rSFT_livefraction = 0.95;//fraction of senstive area of fiber
 
 //////Counter size
 //T0
