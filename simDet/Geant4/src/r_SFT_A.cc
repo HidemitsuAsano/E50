@@ -318,7 +318,7 @@ r_SFT_A::r_SFT_A( const G4String & Cname,
     		       Cname_+"Layer11_dead", logLayerV_dead, physArea, false, 1000*id11+id );
     // Layer12
     new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer12*mm ),
-    		       Cname_+"Layer12", logLayerX_dead, physArea, false, 1000*id12+id );
+    		       Cname_+"Layer12_dead", logLayerX_dead, physArea, false, 1000*id12+id );
 
     // Layer1
     new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer1*mm ),
