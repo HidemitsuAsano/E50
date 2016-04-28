@@ -1,0 +1,37 @@
+
+/control/verbose 1
+/control/saveHistory
+/run/verbose 1
+
+/vis/scene/create
+/vis/scene/add/volume
+
+/vis/sceneHandler/create VRML2FILE
+#
+# prerun.mac
+#
+#/vis/open OGLIX
+#/vis/open OGLSX
+#/vis/open DAWNFILE
+#/vis/open VRML2FILE
+#
+#
+/vis/viewer/create
+#
+#/vis/viewer/set/style surface
+#/vis/viewer/set/style wireframe
+#
+#/vis/viewer/set/viewpointThetaPhi   90.00 0.00
+#/vis/viewer/set/viewpointThetaPhi   89.00 90.00
+#
+#/vis/drawVolume 
+#/vis/viewer/set/autoRefresh
+#
+#/vis/viewer/zoom 1.0
+/tracking/storeTrajectory 1
+/vis/scene/add/trajectories
+#/vis/viewer/refresh
+#/vis/viewer/flush
+/vis/scene/endOfEventAction accumulate
+#
+#
