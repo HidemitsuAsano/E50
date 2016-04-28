@@ -160,7 +160,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     s_SF1->SetSensitiveDetector( sftSD );
   }
 
-  //Type A
+  //Type A real SFT Square Fiber Single Cladding
   if( DetType==1 ){
     ///////////////////// SFT(x,u,v,x,u,v, u,v,x,u,v,x)
     G4int id1=geomMan.GetDetectorId("SFT-x-1");
@@ -208,7 +208,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     
     G4VisAttributes *FiberLayerAttrib =
       new G4VisAttributes( G4Colour::G4Colour( 0.0, 1.0, 1.0 ) );//Cyan
-    G4VisAttributes *FiberDeadAttrib =
+    G4VisAttributes *FiberCradAttrib =
       new G4VisAttributes( G4Colour::G4Colour( 1.0, 0.0, 0.0 ) );//Red
     G4VisAttributes *FiberFrameAttrib =
       new G4VisAttributes( G4Colour::G4Colour( 0.3, 0.3, 0.3 ) );//Blac
@@ -219,7 +219,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     // 			     &G4VisAttributes::Invisible );
 
     r_SF1->SetVisAttributes( FiberLayerAttrib, 
-           FiberDeadAttrib,
+           FiberCradAttrib,
 			     &G4VisAttributes::Invisible,
 			     &G4VisAttributes::Invisible,
 			     &G4VisAttributes::Invisible );

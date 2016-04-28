@@ -69,7 +69,7 @@ void AnalysisSpec::PrimaryGeneration( const PrimaryInfo *info )
 }
 
 struct Event{
-  //Primary
+  //Primary info
   G4double priposx, priposy, priposz;
   G4double prim1, prim2;
   G4double prip1, prip2, prip1cm, prip2cm;
