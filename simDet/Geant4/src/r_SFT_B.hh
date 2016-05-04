@@ -56,14 +56,14 @@ private:
   
   G4String Cname_;
   G4LogicalVolume *logBox, *logFrame, *logArea;
-  G4LogicalVolume *logLayerX, *logLayerU, *logLayerV;
-  G4LogicalVolume *logLayerX_core, *logLayerU_core, *logLayerV_core;
-  G4LogicalVolume *logLayerX_innerclad, *logLayerU_innerclad, *logLayerV_innerclad;
-  G4LogicalVolume *logLayerX_outerclad, *logLayerU_outerclad, *logLayerV_outerclad;
+  G4LogicalVolume *logLayer_core;
+  G4LogicalVolume *logLayer_innerclad;
+  G4LogicalVolume *logLayer_outerclad;
   
 public:
   void SetVisAttributes( const G4VisAttributes *attLayer,
-      const G4VisAttributes *attClad,
+      const G4VisAttributes *attInnerClad,
+      const G4VisAttributes *attOuterClad,
 			 const G4VisAttributes *attFrame,
 			 const G4VisAttributes *attArea,
 			 const G4VisAttributes *attBox );

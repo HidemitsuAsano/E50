@@ -51,7 +51,7 @@ public:
   // Geometry
   DCGeomMan *GetDCGeomManager( void ) { return DCGeomManager_; }
   int GeomFlag( void ) const { return fGeom; }
-  bool DetectorType( void ) const { return fDetType_; }
+  int DetectorType( void ) const { return fDetType_; }
 
   // Physics Process
   int PhysFlag( void ) const { return fPhysProc; }
