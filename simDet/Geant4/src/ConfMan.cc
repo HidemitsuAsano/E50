@@ -55,6 +55,7 @@ bool ConfMan::Initialize( void )
     std::cerr << funcname << ": file open fail" << std::endl;
     exit(-1);
   }
+  std::cout << "Conf file Open " << ConfFileName_.c_str() << std::endl;
 
   while( fgets( buf, BufSize, fp ) != 0 ){
     if( buf[0]!='#' ){
@@ -64,6 +65,7 @@ bool ConfMan::Initialize( void )
       } 
       else if( sscanf(buf,"DETTYPE: %d", &id )==1 ){
 	fDetType_=id;
+      std::cout << "reading DETTYPE " << fDetType_ << std::endl;
       }
       // Physics Process
       else if( sscanf(buf,"EM: %d", &id )==1 ){

@@ -77,7 +77,7 @@ r_SFT_A::r_SFT_A( const G4String & Cname,
   G4double Laythickness = rSFT_LaysizeZ;
 
   G4double tilted = rSFT_TiltAngle;
-  G4double BaseThick = rSFT_BoxThick*12.0 + 20.0*mm;
+  G4double BaseThick = rSFT_BoxThick*12.0 + 20.0*mm; // 12 number of layer , 20 mm ?
 
   G4double width = LaysizeX;//+LaysizeY*tan(tilted);
   G4double livewidth = LaysizeX*rSFT_livefraction;
@@ -131,7 +131,7 @@ r_SFT_A::r_SFT_A( const G4String & Cname,
   logArea   = 
     new G4LogicalVolume( solidArea,  matArea, Cname_+"Area",   0, 0, 0 );
   logLayerX = 
-    new G4LogicalVolume( solidLayerX, matScin, Cname_+"LayerX", 0, 0, 0 );//actual material of dead area ? 
+    new G4LogicalVolume( solidLayerX, matScin, Cname_+"LayerX", 0, 0, 0 ); 
   logLayerU = 
     new G4LogicalVolume( solidLayerU, matScin, Cname_+"LayerU", 0, 0, 0 );
   logLayerV = 
