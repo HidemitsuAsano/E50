@@ -78,6 +78,8 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
 		  G4int id7, G4int id8, G4int id9,
 		  G4int id10, G4int id11, G4int id12,
 		  G4Material *matScin, 
+		  G4Material *matPMMA, 
+		  G4Material *matFP, 
 		  G4Material *matFrame,
 		  G4Material *matArea,
 		  G4Material *matBox )
@@ -88,9 +90,7 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
   G4ThreeVector DCgPos=gPosCent+gOffset;
   
   G4double Radius     = rSFT_B_Radius;
-  G4double Length     = rSFT_B_Length;
 
-  G4double tilted = rSFT_TiltAngle;
   G4double BaseThick = rSFT_BoxThick*12.0 + 20.0*mm;
 
   G4double radius_core_in = 0*mm;
@@ -134,10 +134,10 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
     new G4LogicalVolume( solidLayer_core, matScin, Cname_+"Layer_core", 0, 0, 0 );
   
   logLayer_innerclad = 
-    new G4LogicalVolume( solidLayer_innerclad, matScin, Cname_+"Layer_innerclad", 0, 0, 0 );
+    new G4LogicalVolume( solidLayer_innerclad, matPMMA, Cname_+"Layer_innerclad", 0, 0, 0 );
   
   logLayer_outerclad = 
-    new G4LogicalVolume( solidLayer_outerclad, matScin, Cname_+"Layer_outerclad", 0, 0, 0 );
+    new G4LogicalVolume( solidLayer_outerclad, matFP, Cname_+"Layer_outerclad", 0, 0, 0 );
 
 
 

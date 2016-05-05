@@ -39,8 +39,9 @@
 #include "s_T0Wall.hh"
 
 #include "r_DetectorSize.hh"
-#include "r_SFT_A.hh" //square ,signle cladding fiber
+#include "r_SFT_A.hh" //square ,1mm signle cladding fiber
 #include "r_SFT_B.hh" //round  ,double caldding fiber
+#include "r_SFT_C.hh" //square ,0.5 mm single caldding fiber
 
 #include "G4SDManager.hh"
 #include "SFTSD.hh"
@@ -89,9 +90,10 @@ MakeTrackers( G4VPhysicalVolume *pMother )
   ////////////////////////////////////////////////////////////////////////////////////
 
   G4int DetType=0;
-  if( confMan->DetectorType()==0 ) DetType=0;
-  else if( confMan->DetectorType()==1 ) DetType=1;
-  else if( confMan->DetectorType()==2 ) DetType=2;
+  if( confMan->DetectorType()==0 ) DetType=0;//simple detector
+  else if( confMan->DetectorType()==1 ) DetType=1;//square fiber 1mm
+  else if( confMan->DetectorType()==2 ) DetType=2;//round fiber 1mm
+  else if( confMan->DetectorType()==3 ) DetType=3;//square fiber 0.5mm
   else { G4cout << "invalid Detector type ! (DetType = 0, 1, 2) " << G4endl; return;}
   G4cout << "   "  << G4endl;
   G4cout << "DetType " << confMan->DetectorType() << G4endl;
@@ -164,7 +166,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     s_SF1->SetSensitiveDetector( sftSD );
   }
 
-  //Type A real SFT Square Fiber Single Cladding
+  //Type A real SFT Square Fiber 1mm Single Cladding
   else if( DetType==1 ){
     ///////////////////// SFT(x,u,v,x,u,v, u,v,x,u,v,x)
     G4int id1=geomMan.GetDetectorId("SFT-x-1");
@@ -206,6 +208,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
 		   id7,  id8,  id9, 
 		   id10, id11, id12,
 		   mList_->Scin, 
+		   mList_->PMMA, 
 		   mList_->Al, 
 		   mList_->Air, 
 		   mList_->Air );
@@ -277,6 +280,8 @@ MakeTrackers( G4VPhysicalVolume *pMother )
 		   id7,  id8,  id9, 
 		   id10, id11, id12,
 		   mList_->Scin, 
+		   mList_->PMMA, 
+		   mList_->FP, 
 		   mList_->Al, 
 		   mList_->Air, 
 		   mList_->Air );
@@ -308,6 +313,82 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     SDMan->AddNewDetector( sftSD );  
     r_SF1->SetSensitiveDetector( sftSD );
   }
+  
+  //Type C real SFT Square Fiber 0.5 mm Single Cladding
+  else if( DetType==3 ){
+    ///////////////////// SFT(x,u,v,x,u,v, u,v,x,u,v,x)
+    G4int id1=geomMan.GetDetectorId("SFT-x-1");
+    G4int id2=geomMan.GetDetectorId("SFT-u-1");
+    G4int id3=geomMan.GetDetectorId("SFT-v-1");
+    G4int id4=geomMan.GetDetectorId("SFT-x-2");
+    G4int id5=geomMan.GetDetectorId("SFT-u-2");
+    G4int id6=geomMan.GetDetectorId("SFT-v-2");
+    G4int id7=geomMan.GetDetectorId("SFT-u-3");
+    G4int id8=geomMan.GetDetectorId("SFT-v-3");
+    G4int id9=geomMan.GetDetectorId("SFT-x-3");
+    G4int id10=geomMan.GetDetectorId("SFT-u-4");
+    G4int id11=geomMan.GetDetectorId("SFT-v-4");
+    G4int id12=geomMan.GetDetectorId("SFT-x-4");
+    
+    G4ThreeVector gPos1=geomMan.GetGlobalPosition(id1);
+    G4ThreeVector gPos2=geomMan.GetGlobalPosition(id2);
+    G4ThreeVector gPos3=geomMan.GetGlobalPosition(id3);
+    G4ThreeVector gPos4=geomMan.GetGlobalPosition(id4);
+    G4ThreeVector gPos5=geomMan.GetGlobalPosition(id5);
+    G4ThreeVector gPos6=geomMan.GetGlobalPosition(id6);
+    G4ThreeVector gPos7=geomMan.GetGlobalPosition(id7);
+    G4ThreeVector gPos8=geomMan.GetGlobalPosition(id8);
+    G4ThreeVector gPos9=geomMan.GetGlobalPosition(id9);
+    G4ThreeVector gPos10=geomMan.GetGlobalPosition(id10);
+    G4ThreeVector gPos11=geomMan.GetGlobalPosition(id11);
+    G4ThreeVector gPos12=geomMan.GetGlobalPosition(id12);
+    G4ThreeVector OfsLSFT( 0.0, 0.0, 0.0 );
+
+    r_SFT_C *r_SF1 =
+      new r_SFT_C( "SFT", pMother, RM, 
+		   gPos1,  gPos2,  gPos3, 
+		   gPos4,  gPos5,  gPos6,
+		   gPos7,  gPos8,  gPos9, 
+		   gPos10, gPos11, gPos12,
+		   OfsLSFT, 
+		   id1,  id2,  id3, 
+		   id4,  id5,  id6,
+		   id7,  id8,  id9, 
+		   id10, id11, id12,
+		   mList_->Scin, 
+		   mList_->PMMA, 
+		   mList_->Al, 
+		   mList_->Air, 
+		   mList_->Air );
+    
+    G4VisAttributes *FiberLayerAttrib =
+      new G4VisAttributes( G4Colour::G4Colour( 0.0, 1.0, 1.0 ) );//Cyan
+    G4VisAttributes *FiberCradAttrib =
+      new G4VisAttributes( G4Colour::G4Colour( 1.0, 0.0, 0.0 ) );//Red
+    G4VisAttributes *FiberFrameAttrib =
+      new G4VisAttributes( G4Colour::G4Colour( 0.3, 0.3, 0.3 ) );//Blac
+    
+    // r_SF1->SetVisAttributes( FiberLayerAttrib, 
+    // 			     FiberFrameAttrib, 
+    // 			     &G4VisAttributes::Invisible,
+    // 			     &G4VisAttributes::Invisible );
+
+    r_SF1->SetVisAttributes( FiberLayerAttrib, 
+           FiberCradAttrib,
+			     &G4VisAttributes::Invisible,
+			     &G4VisAttributes::Invisible,
+			     &G4VisAttributes::Invisible );
+
+    //////// Sensitive Detectors ////////
+    G4SDManager *SDMan = G4SDManager::GetSDMpointer();
+    SFTSD *sftSD = new SFTSD( "/spec/sft" );
+    SDMan->AddNewDetector( sftSD );  
+    r_SF1->SetSensitiveDetector( sftSD );
+  }
+  
+
+
+
 }
 
 void DetectorConstructionSpec::

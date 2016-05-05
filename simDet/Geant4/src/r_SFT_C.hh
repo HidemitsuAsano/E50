@@ -1,14 +1,14 @@
 /*
-  r_SFT_A.hh
+  r_SFT_C.hh
 
-  Segmented SFT
+  Segmented SFT 0.5mm
   -> Fiber + Frame
 
-  2016/4  K.Shirotori
+  May 2016  H.Asano
 */
 
-#ifndef r_SFT_A_h
-#define r_SFT_A_h 1
+#ifndef r_SFT_C_h
+#define r_SFT_C_h 1
 
 #include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
@@ -20,10 +20,10 @@ class G4VSensitiveDetector;
 class G4LogicalVolume;
 class G4VPhysicalVolume;
 
-class r_SFT_A
+class r_SFT_C
 {
 public:  
-  r_SFT_A( const G4String & Cname,
+  r_SFT_C( const G4String & Cname,
 	   G4VPhysicalVolume *pMother, 
 	   const G4RotationMatrix & rotMat, 
 	   const G4ThreeVector & gPos1, 
@@ -48,11 +48,11 @@ public:
 	   G4Material *matFrame, 
 	   G4Material *matArea, 
 	   G4Material *matBox );
-  ~r_SFT_A() {}; 
+  ~r_SFT_C() {}; 
   
 private:
-  r_SFT_A( const r_SFT_A & );
-  r_SFT_A & operator = ( const r_SFT_A & );
+  r_SFT_C( const r_SFT_C & );
+  r_SFT_C & operator = ( const r_SFT_C & );
   
   G4String Cname_;
   G4LogicalVolume *logBox, *logFrame, *logArea;

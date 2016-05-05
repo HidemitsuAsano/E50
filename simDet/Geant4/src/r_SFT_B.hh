@@ -44,6 +44,8 @@ public:
 	   G4int id7,  G4int id8,  G4int id9,
 	   G4int id10, G4int id11, G4int id12,
 	   G4Material *matScin, 
+	   G4Material *matPMMA, 
+	   G4Material *matFP, 
 	   G4Material *matFrame, 
 	   G4Material *matArea, 
 	   G4Material *matBox );
