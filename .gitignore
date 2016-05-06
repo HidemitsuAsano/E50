@@ -6,4 +6,7 @@
 *.d
 *.so
 *.out
+*.root
+*.gitignore
 simDet/Geant4/bin/*
+simDet/Geant4/conf/*
