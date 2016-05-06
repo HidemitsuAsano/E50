@@ -10,41 +10,28 @@
 #include "r_SFT_B.hh"
 #include "r_DetectorSize.hh"
 #include <cmath>
-
-
-const G4double LzLayer1=-165.0;
-const G4double LzLayer2=-135.0;
-const G4double LzLayer3=-105.0;
-const G4double LzLayer4= -75.0;
-const G4double LzLayer5= -45.0;
-const G4double LzLayer6= -15.0;
-const G4double LzLayer7=  15.0;
-const G4double LzLayer8=  45.0;
-const G4double LzLayer9=  75.0;
-const G4double LzLayer10=105.0;
-const G4double LzLayer11=135.0;
-const G4double LzLayer12=165.0;
+#include <sstream>
+#include <string>
 
 const G4double LzLayer[rSFT_nLayer]={
-LzLayer1,
-LzLayer2,
-LzLayer3,
-LzLayer4,
-LzLayer5,
-LzLayer6,
-LzLayer7,
-LzLayer8,
-LzLayer9,
-LzLayer10,
-LzLayer11,
-LzLayer12};
+-165.0*mm,
+-135.0*mm,
+-105.0*mm,
+ -75.0*mm,
+ -45.0*mm,
+ -15.0*mm,
+  15.0*mm,
+  45.0*mm,
+  75.0*mm,
+ 105.0*mm,
+ 135.0*mm,
+ 165.0*mm
+};
 
 
 
 const G4double MaxDispl= 0.01; /* 10um */
 
-const G4double Deg2Rad = acos(-1.)/180.;
-const G4double Rad2Deg = 180./acos(-1.);
 
 #include "globals.hh"
 #include "G4Box.hh"
@@ -60,23 +47,9 @@ const G4double Rad2Deg = 180./acos(-1.);
 r_SFT_B::r_SFT_B( const G4String & Cname,
 		  G4VPhysicalVolume *pMother,
 		  const G4RotationMatrix &rotMat,
-		  const G4ThreeVector &gPos1, 
-		  const G4ThreeVector &gPos2,
-		  const G4ThreeVector &gPos3, 
-		  const G4ThreeVector &gPos4,
-		  const G4ThreeVector &gPos5,
-		  const G4ThreeVector &gPos6,
-		  const G4ThreeVector &gPos7,
-		  const G4ThreeVector &gPos8,
-		  const G4ThreeVector &gPos9,
-		  const G4ThreeVector &gPos10,
-		  const G4ThreeVector &gPos11,
-		  const G4ThreeVector &gPos12,
+		  const G4ThreeVector *gPos, 
 		  const G4ThreeVector &OffsetLocal,
-		  G4int id1, G4int id2, G4int id3, 
-		  G4int id4, G4int id5, G4int id6,
-		  G4int id7, G4int id8, G4int id9,
-		  G4int id10, G4int id11, G4int id12,
+		  G4int *detid,
 		  G4Material *matScin, 
 		  G4Material *matPMMA, 
 		  G4Material *matFP, 
@@ -85,7 +58,7 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
 		  G4Material *matBox )
   : Cname_(Cname)
 {
-  G4ThreeVector gPosCent=(gPos6+gPos7)/2.;
+  G4ThreeVector gPosCent=(gPos[5]+gPos[6])/2.;
   G4ThreeVector gOffset=rotMat*OffsetLocal;
   G4ThreeVector DCgPos=gPosCent+gOffset;
   
@@ -99,8 +72,8 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
   G4double radius_innerclad_out = radius_innerclad_in+Radius*rSFT_B_InnerCladding;
   G4double radius_outerclad_in = radius_innerclad_out ;
   G4double radius_outerclad_out =  radius_outerclad_in+Radius*rSFT_B_OuterCladding;
-  G4double FrameSize = rSFT_FramesizeX;
-  G4double FrameT = rSFT_FrameThick;
+  G4double FrameSize = rSFT_B_FramesizeX;
+  G4double FrameT = rSFT_B_FrameThick;
 
   G4Box *solidBox  = 
     new G4Box( Cname_+"Box", (FrameSize+1.0*mm)/2.+FrameT, (rSFT_B_Length+1.0*mm)/2.+FrameT, (BaseThick+0.5*mm)/2. );
@@ -108,6 +81,7 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
     new G4Box( Cname_+"Base", FrameSize/2.+FrameT, rSFT_B_Length/2.+FrameT, BaseThick/2. );
   G4Box *solidArea  = 
     new G4Box( Cname_+"Area", FrameSize/2., rSFT_B_Length/2., BaseThick/2.+0.001*mm );
+  //   new G4Box( Cname_+"Area", FrameSize/2., rSFT_B_Length/2., BaseThick/2. );
   
 
   G4Tubs *solidLayer_core = 
@@ -147,7 +121,6 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
 						     DCgPos.y()*mm,
 						     DCgPos.z()*mm ) ),
 		       Cname_+"Box", logBox, pMother, false, 0 );//name, logical volume, mother volume, no booliean operations its copy number
-
   G4VPhysicalVolume *physFrame =
     new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
                        Cname_+"Frame", logFrame, physBox, false, 0 );
@@ -158,107 +131,86 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
  
   // Consitency should be checked.
   G4RotationMatrix InvMat=rotMat.inverse();
-  G4ThreeVector lPos1=InvMat*(gPos1-gPosCent);
-  G4ThreeVector lPos2=InvMat*(gPos2-gPosCent);
-  G4ThreeVector lPos3=InvMat*(gPos3-gPosCent);
-  G4ThreeVector lPos4=InvMat*(gPos4-gPosCent);
-  G4ThreeVector lPos5=InvMat*(gPos5-gPosCent);
-  G4ThreeVector lPos6=InvMat*(gPos6-gPosCent);
-  G4ThreeVector lPos7=InvMat*(gPos7-gPosCent);
-  G4ThreeVector lPos8=InvMat*(gPos8-gPosCent);
-  G4ThreeVector lPos9=InvMat*(gPos9-gPosCent);
-  G4ThreeVector lPos10=InvMat*(gPos10-gPosCent);
-  G4ThreeVector lPos11=InvMat*(gPos11-gPosCent);
-  G4ThreeVector lPos12=InvMat*(gPos12-gPosCent);
+  G4ThreeVector lPos[12];
+  for(G4int ilr = 0; ilr < rSFT_nLayer;ilr++){
+    lPos[ilr] = InvMat*(gPos[ilr]-gPosCent);
   
-  if( fabs(lPos1.z()-LzLayer1)>MaxDispl ){
-    G4cout << Cname_ << "Layer1: Geometry Error!:" 
-	   << "(0,0," << LzLayer1 << ") --> " << lPos1 << G4endl;
-    G4Exception("Geometry Error");
+    if( fabs(lPos[ilr].z()-LzLayer[ilr])>MaxDispl){
+      G4cout << Cname_ << "Layer" << ilr+1 << ": Geometry Error!:" 
+        << "(0,0," << LzLayer[ilr] << ") --> " << lPos[ilr] << G4endl;
+      G4Exception("Geometry Error");
+    }
   }
-  if( fabs(lPos2.z()-LzLayer2)>MaxDispl ){
-    G4cout << Cname_ << "Layer2: Geometry Error!:" 
-	   << "(0,0," << LzLayer2 << ") --> " << lPos2 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos3.z()-LzLayer3)>MaxDispl ){
-    G4cout << Cname_ << "Layer3: Geometry Error!:" 
-	   << "(0,0," << LzLayer3 << ") --> " << lPos3 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos4.z()-LzLayer4)>MaxDispl ){
-    G4cout << Cname_ << "Layer4: Geometry Error!:" 
-	   << "(0,0," << LzLayer4 << ") --> " << lPos4 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos5.z()-LzLayer5)>MaxDispl ){
-    G4cout << Cname_ << "Layer5: Geometry Error!:" 
-	   << "(0,0," << LzLayer5 << ") --> " << lPos5 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos6.z()-LzLayer6)>MaxDispl ){
-    G4cout << Cname_ << "Layer6: Geometry Error!:" 
-	   << "(0,0," << LzLayer6 << ") --> " << lPos6 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos7.z()-LzLayer7)>MaxDispl ){
-    G4cout << Cname_ << "Layer7: Geometry Error!:" 
-	   << "(0,0," << LzLayer7 << ") --> " << lPos7 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos8.z()-LzLayer8)>MaxDispl ){
-    G4cout << Cname_ << "Layer8: Geometry Error!:" 
-	   << "(0,0," << LzLayer8 << ") --> " << lPos8 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos9.z()-LzLayer9)>MaxDispl ){
-    G4cout << Cname_ << "Layer9: Geometry Error!:" 
-	   << "(0,0," << LzLayer9 << ") --> " << lPos9 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos10.z()-LzLayer10)>MaxDispl ){
-    G4cout << Cname_ << "Layer10: Geometry Error!:" 
-	   << "(0,0," << LzLayer10 << ") --> " << lPos10 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos11.z()-LzLayer11)>MaxDispl ){
-    G4cout << Cname_ << "Layer11: Geometry Error!:" 
-	   << "(0,0," << LzLayer11 << ") --> " << lPos11 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos12.z()-LzLayer12)>MaxDispl ){
-    G4cout << Cname_ << "Layer12: Geometry Error!:" 
-	   << "(0,0," << LzLayer12 << ") --> " << lPos12 << G4endl;
-    G4Exception("Geometry Error");
-  }
+ 
 
-  const G4double offset_2ndlayer = 0.5*mm;
-  for( int id=1; id<=rSFT_SegNum; ++id ){ 
-    G4double ofsScinX=-rSFT_SegSpacing*(rSFT_SegNum/2.+0.5-id);
-     
-    
-    // Layer1-1 x
-    G4RotationMatrix *layrot = new G4RotationMatrix();
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer1*mm ),
-    		       Cname_+"Layer1_1_core", logLayer_core, physArea, false, 1000*id1+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer1*mm ),
-    		       Cname_+"Layer1_1_innerclad", logLayer_innerclad, physArea, false, 1000*id1+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer1*mm ),
-    		       Cname_+"Layer1_1_outerclad", logLayer_outerclad, physArea, false, 1000*id1+id );
+  const G4double offset_2ndsublayer = 0.5*mm;
+  //x u v x u v u v x u v x 
+  //Here
+  //x: 0 
+  //u: 1
+  //v: 2
+  const G4int layer_conf[rSFT_nLayer]={0, 1, 2, 0, 1,2 ,1,2,0,1,2,0}; 
+  
+  G4RotationMatrix *layrot[3];
+  //x layer local -> global rotation
+  layrot[0] = new G4RotationMatrix();
+  layrot[0]->rotateX(90.*deg);
+  
+  //u layer local ->global rotation
+  layrot[1] = new G4RotationMatrix();
+  layrot[1]->rotateZ( (-1.000)*rSFT_TiltAngle);
+  layrot[1]->rotateX( 90.*deg);
+  
+  //v layer local ->global rotation
+  layrot[2] = new G4RotationMatrix();
+  layrot[2]->rotateZ( (1.000)*rSFT_TiltAngle);
+  layrot[2]->rotateX( 90.*deg);
 
     
+    for( G4int iseg=1; iseg<=rSFT_SegNum; ++iseg ){ 
+      G4double ofsScinX=-rSFT_SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
+      for( G4int ilr=0; ilr<rSFT_nLayer;ilr++){
+        G4int conf = layer_conf[ilr];
+      
+        //set name
+        std::ostringstream os;
+        os << ilr+1;
+        G4String Lname = os.str();;//+"_"+1;
+
+        //first sublayer
+        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
+            Cname_+"Layer"+Lname+"_1_core", logLayer_core, physArea, false, 1000*detid[ilr]+iseg );
+
+        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
+            Cname_+"Layer"+Lname+"_1_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+iseg );
+
+        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
+            Cname_+"Layer"+Lname+"_1_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+iseg );
+
+        //second sublayer
+        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.732051 ),
+  //      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.73205 ),
+     //   new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*2. ),
+            Cname_+"Layer"+Lname+"_2_core", logLayer_core, physArea, false, 1000*detid[ilr]+iseg+n_SFT_B_fiber );
+
+        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.732051 ),
+     //   new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*2. ),
+            Cname_+"Layer"+Lname+"_2_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+iseg+n_SFT_B_fiber );
+
+        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.732051 ),
+     //   new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*2.0 ),
+            Cname_+"Layer"+Lname+"_2_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+iseg+n_SFT_B_fiber );
+      }
+    /*
     // Layer1-2 x
     new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer1*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer1_2_core", logLayer_core, physArea, false, 1000*id1+id+n_SFT_B_fiber);
+    		       Cname_+"Layer1_2_core", logLayer_core, physArea, false, 1000*id1+iseg+n_SFT_B_fiber);
     
     new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer1*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer1_2_innerclad", logLayer_innerclad, physArea, false, 1000*id1+id+n_SFT_B_fiber);
+    		       Cname_+"Layer1_2_innerclad", logLayer_innerclad, physArea, false, 1000*id1+iseg+n_SFT_B_fiber);
     
     new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer1*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer1_2_outerclad", logLayer_outerclad, physArea, false, 1000*id1+id+n_SFT_B_fiber);
+    		       Cname_+"Layer1_2_outerclad", logLayer_outerclad, physArea, false, 1000*id1+iseg+n_SFT_B_fiber);
     
     
     // Layer2-1 u
@@ -530,7 +482,7 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
     new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer12*mm+rSFT_B_Radius*1.732051 ),
     		       Cname_+"Layer12_2_outerclad", logLayer_outerclad, physArea, false, 1000*id12+id+n_SFT_B_fiber);
     
-    
+    */    
     
   }
 }

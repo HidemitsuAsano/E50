@@ -241,44 +241,31 @@ MakeTrackers( G4VPhysicalVolume *pMother )
   //Type B real SFT Round Fiber Double Cladding
   else if( DetType==2 ){
     ///////////////////// SFT(x,u,v,x,u,v, u,v,x,u,v,x)
-    G4int id1=geomMan.GetDetectorId("SFT-x-1");
-    G4int id2=geomMan.GetDetectorId("SFT-u-1");
-    G4int id3=geomMan.GetDetectorId("SFT-v-1");
-    G4int id4=geomMan.GetDetectorId("SFT-x-2");
-    G4int id5=geomMan.GetDetectorId("SFT-u-2");
-    G4int id6=geomMan.GetDetectorId("SFT-v-2");
-    G4int id7=geomMan.GetDetectorId("SFT-u-3");
-    G4int id8=geomMan.GetDetectorId("SFT-v-3");
-    G4int id9=geomMan.GetDetectorId("SFT-x-3");
-    G4int id10=geomMan.GetDetectorId("SFT-u-4");
-    G4int id11=geomMan.GetDetectorId("SFT-v-4");
-    G4int id12=geomMan.GetDetectorId("SFT-x-4");
+    G4int detid[12];
+    detid[0]=geomMan.GetDetectorId("SFT-x-1");
+    detid[1]=geomMan.GetDetectorId("SFT-u-1");
+    detid[2]=geomMan.GetDetectorId("SFT-v-1");
+    detid[3]=geomMan.GetDetectorId("SFT-x-2");
+    detid[4]=geomMan.GetDetectorId("SFT-u-2");
+    detid[5]=geomMan.GetDetectorId("SFT-v-2");
+    detid[6]=geomMan.GetDetectorId("SFT-u-3");
+    detid[7]=geomMan.GetDetectorId("SFT-v-3");
+    detid[8]=geomMan.GetDetectorId("SFT-x-3");
+    detid[9]=geomMan.GetDetectorId("SFT-u-4");
+    detid[10]=geomMan.GetDetectorId("SFT-v-4");
+    detid[11]=geomMan.GetDetectorId("SFT-x-4");
     
-    G4ThreeVector gPos1=geomMan.GetGlobalPosition(id1);
-    G4ThreeVector gPos2=geomMan.GetGlobalPosition(id2);
-    G4ThreeVector gPos3=geomMan.GetGlobalPosition(id3);
-    G4ThreeVector gPos4=geomMan.GetGlobalPosition(id4);
-    G4ThreeVector gPos5=geomMan.GetGlobalPosition(id5);
-    G4ThreeVector gPos6=geomMan.GetGlobalPosition(id6);
-    G4ThreeVector gPos7=geomMan.GetGlobalPosition(id7);
-    G4ThreeVector gPos8=geomMan.GetGlobalPosition(id8);
-    G4ThreeVector gPos9=geomMan.GetGlobalPosition(id9);
-    G4ThreeVector gPos10=geomMan.GetGlobalPosition(id10);
-    G4ThreeVector gPos11=geomMan.GetGlobalPosition(id11);
-    G4ThreeVector gPos12=geomMan.GetGlobalPosition(id12);
+    G4ThreeVector gPos[12];
+    for(int ilr=0;ilr<12;ilr++){
+      gPos[ilr] = geomMan.GetGlobalPosition(detid[ilr]);
+    }
     G4ThreeVector OfsLSFT( 0.0, 0.0, 0.0 );
 
     r_SFT_B *r_SF1 =
       new r_SFT_B( "SFT", pMother, RM, 
-		   gPos1,  gPos2,  gPos3, 
-		   gPos4,  gPos5,  gPos6,
-		   gPos7,  gPos8,  gPos9, 
-		   gPos10, gPos11, gPos12,
+		   gPos, 
 		   OfsLSFT, 
-		   id1,  id2,  id3, 
-		   id4,  id5,  id6,
-		   id7,  id8,  id9, 
-		   id10, id11, id12,
+		   detid,
 		   mList_->Scin, 
 		   mList_->PMMA, 
 		   mList_->FP, 
@@ -317,44 +304,31 @@ MakeTrackers( G4VPhysicalVolume *pMother )
   //Type C real SFT Square Fiber 0.5 mm Single Cladding
   else if( DetType==3 ){
     ///////////////////// SFT(x,u,v,x,u,v, u,v,x,u,v,x)
-    G4int id1=geomMan.GetDetectorId("SFT-x-1");
-    G4int id2=geomMan.GetDetectorId("SFT-u-1");
-    G4int id3=geomMan.GetDetectorId("SFT-v-1");
-    G4int id4=geomMan.GetDetectorId("SFT-x-2");
-    G4int id5=geomMan.GetDetectorId("SFT-u-2");
-    G4int id6=geomMan.GetDetectorId("SFT-v-2");
-    G4int id7=geomMan.GetDetectorId("SFT-u-3");
-    G4int id8=geomMan.GetDetectorId("SFT-v-3");
-    G4int id9=geomMan.GetDetectorId("SFT-x-3");
-    G4int id10=geomMan.GetDetectorId("SFT-u-4");
-    G4int id11=geomMan.GetDetectorId("SFT-v-4");
-    G4int id12=geomMan.GetDetectorId("SFT-x-4");
+    G4int detid[12];
+    detid[0]=geomMan.GetDetectorId("SFT-x-1");
+    detid[1]=geomMan.GetDetectorId("SFT-u-1");
+    detid[2]=geomMan.GetDetectorId("SFT-v-1");
+    detid[3]=geomMan.GetDetectorId("SFT-x-2");
+    detid[4]=geomMan.GetDetectorId("SFT-u-2");
+    detid[5]=geomMan.GetDetectorId("SFT-v-2");
+    detid[6]=geomMan.GetDetectorId("SFT-u-3");
+    detid[7]=geomMan.GetDetectorId("SFT-v-3");
+    detid[8]=geomMan.GetDetectorId("SFT-x-3");
+    detid[9]=geomMan.GetDetectorId("SFT-u-4");
+    detid[10]=geomMan.GetDetectorId("SFT-v-4");
+    detid[11]=geomMan.GetDetectorId("SFT-x-4");
     
-    G4ThreeVector gPos1=geomMan.GetGlobalPosition(id1);
-    G4ThreeVector gPos2=geomMan.GetGlobalPosition(id2);
-    G4ThreeVector gPos3=geomMan.GetGlobalPosition(id3);
-    G4ThreeVector gPos4=geomMan.GetGlobalPosition(id4);
-    G4ThreeVector gPos5=geomMan.GetGlobalPosition(id5);
-    G4ThreeVector gPos6=geomMan.GetGlobalPosition(id6);
-    G4ThreeVector gPos7=geomMan.GetGlobalPosition(id7);
-    G4ThreeVector gPos8=geomMan.GetGlobalPosition(id8);
-    G4ThreeVector gPos9=geomMan.GetGlobalPosition(id9);
-    G4ThreeVector gPos10=geomMan.GetGlobalPosition(id10);
-    G4ThreeVector gPos11=geomMan.GetGlobalPosition(id11);
-    G4ThreeVector gPos12=geomMan.GetGlobalPosition(id12);
+    G4ThreeVector gPos[12];
+    for(int ilr=0;ilr<12;ilr++){
+      gPos[ilr] = geomMan.GetGlobalPosition(detid[ilr]);
+    }
     G4ThreeVector OfsLSFT( 0.0, 0.0, 0.0 );
 
     r_SFT_C *r_SF1 =
       new r_SFT_C( "SFT", pMother, RM, 
-		   gPos1,  gPos2,  gPos3, 
-		   gPos4,  gPos5,  gPos6,
-		   gPos7,  gPos8,  gPos9, 
-		   gPos10, gPos11, gPos12,
+		   gPos, 
 		   OfsLSFT, 
-		   id1,  id2,  id3, 
-		   id4,  id5,  id6,
-		   id7,  id8,  id9, 
-		   id10, id11, id12,
+		   detid,  
 		   mList_->Scin, 
 		   mList_->PMMA, 
 		   mList_->Al, 
