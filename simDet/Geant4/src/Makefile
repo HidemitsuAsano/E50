@@ -118,6 +118,7 @@ OBJS	= 	GetNumberFromKernelEntropyPool.o	\
                 s_T0Wall.o                              \
                 r_SFT_A.o                               \
                 r_SFT_B.o                               \
+                r_SFT_C.o                               \
 		SFTHit.o				\
 		SFTSD.o 	               		\
 		T0Hit.o		         		\
