@@ -27,7 +27,7 @@ public:
   void DrawAll() const;
   void PrintAll() const;
   void clear();
-
+  
 private:
   SFTHitsCollection *SFTCollection;
 };

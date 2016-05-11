@@ -268,8 +268,8 @@ void AnalysisSpec::EndOfEvent( const G4Event *anEvent )
       event.sftposx.push_back(xl/mm);
       event.sftposy.push_back(yl/mm);
       event.sftpath.push_back(path/mm);
-      event.sftbeta.push_back(beta);
-      event.sftmass.push_back(mass);
+      event.sftbeta.push_back(beta);//
+      event.sftmass.push_back(mass);// particle mass
     }
   }    
 
@@ -389,7 +389,7 @@ void AnalysisSpec::PrintHitsInformation( const G4Event *anEvent, std::ostream &o
     }
     //Type A
     if( aHit->GetEdep() > confMan->GetTrEdep() &&
-	confMan->DetectorType()==1 ){
+	confMan->DetectorType()>=1 ){
       ost.precision(5);
       ost << std::setw(12) << aHit->GetLayerID() 
 	  << std::setw(12) << aHit->GetSegmentID()

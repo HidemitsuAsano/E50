@@ -2,7 +2,8 @@
   r_SFT_B.cc
 
   Segmented SFT
-  -> round Fiber + Frame
+  -> Multi Caldding round Fiber + Frame
+  Kuraray's Scintillation fiber SCSF-78M is implemented
 
   Apr. 27th H.Asano
 */
@@ -81,9 +82,9 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
     new G4Box( Cname_+"Base", FrameSize/2.+FrameT, rSFT_B_Length/2.+FrameT, BaseThick/2. );
   G4Box *solidArea  = 
     new G4Box( Cname_+"Area", FrameSize/2., rSFT_B_Length/2., BaseThick/2.+0.001*mm );
-  //   new G4Box( Cname_+"Area", FrameSize/2., rSFT_B_Length/2., BaseThick/2. );
   
-
+  
+  //Note the local coordinate system is different from type A, C (square fiber) because of the symmetry.
   G4Tubs *solidLayer_core = 
     new G4Tubs( Cname_+"Layer", radius_core_in, radius_core_out, rSFT_B_Length/2.,0.*deg, 360.*deg);
   
@@ -149,340 +150,54 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
   //x: 0 
   //u: 1
   //v: 2
-  const G4int layer_conf[rSFT_nLayer]={0, 1, 2, 0, 1,2 ,1,2,0,1,2,0}; 
+  const G4int layer_conf[rSFT_nLayer]={0, 1, 2, 0, 1, 2, 1, 2, 0, 1, 2, 0}; 
   
   G4RotationMatrix *layrot[3];
   //x layer local -> global rotation
   layrot[0] = new G4RotationMatrix();
   layrot[0]->rotateX(90.*deg);
   
-  //u layer local ->global rotation
+  //u layer local -> global rotation
   layrot[1] = new G4RotationMatrix();
-  layrot[1]->rotateZ( (-1.000)*rSFT_TiltAngle);
+  layrot[1]->rotateZ( (-1.0)*rSFT_TiltAngle);
   layrot[1]->rotateX( 90.*deg);
   
-  //v layer local ->global rotation
+  //v layer local -> global rotation
   layrot[2] = new G4RotationMatrix();
-  layrot[2]->rotateZ( (1.000)*rSFT_TiltAngle);
+  layrot[2]->rotateZ( (1.0)*rSFT_TiltAngle);
   layrot[2]->rotateX( 90.*deg);
 
     
-    for( G4int iseg=1; iseg<=rSFT_SegNum; ++iseg ){ 
-      G4double ofsScinX=-rSFT_SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
-      for( G4int ilr=0; ilr<rSFT_nLayer;ilr++){
-        G4int conf = layer_conf[ilr];
-      
-        //set name
-        std::ostringstream os;
-        os << ilr+1;
-        G4String Lname = os.str();;//+"_"+1;
+  for( G4int iseg=1; iseg<=rSFT_SegNum; ++iseg ){ 
+    G4double ofsScinX=-rSFT_SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
+    for( G4int ilr=0; ilr<rSFT_nLayer;ilr++){
+      G4int conf = layer_conf[ilr];
 
-        //first sublayer
-        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-            Cname_+"Layer"+Lname+"_1_core", logLayer_core, physArea, false, 1000*detid[ilr]+iseg );
+      //set name
+      std::ostringstream os;
+      os << ilr+1;
+      G4String Lname = os.str();;//+"_"+1;
 
-        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-            Cname_+"Layer"+Lname+"_1_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+iseg );
+      //first sublayer
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
+          Cname_+"Layer"+Lname+"_1_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg-1 );
 
-        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-            Cname_+"Layer"+Lname+"_1_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+iseg );
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
+          Cname_+"Layer"+Lname+"_1_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg-1 );
 
-        //second sublayer
-        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.732051 ),
-  //      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.73205 ),
-     //   new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*2. ),
-            Cname_+"Layer"+Lname+"_2_core", logLayer_core, physArea, false, 1000*detid[ilr]+iseg+n_SFT_B_fiber );
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
+          Cname_+"Layer"+Lname+"_1_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg-1 );
 
-        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.732051 ),
-     //   new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*2. ),
-            Cname_+"Layer"+Lname+"_2_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+iseg+n_SFT_B_fiber );
+      //second sublayer
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.732051 ),
+          Cname_+"Layer"+Lname+"_2_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg );
 
-        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.732051 ),
-     //   new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*2.0 ),
-            Cname_+"Layer"+Lname+"_2_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+iseg+n_SFT_B_fiber );
-      }
-    /*
-    // Layer1-2 x
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer1*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer1_2_core", logLayer_core, physArea, false, 1000*id1+iseg+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer1*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer1_2_innerclad", logLayer_innerclad, physArea, false, 1000*id1+iseg+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer1*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer1_2_outerclad", logLayer_outerclad, physArea, false, 1000*id1+iseg+n_SFT_B_fiber);
-    
-    
-    // Layer2-1 u
-    layrot = new G4RotationMatrix();
-    layrot->rotateZ( (-1.)*rSFT_TiltAngle);
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer2*mm ),
-    		       Cname_+"Layer2_1_core", logLayer_core, physArea, false, 1000*id2+id );
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.732051 ),
+          Cname_+"Layer"+Lname+"_2_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg );
 
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer2*mm ),
-    		       Cname_+"Layer2_1_innerclad", logLayer_innerclad, physArea, false, 1000*id2+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer2*mm ),
-    		       Cname_+"Layer2_1_outerclad", logLayer_outerclad, physArea, false, 1000*id2+id );
-
-    // Layer2-2 u
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer2*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer2_2_core", logLayer_core, physArea, false, 1000*id2+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer2*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer2_2_innerclad", logLayer_innerclad, physArea, false, 1000*id2+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer2*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer2_2_outerclad", logLayer_outerclad, physArea, false, 1000*id2+id+n_SFT_B_fiber);
-    
-    
-    // Layer3-1 v
-    
-    layrot = new G4RotationMatrix();
-   
-    layrot->rotateZ( (1.)*rSFT_TiltAngle);
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer3*mm ),
-    		       Cname_+"Layer3_1_core", logLayer_core, physArea, false, 1000*id3+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer3*mm ),
-    		       Cname_+"Layer3_1_innerclad", logLayer_innerclad, physArea, false, 1000*id3+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer3*mm ),
-    		       Cname_+"Layer3_1_outerclad", logLayer_outerclad, physArea, false, 1000*id3+id );
-
-    // Layer3-2 v
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer3*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer3_2_core", logLayer_core, physArea, false, 1000*id3+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer3*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer3_2_innerclad", logLayer_innerclad, physArea, false, 1000*id3+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer3*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer3_2_outerclad", logLayer_outerclad, physArea, false, 1000*id3+id+n_SFT_B_fiber);
-    
-    
-
-    
-    // Layer4-1 x
-    layrot = new G4RotationMatrix();
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer4*mm ),
-    		       Cname_+"Layer4_1_core", logLayer_core, physArea, false, 1000*id4+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer4*mm ),
-    		       Cname_+"Layer4_1_innerclad", logLayer_innerclad, physArea, false, 1000*id4+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer4*mm ),
-    		       Cname_+"Layer4_1_outerclad", logLayer_outerclad, physArea, false, 1000*id4+id );
-
-    // Layer4-2 x
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer4*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer4_2_core", logLayer_core, physArea, false, 1000*id4+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer4*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer4_2_innerclad", logLayer_innerclad, physArea, false, 1000*id4+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer4*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer4_2_outerclad", logLayer_outerclad, physArea, false, 1000*id4+id+n_SFT_B_fiber);
-    
-    
-    // Layer5-1 u
-    layrot = new G4RotationMatrix();
-    layrot->rotateZ( (-1.)*rSFT_TiltAngle);
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer5*mm ),
-    		       Cname_+"Layer5_1_core", logLayer_core, physArea, false, 1000*id5+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer5*mm ),
-    		       Cname_+"Layer5_1_innerclad", logLayer_innerclad, physArea, false, 1000*id5+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer5*mm ),
-    		       Cname_+"Layer5_1_outerclad", logLayer_outerclad, physArea, false, 1000*id5+id );
-
-    // Layer5-2 u
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer5*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer5_2_core", logLayer_core, physArea, false, 1000*id5+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer5*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer5_2_innerclad", logLayer_innerclad, physArea, false, 1000*id5+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer5*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer5_2_outerclad", logLayer_outerclad, physArea, false, 1000*id5+id+n_SFT_B_fiber);
-    
-    
-    
-    // Layer6-1 v
-    
-    layrot = new G4RotationMatrix();
-    layrot->rotateZ( (1.)*rSFT_TiltAngle);
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer6*mm ),
-    		       Cname_+"Layer6_1_core", logLayer_core, physArea, false, 1000*id6+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer6*mm ),
-    		       Cname_+"Layer6_1_innerclad", logLayer_innerclad, physArea, false, 1000*id6+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer6*mm ),
-    		       Cname_+"Layer6_1_outerclad", logLayer_outerclad, physArea, false, 1000*id6+id );
-
-    // Layer6-2
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer6*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer6_2_core", logLayer_core, physArea, false, 1000*id6+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer6*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer6_2_innerclad", logLayer_innerclad, physArea, false, 1000*id6+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer6*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer6_2_outerclad", logLayer_outerclad, physArea, false, 1000*id6+id+n_SFT_B_fiber);
-    
-    
-    // Layer7-1 u
-    layrot = new G4RotationMatrix();
-    layrot->rotateZ( (-1.)*rSFT_TiltAngle);
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer7*mm ),
-    		       Cname_+"Layer7_1_core", logLayer_core, physArea, false, 1000*id7+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer7*mm ),
-    		       Cname_+"Layer7_1_innerclad", logLayer_innerclad, physArea, false, 1000*id7+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer7*mm ),
-    		       Cname_+"Layer7_1_outerclad", logLayer_outerclad, physArea, false, 1000*id7+id );
-
-    
-    // Layer7-2 u
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer7*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer7_2_core", logLayer_core, physArea, false, 1000*id7+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer7*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer7_2_innerclad", logLayer_innerclad, physArea, false, 1000*id7+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer7*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer7_2_outerclad", logLayer_outerclad, physArea, false, 1000*id7+id+n_SFT_B_fiber);
-    
-    
-    // Layer8-1 v
-    layrot = new G4RotationMatrix();
-    layrot->rotateZ( (1.)*rSFT_TiltAngle);
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer8*mm ),
-    		       Cname_+"Layer8_1_core", logLayer_core, physArea, false, 1000*id8+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer8*mm ),
-    		       Cname_+"Layer8_1_innerclad", logLayer_innerclad, physArea, false, 1000*id8+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer8*mm ),
-    		       Cname_+"Layer8_1_outerclad", logLayer_outerclad, physArea, false, 1000*id8+id );
-
-    // Layer8-2 v
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer8*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer8_2_core", logLayer_core, physArea, false, 1000*id8+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer8*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer8_2_innerclad", logLayer_innerclad, physArea, false, 1000*id8+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer8*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer8_2_outerclad", logLayer_outerclad, physArea, false, 1000*id8+id+n_SFT_B_fiber);
-    
-    
-    // Layer9-1 x
-    layrot = new G4RotationMatrix();
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer9*mm ),
-    		       Cname_+"Layer9_1_core", logLayer_core, physArea, false, 1000*id9+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer9*mm ),
-    		       Cname_+"Layer9_1_innerclad", logLayer_innerclad, physArea, false, 1000*id9+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer9*mm ),
-    		       Cname_+"Layer9_1_outerclad", logLayer_outerclad, physArea, false, 1000*id9+id );
-
-    // Layer9-2 x
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer9*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer9_2_core", logLayer_core, physArea, false, 1000*id9+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer9*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer9_2_innerclad", logLayer_innerclad, physArea, false, 1000*id9+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer9*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer9_2_outerclad", logLayer_outerclad, physArea, false, 1000*id9+id+n_SFT_B_fiber);
-    
-    
-
-    // Layer10-1 u
-    layrot = new G4RotationMatrix();
-    layrot->rotateZ( (-1.)*rSFT_TiltAngle);
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer10*mm ),
-    		       Cname_+"Layer10_1_core", logLayer_core, physArea, false, 1000*id10+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer10*mm ),
-    		       Cname_+"Layer10_1_innerclad", logLayer_innerclad, physArea, false, 1000*id10+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer10*mm ),
-    		       Cname_+"Layer10_1_outerclad", logLayer_outerclad, physArea, false, 1000*id10+id );
-
-    // Layer10-2 u
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer10*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer10_2_core", logLayer_core, physArea, false, 1000*id10+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer10*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer10_2_innerclad", logLayer_innerclad, physArea, false, 1000*id10+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer10*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer10_2_outerclad", logLayer_outerclad, physArea, false, 1000*id10+id+n_SFT_B_fiber);
-    
-    
-    // Layer11-1 v
-    layrot = new G4RotationMatrix();
-    layrot->rotateZ( (1.)*rSFT_TiltAngle);
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer11*mm ),
-    		       Cname_+"Layer11_1_core", logLayer_core, physArea, false, 1000*id11+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer11*mm ),
-    		       Cname_+"Layer11_1_innerclad", logLayer_innerclad, physArea, false, 1000*id11+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer11*mm ),
-    		       Cname_+"Layer11_1_outerclad", logLayer_outerclad, physArea, false, 1000*id11+id );
-
-    // Layer11-2 v
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer11*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer11_2_core", logLayer_core, physArea, false, 1000*id11+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer11*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer11_2_innerclad", logLayer_innerclad, physArea, false, 1000*id11+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer11*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer11_2_outerclad", logLayer_outerclad, physArea, false, 1000*id11+id+n_SFT_B_fiber);
-    
-    
-    
-    // Layer12-1 x
-    layrot = new G4RotationMatrix();
-    layrot->rotateX( 90.*deg);
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer12*mm ),
-    		       Cname_+"Layer12_1_core", logLayer_core, physArea, false, 1000*id12+id );
-
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer12*mm ),
-    		       Cname_+"Layer12_1_innerclad", logLayer_innerclad, physArea, false, 1000*id12+id );
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer12*mm ),
-    		       Cname_+"Layer12_1_outerclad", logLayer_outerclad, physArea, false, 1000*id12+id );
-
-    // Layer12-2
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer12*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer12_2_core", logLayer_core, physArea, false, 1000*id12+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer12*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer12_2_innerclad", logLayer_innerclad, physArea, false, 1000*id12+id+n_SFT_B_fiber);
-    
-    new G4PVPlacement( layrot, G4ThreeVector(  ofsScinX+offset_2ndlayer, 0.0*mm, -LzLayer12*mm+rSFT_B_Radius*1.732051 ),
-    		       Cname_+"Layer12_2_outerclad", logLayer_outerclad, physArea, false, 1000*id12+id+n_SFT_B_fiber);
-    
-    */    
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_B_Radius*1.732051 ),
+          Cname_+"Layer"+Lname+"_2_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg );
+    }
     
   }
 }

@@ -182,47 +182,47 @@ r_SFT_C::r_SFT_C( const G4String & Cname,
       if(conf==0){
         // first sub layer
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-            Cname_+"Layer"+Lname+"_1_clad", logLayerX_clad, physArea, false, 1000*detid[ilr]+id );
+            Cname_+"Layer"+Lname+"_1_clad", logLayerX_clad, physArea, false, 1000*detid[ilr]+2*id-1 );
 
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-            Cname_+"Layer"+Lname+"_1_core", logLayerX_core, physArea, false, 1000*detid[ilr]+id );
+            Cname_+"Layer"+Lname+"_1_core", logLayerX_core, physArea, false, 1000*detid[ilr]+2*id-1 );
 
         // second sub layer
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX+rSFT_C_LaysizeX/2.0, 0.0*mm, -LzLayer[ilr]+rSFT_C_LaysizeZ ),
-            Cname_+"Layer"+Lname+"_2_clad", logLayerX_clad, physArea, false, 1000*detid[ilr]+id+rSFT_C_SegNum );
+            Cname_+"Layer"+Lname+"_2_clad", logLayerX_clad, physArea, false, 1000*detid[ilr]+2*id );
 
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX+rSFT_C_LaysizeX/2.0, 0.0*mm, -LzLayer[ilr]+rSFT_C_LaysizeZ ),
-            Cname_+"Layer"+Lname+"_2_core", logLayerX_core, physArea, false, 1000*detid[ilr]+id+rSFT_C_SegNum );
+            Cname_+"Layer"+Lname+"_2_core", logLayerX_core, physArea, false, 1000*detid[ilr]+2*id );
 
       }else if(conf==1){
         // first sub layer
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-            Cname_+"Layer"+Lname+"_1_clad", logLayerU_clad, physArea, false, 1000*detid[ilr]+id );
+            Cname_+"Layer"+Lname+"_1_clad", logLayerU_clad, physArea, false, 1000*detid[ilr]+2*id-1 );
 
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-            Cname_+"Layer"+Lname+"_1_core", logLayerU_core, physArea, false, 1000*detid[ilr]+id );
+            Cname_+"Layer"+Lname+"_1_core", logLayerU_core, physArea, false, 1000*detid[ilr]+2*id-1 );
 
         // second sub layer
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX+rSFT_C_LaysizeX/2.0, 0.0*mm, -LzLayer[ilr]+rSFT_C_LaysizeZ ),
-            Cname_+"Layer"+Lname+"_2_clad", logLayerU_clad, physArea, false, 1000*detid[ilr]+id+rSFT_C_SegNum );
+            Cname_+"Layer"+Lname+"_2_clad", logLayerU_clad, physArea, false, 1000*detid[ilr]+2*id );
 
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX+rSFT_C_LaysizeX/2.0, 0.0*mm, -LzLayer[ilr]+rSFT_C_LaysizeZ ),
-            Cname_+"Layer"+Lname+"_2_core", logLayerU_core, physArea, false, 1000*detid[ilr]+id+rSFT_C_SegNum );
+            Cname_+"Layer"+Lname+"_2_core", logLayerU_core, physArea, false, 1000*detid[ilr]+2*id );
 
       }else if(conf==2){
         // first sub layer
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-            Cname_+"Layer"+Lname+"_1_clad", logLayerV_clad, physArea, false, 1000*detid[ilr]+id );
+            Cname_+"Layer"+Lname+"_1_clad", logLayerV_clad, physArea, false, 1000*detid[ilr]+2*id-1 );
 
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-            Cname_+"Layer"+Lname+"_1_core", logLayerV_core, physArea, false, 1000*detid[ilr]+id );
+            Cname_+"Layer"+Lname+"_1_core", logLayerV_core, physArea, false, 1000*detid[ilr]+2*id-1 );
 
         // second sub layer
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX+rSFT_C_LaysizeX/2.0, 0.0*mm, -LzLayer[ilr]+rSFT_C_LaysizeZ ),
-            Cname_+"Layer"+Lname+"_2_clad", logLayerV_clad, physArea, false, 1000*detid[ilr]+id+rSFT_C_SegNum );
+            Cname_+"Layer"+Lname+"_2_clad", logLayerV_clad, physArea, false, 1000*detid[ilr]+2*id);
 
         new G4PVPlacement( 0, G4ThreeVector(  ofsScinX+rSFT_C_LaysizeX/2.0, 0.0*mm, -LzLayer[ilr]+rSFT_C_LaysizeZ ),
-            Cname_+"Layer"+Lname+"_2_core", logLayerV_core, physArea, false, 1000*detid[ilr]+id+rSFT_C_SegNum );
+            Cname_+"Layer"+Lname+"_2_core", logLayerV_core, physArea, false, 1000*detid[ilr]+2*id);
       }
     }//ilr
   }//iseg

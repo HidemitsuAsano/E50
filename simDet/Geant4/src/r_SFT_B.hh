@@ -37,7 +37,6 @@ public:
 	   G4Material *matBox );
   ~r_SFT_B() {}; 
      
-     static const G4int n_SFT_B_fiber = 10;
 private:
   r_SFT_B( const r_SFT_B & );
   r_SFT_B & operator = ( const r_SFT_B & );

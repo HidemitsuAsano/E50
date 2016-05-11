@@ -54,10 +54,17 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
   const G4VTouchable *theTouchable =
     aStep->GetPreStepPoint()->GetTouchable();
   G4VPhysicalVolume *vol=theTouchable->GetVolume();
-  G4String hitName = vol->GetName();
-  G4int hitLayer = theTouchable->GetReplicaNumber();
-  G4int hitSegment = vol->GetCopyNo();
-
+  G4String hitName = vol->GetName();// volume name
+  G4int hitLayer = theTouchable->GetReplicaNumber();// 
+  G4int hitSegment = vol->GetCopyNo();// same number as above
+  
+  /*
+  {
+    G4cout << "hitName" << hitName << G4endl;
+    G4cout << "hitLayer" << hitLayer << G4endl;
+    G4cout << "hitSegment" << hitSegment << G4endl;
+  }
+  */
   G4int nHits = SFTCollection->entries();
   G4ThreeVector hitpos = aStep->GetPreStepPoint()->GetPosition();
   G4double hittime = aTrack->GetGlobalTime();
@@ -98,8 +105,7 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
   if( confMan->DetectorType()==0 ){
     layerId= hitLayer;
     segId  = hitSegment;
-  }
-  if( confMan->DetectorType()==1 ){
+  }else if( confMan->DetectorType()>=1 ){
     layerId= hitLayer/1000;
     segId  = hitSegment-1000*layerId;
   }  
