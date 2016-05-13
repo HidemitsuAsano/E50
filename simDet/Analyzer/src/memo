@@ -1,0 +1,27 @@
+//flow of fiber geometry
+
+TrGeomRecord -- double WirePos(double wire) ->assing wire position by geometric calculation
+
+<-> WireNumber (recover wire number from geometry)
+
+
+This function is wrapped by  
+double calcWirePosition(int lnum, double wire) in TrGeomMan class
+
+//I think we do not need to create separate classes
+
+The calcWirePosition is called in 
+bool TrHit::CalcObservables( void )
+
+
+CalcObservbables is called in 
+
+bool TrAnalyzer::DecodeRawHits( RawData *rawData) 
+
+
+TrAnalyzer::DecodeRawHits is called in 
+
+bool EventBeamTracking::ProcessingNormal(std::ifstream &In)  UserBeamTracking.cc
+
+
+
