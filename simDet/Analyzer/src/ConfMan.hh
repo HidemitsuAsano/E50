@@ -43,7 +43,7 @@ public:
   void SetFileName( const std::string & filename ) { ConfFileName_=filename; }
   VEvent* EventAllocator();
 
-  bool AnaMode( void ) const { return anaMode_; }
+  int AnaMode( void ) const { return anaMode_; }
 
   //Tr
   TrGeomMan *GetTrGeomManager( void ) { return TrGeomManager_; }

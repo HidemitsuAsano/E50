@@ -96,7 +96,7 @@ public:
 
 private:
   bool status_;
-  double x0_, y0_, u0_, v0_, u1_, v1_;
+  double x0_, y0_, u0_, v0_, u1_, v1_; // x0_, y0_ .. : fitting results of beam position at (0,0,0) in SFT coordinate system.
   double a_,b_,c_;
   double chisqr_;
   bool gftstatus_;

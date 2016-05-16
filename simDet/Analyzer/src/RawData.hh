@@ -31,7 +31,7 @@ private:
 
   HodoRHitContainer T0RHC;
 
-  TrRHitContainer SFTRHC[PlMaxSFT+1];
+  TrRHitContainer SFTRHC[PlMaxSFT+1];//vector of data object class for a single track in each SFT layer, PlMaxSFT: max layer number of SFT (=12)
 
 public:
   RawData();

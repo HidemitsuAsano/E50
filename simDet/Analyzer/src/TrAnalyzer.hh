@@ -29,7 +29,7 @@ private:
 private:
   TrHitContainer SFTTHC[NumOfLayersSFT+1];
 
-  std::vector <TrLocalTrack *> TrackSFTTCol;
+  std::vector <TrLocalTrack *> TrackSFTTCol;//array of SFT track class 
 
 public:
   bool DecodeRawHits( RawData *rawData );

@@ -4,6 +4,10 @@
   2016/2  K.Shirotori
 */
 
+//added comments by H.Asano
+//This is the data object class of a single hit for each layer of trackers (SFT and DC ?) 
+//actual values is stored in the RawData.cc
+
 #ifndef TrRawHit_h 
 #define TrRawHit_h
 
