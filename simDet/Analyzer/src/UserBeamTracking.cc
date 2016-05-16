@@ -98,7 +98,7 @@ struct Event{
   std::vector<int>    t0pid;
   std::vector<double> t0beta;
 
-  //Local tracking
+  //Local tracking ( search beam position at (0, 0, 0) in SFT global coordinate system.
   int    ntr;
   std::vector<int>    layer;
   std::vector<double> chisqr;

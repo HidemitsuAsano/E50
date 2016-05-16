@@ -4,6 +4,10 @@
   2012/5  K.Shirotori
 */
 
+
+//  H. Asano
+// purpose of local tracking : compare primary beam position and expected position obtained by fitting, 
+
 #include "TrLocalTrack.hh"
 #include "TrLTrackHit.hh"
 #include "TrGeomMan.hh"

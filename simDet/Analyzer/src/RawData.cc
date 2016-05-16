@@ -4,6 +4,13 @@
   2016/4  K.Shirotori
 */
 
+//Added Comments H. Asano
+//role of this class
+//
+//1. decodes text files generated from GEANT4 simulation
+//2. store Primary, T0 and SFT data into vectors
+//The SFT data is stored in TrRawhit class which is 
+
 #include "RawData.hh"
 #include "GetNumberFromKernelEntropyPool.hh"
 #include "Random/Randomize.h"
@@ -39,7 +46,7 @@ const double Rad2Deg = 180./acos(-1.);
 RawData::RawData():
   PrimHC(0),
   T0RHC(0),
-  SFTRHC()
+  SFTRHC() //vector of data object class for a single track in SFT
 {}
 
 RawData::~RawData()
@@ -257,7 +264,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
     ////////////////////////////////////////////////////////////////////////////////
     
     if( type==FullTrackF ){ 
-      while( type!=FullTrackFEnd ){ 
+      while( type!=FullTrackFEnd ){ //loop over all tracks from here
 	In >> type;
 	
 #if check1
@@ -273,11 +280,13 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	  while( lnum!=FullTrackTFEnd ){
 	    In >> lnum;
 	    if( lnum==FullTrackTFEnd ) break;
-
+      
+      //Type 0 simple detector
 	    if( confMan->AnaMode()==0 ){
 	      In >> x >> y;
 	      
 	      //SFT
+        //PlMinSFT = 1 , PLMaxSFT=12 , PlOffsSFT=0; defined in detectorID.hh
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
 		double angle = geomMan.GetTiltAngle( lnum );
 		double l = x*cos(angle*Deg2Rad) + y*sin(angle*Deg2Rad);
@@ -285,12 +294,13 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 		AddTrRHit(SFTRHC[lnum-PlOffsSFT], lnum, wire, x, y, dl);
 	      }
 	    }	    
-
-	    if( confMan->AnaMode()==1 ){
+      
+      //Type A, B ,C realistic detector
+	    if( confMan->AnaMode()>=1 ){
 	      In >> wire;
-	      x=0.0; y=0.0; dl=0.0;
+	      x=0.0; y=0.0; dl=0.0;//
 	      
-	      //SFT
+	      //SFT only stores layer number and segment id
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
 		AddTrRHit(SFTRHC[lnum-PlOffsSFT], lnum, wire, x, y, dl);
 	      }

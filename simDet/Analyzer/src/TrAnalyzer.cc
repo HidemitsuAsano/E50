@@ -83,10 +83,10 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	  delete hit;
       }
     }
-  }
+  }//if Type 0
 
-  //Type A
-  if( confMan->AnaMode()==1 ){
+  //Type A , B , C
+  if( confMan->AnaMode()>=1 ){
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
       const TrRHitContainer &cont =rawData->GetSFTRHC(layer);
       int nh=cont.size();
@@ -98,7 +98,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
 	int nhpos= rhit->GetSize();
 	for( int j=0; j<nhpos; ++j ){
-	  hit->SetPos( rhit->WireId() );
+	  hit->SetPos( rhit->WireId() ); // set segment ID as a hit position ???
 	  
 #if check1
 	  std::cout<< rhit->LayerId() << " " << rhit->WireId(j) << std::endl;
@@ -106,13 +106,13 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	}
 	if(!hit) continue; 
 	
-	if(hit->CalcObservables())
+	if(hit->CalcObservables())//hit position is calculated in this function, calling TrGeomRecord
 	  SFTTHC[layer].push_back(hit);
 	else
 	  delete hit;
       }
     }
-  }
+  }//if Type A, B ,C
 
 
   return true;

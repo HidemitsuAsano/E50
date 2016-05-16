@@ -82,11 +82,12 @@ bool TrHit::CalcObservables( void )
 //     if (status == false) Status = status;
     
 //     dt_.push_back(dtime);
-
+    
+    //Type 0 detector
     if( confMan->AnaMode()==0 ){
       dl_.push_back(pos_[i]);
-    }
-    if( confMan->AnaMode()==1 ){
+    }//Type A, B, C detector
+    else if( confMan->AnaMode()>=1 ){
       dl_.push_back(0.0);
     }
     

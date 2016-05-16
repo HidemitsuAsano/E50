@@ -2307,7 +2307,7 @@ int nh=HC.size();
 	if( confMan->AnaMode()==0 ){
 	  Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,pos,m) ) );
 	}
-	if( confMan->AnaMode()==1 ){
+	if( confMan->AnaMode()>=1 ){//clustering is assumed  ?
 	  Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,wp,m) ) );
 	}
       }

@@ -141,7 +141,10 @@ const TrGeomRecord * TrGeomMan::GetRecord( int lnum ) const
   }
 }
  
-  
+
+//calculate wire local x position from geant geometry. 
+//So far, only useful in Type A. 
+//Not in use for B, C
 double TrGeomMan::calcWirePosition( int lnum, double wire ) const
 {
   static const std::string funcname = "[TrGeomMan::calcWirePosition()]";
