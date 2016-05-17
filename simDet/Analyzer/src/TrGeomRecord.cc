@@ -10,6 +10,7 @@
 
 const double Deg2Rad = acos(-1.)/180.;
 
+//not used in the current code
 void TrGeomRecord::calcVectors( void )
 {
   double ct1=cos(rotAngle1_*Deg2Rad), st1=sin(rotAngle1_*Deg2Rad);

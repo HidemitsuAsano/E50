@@ -86,7 +86,7 @@ struct Event{
   //SFT
   int    sftnhits;
   std::vector<int> sftlayer;
-  std::vector<double> sftposx, sftposy;
+  std::vector<double> sftposx, sftposy;//always 0 in type A,B,C
   std::vector<double> sftdl;
 
   //T0
@@ -340,8 +340,8 @@ bool ConfMan:: InitializeHistograms()
   //SFT
   tree->Branch("sftnhits", &event.sftnhits);
   tree->Branch("sftlayer", &event.sftlayer);
-  tree->Branch("sftposx", &event.sftposx);
-  tree->Branch("sftposy", &event.sftposy);
+  tree->Branch("sftposx", &event.sftposx);//hit position of raw hits
+  tree->Branch("sftposy", &event.sftposy);//hit position if raw hits
   tree->Branch("sftdl", &event.sftdl);
 
   //T0
