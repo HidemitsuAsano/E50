@@ -16,7 +16,7 @@ RTINCLUDE	= `root-config --cflags`
 RTLIBS		= `root-config --libs`
 #
 #
-CFLAGS      = -g -O2 
+CFLAGS      = -g -O2 -Wall
 #-Wall 
 #DFLAGS      = -Df2cFortran -Dextname -DDEBUG 
 
