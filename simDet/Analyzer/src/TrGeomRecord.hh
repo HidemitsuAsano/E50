@@ -21,7 +21,7 @@ public:
 		double w0, double dd, double ofs )
     : id_(id), name_(name), pos_(x,y,z), tiltAngle_(ta),
       rotAngle1_(ra1), rotAngle2_(ra2),
-      length_(length), resol_(resol), w0_(w0), dd_(dd), ofs_(ofs)
+      length_(length), resol_(resol), w0_(w0), dd_(dd), offset_(ofs)
   { calcVectors(); }
 
   TrGeomRecord( int id, const std::string &name,
@@ -30,8 +30,9 @@ public:
 		double w0, double dd, double ofs )
     : id_(id), name_(name), pos_(x,y,z), tiltAngle_(ta),
       rotAngle1_(ra1), rotAngle2_(ra2),
-      length_(length), resol_(resol), w0_(w0), dd_(dd), ofs_(ofs)
+      length_(length), resol_(resol), w0_(w0), dd_(dd), offset_(ofs)
   { calcVectors(); }
+  
 
   TrGeomRecord( int id, const char *name,
                 const ThreeVector pos, double ta,
@@ -39,7 +40,7 @@ public:
 		double w0, double dd, double ofs )
     : id_(id), name_(name), pos_(pos),  tiltAngle_(ta),
       rotAngle1_(ra1), rotAngle2_(ra2),
-      length_(length), resol_(resol), w0_(w0), dd_(dd), ofs_(ofs)
+      length_(length), resol_(resol), w0_(w0), dd_(dd), offset_(ofs)
   { calcVectors(); }
 
   TrGeomRecord( int id, const std::string &name,
@@ -48,12 +49,13 @@ public:
 		double w0, double dd, double ofs )
     : id_(id), name_(name), pos_(pos),  tiltAngle_(ta),
       rotAngle1_(ra1), rotAngle2_(ra2),
-      length_(length), resol_(resol), w0_(w0), dd_(dd), ofs_(ofs)
+      length_(length), resol_(resol), w0_(w0), dd_(dd), offset_(ofs)
   { calcVectors(); }
-
+  
   ~TrGeomRecord() {}
   TrGeomRecord( const TrGeomRecord & );
   TrGeomRecord & operator=( const TrGeomRecord );
+
 public:
   const ThreeVector & Position( void ) const { return pos_; }
   ThreeVector NormalVector( void ) const 
@@ -81,9 +83,9 @@ public:
   double dzdt( void ) const { return dzdt_; }
   double dzdu( void ) const { return dzdu_; }
 
-  double WirePos( double wire ) const 
-  { return dd_*(wire - w0_)+ofs_; }   
-  //{ return dd_*(-wire + w0_)+ofs_; }
+  double WirePos( double wire ) const;
+
+  //{ return dd_*(-wire + w0_)+offset_; }
   int WireNumber( double pos ) const; 
 
 private:
@@ -96,7 +98,7 @@ private:
   double tiltAngle_, rotAngle1_, rotAngle2_;
   double length_;
   double resol_;
-  double w0_, dd_, ofs_;
+  double w0_, dd_, offset_;
 
   double dxds_, dxdt_, dxdu_;
   double dyds_, dydt_, dydu_;

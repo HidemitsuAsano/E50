@@ -40,7 +40,7 @@ public:
 
   int GetNtracksSFTT( void ) const  { return TrackSFTTCol.size(); }
 
-  inline TrLocalTrack * GetTrackSFTT( int i ) const;
+  inline TrLocalTrack * GetTrackSFTT(unsigned int i ) const;
 
   bool ReCalcTrHits( bool applyRecursively=false ); 
   bool ReCalcTrackSFTT( bool applyRecursively=false ); 
@@ -61,7 +61,7 @@ inline const TrHitContainer & TrAnalyzer::GetSFTTHC( int layer ) const
   return SFTTHC[layer];
 }
 
-inline TrLocalTrack * TrAnalyzer::GetTrackSFTT( int i ) const
+inline TrLocalTrack * TrAnalyzer::GetTrackSFTT( unsigned int i ) const
 {
   if( i>=0 && i<TrackSFTTCol.size() )
     return TrackSFTTCol[i];

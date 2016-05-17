@@ -27,9 +27,9 @@ public:
 
   bool Initialize( void );
   bool Initialize( const char *filename )
-  { filename_=filename; Initialize(); }
+  { filename_=filename; return Initialize(); }
   bool Initialize( const std::string &filename )
-  { filename_=filename; Initialize(); }
+  { filename_=filename; return Initialize(); }
 
   static TrGeomMan & GetInstance( void );
   double GetLocalZ( int lnum ) const;

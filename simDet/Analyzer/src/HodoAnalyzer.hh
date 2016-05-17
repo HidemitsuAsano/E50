@@ -44,7 +44,7 @@ public:
 
   int GetNClustersT1( void ) const { return T0ClCont.size(); };
 
-  inline HodoCluster * GetClusterT0( int i ) const;
+  inline HodoCluster * GetClusterT0( unsigned int i ) const;
 
   bool ReCalcT0Hits( bool applyRecursively=false );
   
@@ -60,7 +60,7 @@ private:
 			     double maxTimeDif );
 };
 
-inline HodoCluster * HodoAnalyzer::GetClusterT0( int i ) const
+inline HodoCluster * HodoAnalyzer::GetClusterT0( unsigned int i ) const
 {
   if( i>=0 && i<T0ClCont.size() )
     return T0ClCont[i];

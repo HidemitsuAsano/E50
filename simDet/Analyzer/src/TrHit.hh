@@ -32,9 +32,9 @@ private:
 
 private:
   int layer_;
-  double wire_;
-  DoubleVec pos_;
-  DoubleVec dt_, dl_;
+  double wire_;//here wire means one segment of scintillating fiber 
+  DoubleVec pos_;//vector of hit position in the layer local coordinate
+  DoubleVec dt_, dl_;//drift time , drift length
 //   IntVec tdc_;
 //   IntVec trailing_;
 //   DoubleVec dt_, dl_;
