@@ -108,8 +108,8 @@ int LocalTrackSearch( const TrHitContainer * HC,
   int nbefore=TrackCont.size();
   for( int i=0; i<nbefore; ++i ){
     TrLocalTrack *tp=TrackCont[i];
-    int nh=tp->GetNHit(); 
-    for( int j=0; j<nh; ++j ) {
+    int nhit=tp->GetNHit(); 
+    for( int j=0; j<nhit; ++j ) {
       //if(tp->GetHit(j)->showFlags()) 
 	tp->GetHit(j)->clearFlags();
 
@@ -158,13 +158,13 @@ int LocalTrackSearch( const TrHitContainer * HC,
   // Delete Duplicated Tracks
   for( int i=0; i<int(TrackCont.size()); ++i ){
     TrLocalTrack *tp=TrackCont[i];
-    int nh=tp->GetNHit();
-    for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+    int nhit=tp->GetNHit();
+    for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
 
     for( int i2=TrackCont.size()-1; i2>i; --i2 ){
       TrLocalTrack *tp2=TrackCont[i2];
-      int nh2=tp2->GetNHit(), flag=0;
-      for( int j=0; j<nh2; ++j )
+      int nhit2=tp2->GetNHit(), flag=0;
+      for( int j=0; j<nhit2; ++j )
 	if( tp2->GetHit(j)->showFlags() ) ++flag;
       if(flag){
 	delete tp2;
@@ -177,8 +177,8 @@ int LocalTrackSearch( const TrHitContainer * HC,
     int nn=TrackCont.size();
     for(int i=0; i<nn; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	int lnum = tp->GetHit(j)->GetLayer();
 	double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
 	tp->GetHit(j)->SetCalPosition(tp->GetX(zz), tp->GetY(zz));
@@ -287,8 +287,8 @@ int LocalTrackSearchQ( const TrHitContainer * HC,
   int nbefore=TrackCont.size();
   for( int i=0; i<nbefore; ++i ){
     TrLocalTrack *tp=TrackCont[i];
-    int nh=tp->GetNHit(); 
-    for( int j=0; j<nh; ++j ) {
+    int nhit=tp->GetNHit(); 
+    for( int j=0; j<nhit; ++j ) {
       //if(tp->GetHit(j)->showFlags()) 
 	tp->GetHit(j)->clearFlags();
     }
@@ -336,13 +336,13 @@ int LocalTrackSearchQ( const TrHitContainer * HC,
   // Delete Duplicated Tracks
   for( int i=0; i<int(TrackCont.size()); ++i ){
     TrLocalTrack *tp=TrackCont[i];
-    int nh=tp->GetNHit();
-    for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+    int nhit=tp->GetNHit();
+    for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
 
     for( int i2=TrackCont.size()-1; i2>i; --i2 ){
       TrLocalTrack *tp2=TrackCont[i2];
-      int nh2=tp2->GetNHit(), flag=0;
-      for( int j=0; j<nh2; ++j )
+      int nhit2=tp2->GetNHit(), flag=0;
+      for( int j=0; j<nhit2; ++j )
 	if( tp2->GetHit(j)->showFlags() ) ++flag;
       if(flag){
 	delete tp2;
@@ -355,8 +355,8 @@ int LocalTrackSearchQ( const TrHitContainer * HC,
     int nn=TrackCont.size();
     for(int i=0; i<nn; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	int lnum = tp->GetHit(j)->GetLayer();
 	double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
 	tp->GetHit(j)->SetCalPosition(tp->GetX(zz), tp->GetY(zz));
@@ -586,8 +586,8 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     nbeforeV=TrackContV.size();
     for( int i=0; i<nbeforeV; ++i ){
       TrLocalTrack *tp=TrackContV[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->clearFlags();
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->clearFlags();
     }
   }
 
@@ -595,8 +595,8 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     nbeforeX=TrackContX.size();
     for( int i=0; i<nbeforeX; ++i ){
       TrLocalTrack *tp=TrackContX[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->clearFlags();
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->clearFlags();
     }
   }
 
@@ -604,8 +604,8 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     nbeforeU=TrackContU.size();
     for( int i=0; i<nbeforeU; ++i ){
       TrLocalTrack *tp=TrackContU[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->clearFlags();
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->clearFlags();
     }
   }
 
@@ -732,20 +732,20 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     /* V Plane  */  
     for( int i=0; i<int(TrackContV.size()); ++i ){
       TrLocalTrack *tp=TrackContV[i];
-      int nh=tp->GetNHit();
+      int nhit=tp->GetNHit();
       if(chiV > tp->GetChiSquare()) chiV = tp->GetChiSquare();
-      //      if(nh==nV && chiV > tp->GetChiSquare()) chiV = tp->GetChiSquare();
+      //      if(nhit==nV && chiV > tp->GetChiSquare()) chiV = tp->GetChiSquare();
       else{
 	delete tp;
 	TrackContV.erase(TrackContV.begin()+i);
 	continue;
       }
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
       
       for( int i2=TrackContV.size()-1; i2>i; --i2 ){
 	TrLocalTrack *tp2=TrackContV[i2];
-	int nh2=tp2->GetNHit(), flag=0;
-	for( int j=0; j<nh2; ++j )
+	int nhit2=tp2->GetNHit(), flag=0;
+	for( int j=0; j<nhit2; ++j )
 	  if( tp2->GetHit(j)->showFlags() ) ++flag;
 	if((flag) && tp2->GetChiSquare()>ChisquareCutVXU){
 	  delete tp2;
@@ -756,20 +756,20 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     /* X Plane  */    
     for( int i=0; i<int(TrackContX.size()); ++i ){
       TrLocalTrack *tp=TrackContX[i];
-      int nh=tp->GetNHit();
+      int nhit=tp->GetNHit();
       if(chiX > tp->GetChiSquare()) chiX = tp->GetChiSquare();
-      //      if(nh==nX && chiX > tp->GetChiSquare()) chiX = tp->GetChiSquare();
+      //      if(nhit==nX && chiX > tp->GetChiSquare()) chiX = tp->GetChiSquare();
       else{
 	delete tp;
 	TrackContX.erase(TrackContX.begin()+i);
 	continue;
       }
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
       
       for( int i2=TrackContX.size()-1; i2>i; --i2 ){
 	TrLocalTrack *tp2=TrackContX[i2];
-	int nh2=tp2->GetNHit(), flag=0;
-	for( int j=0; j<nh2; ++j )
+	int nhit2=tp2->GetNHit(), flag=0;
+	for( int j=0; j<nhit2; ++j )
 	  if( tp2->GetHit(j)->showFlags() ) ++flag;
 	if((flag) && tp2->GetChiSquare()>ChisquareCutVXU){
 	  delete tp2;
@@ -780,20 +780,20 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     /* U Plane  */    
     for( int i=0; i<int(TrackContU.size()); ++i ){
       TrLocalTrack *tp=TrackContU[i];
-      int nh=tp->GetNHit();
+      int nhit=tp->GetNHit();
       if(chiU > tp->GetChiSquare()) chiU = tp->GetChiSquare();
-      //      if(nh==nU && chiU > tp->GetChiSquare()) chiU = tp->GetChiSquare();
+      //      if(nhit==nU && chiU > tp->GetChiSquare()) chiU = tp->GetChiSquare();
       else{
 	delete tp;
 	TrackContU.erase(TrackContU.begin()+i);
 	continue;
       }
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
       
       for( int i2=TrackContU.size()-1; i2>i; --i2 ){
 	TrLocalTrack *tp2=TrackContU[i2];
-	int nh2=tp2->GetNHit(), flag=0;
-	for( int j=0; j<nh2; ++j )
+	int nhit2=tp2->GetNHit(), flag=0;
+	for( int j=0; j<nhit2; ++j )
 	  if( tp2->GetHit(j)->showFlags() ) ++flag;
 	if((flag) && tp2->GetChiSquare()>ChisquareCutVXU){
 	  delete tp2;
@@ -1110,8 +1110,8 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     int nbefore=TrackCont.size();
     for( int i=0; i<nbefore; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	tp->GetHit(j)->clearFlags();
       }
     }
@@ -1144,17 +1144,17 @@ int LocalTrackSearch2( const TrHitContainer * HC,
   // Delete Tracks about (Nhit1 = Nhit2  && chi1 < chi2)
   for( int i=0; i<int(TrackCont.size()); ++i ){
     TrLocalTrack *tp=TrackCont[i];
-    int nh=tp->GetNHit();
+    int nhit=tp->GetNHit();
       double chi=tp->GetChiSquare();
-    for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+    for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
     
     for( int i2=TrackCont.size()-1; i2>i; --i2 ){
       TrLocalTrack *tp2=TrackCont[i2];
-      int nh2=tp2->GetNHit(), flag=0;
+      int nhit2=tp2->GetNHit(), flag=0;
       double chi2=tp2->GetChiSquare();
-      for( int j=0; j<nh2; ++j )
+      for( int j=0; j<nhit2; ++j )
 	if( tp2->GetHit(j)->showFlags() ) ++flag;
-      if((flag) && ((nh==nh2) && (chi<=chi2))){
+      if((flag) && ((nhit==nhit2) && (chi<=chi2))){
         delete tp2;
 	TrackCont.erase(TrackCont.begin()+i2);
       }
@@ -1190,8 +1190,8 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     int nbefore=TrackCont.size();
     for( int i=0; i<nbefore; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	tp->GetHit(j)->clearFlags();
       }
     }
@@ -1222,12 +1222,12 @@ int LocalTrackSearch2( const TrHitContainer * HC,
   
   for( int i=0; i<int(TrackCont.size()); ++i ){
     TrLocalTrack *tp=TrackCont[i];
-    int nh=tp->GetNHit();
-    for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+    int nhit=tp->GetNHit();
+    for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
     for( int i2=TrackCont.size()-1; i2>i; --i2 ){
       TrLocalTrack *tp2=TrackCont[i2];
-      int nh2=tp2->GetNHit(), flag=0;  
-      for( int j=0; j<nh2; ++j )
+      int nhit2=tp2->GetNHit(), flag=0;  
+      for( int j=0; j<nhit2; ++j )
 	if( tp2->GetHit(j)->showFlags() ) ++flag;
       if(flag){
 	delete tp2;
@@ -1241,8 +1241,8 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     int nbefore=TrackCont.size();
     for( int i=0; i<nbefore; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	tp->GetHit(j)->clearFlags();
       }
     }
@@ -1253,8 +1253,8 @@ int LocalTrackSearch2( const TrHitContainer * HC,
     int nn=TrackCont.size();
     for(int i=0; i<nn; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	int lnum = tp->GetHit(j)->GetLayer();
 	double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
 	tp->GetHit(j)->SetCalPosition(tp->GetX(zz), tp->GetY(zz));
@@ -1485,8 +1485,8 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     nbeforeV=TrackContV.size();
     for( int i=0; i<nbeforeV; ++i ){
       TrLocalTrack *tp=TrackContV[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->clearFlags();
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->clearFlags();
     }
   }
 
@@ -1494,8 +1494,8 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     nbeforeX=TrackContX.size();
     for( int i=0; i<nbeforeX; ++i ){
       TrLocalTrack *tp=TrackContX[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->clearFlags();
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->clearFlags();
     }
   }
 
@@ -1503,8 +1503,8 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     nbeforeU=TrackContU.size();
     for( int i=0; i<nbeforeU; ++i ){
       TrLocalTrack *tp=TrackContU[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->clearFlags();
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->clearFlags();
     }
   }
 
@@ -1631,20 +1631,20 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     /* V Plane  */  
     for( int i=0; i<int(TrackContV.size()); ++i ){
       TrLocalTrack *tp=TrackContV[i];
-      int nh=tp->GetNHit();
+      int nhit=tp->GetNHit();
       if(chiV > tp->GetChiSquare()) chiV = tp->GetChiSquare();
-      //      if(nh==nV && chiV > tp->GetChiSquare()) chiV = tp->GetChiSquare();
+      //      if(nhit==nV && chiV > tp->GetChiSquare()) chiV = tp->GetChiSquare();
       else{
 	delete tp;
 	TrackContV.erase(TrackContV.begin()+i);
 	continue;
       }
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
       
       for( int i2=TrackContV.size()-1; i2>i; --i2 ){
 	TrLocalTrack *tp2=TrackContV[i2];
-	int nh2=tp2->GetNHit(), flag=0;
-	for( int j=0; j<nh2; ++j )
+	int nhit2=tp2->GetNHit(), flag=0;
+	for( int j=0; j<nhit2; ++j )
 	  if( tp2->GetHit(j)->showFlags() ) ++flag;
 	if((flag) && tp2->GetChiSquare()>ChisquareCutVXU){
 	  delete tp2;
@@ -1655,20 +1655,20 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     /* X Plane  */    
     for( int i=0; i<int(TrackContX.size()); ++i ){
       TrLocalTrack *tp=TrackContX[i];
-      int nh=tp->GetNHit();
+      int nhit=tp->GetNHit();
       if(chiX > tp->GetChiSquare()) chiX = tp->GetChiSquare();
-      //      if(nh==nX && chiX > tp->GetChiSquare()) chiX = tp->GetChiSquare();
+      //      if(nhit==nX && chiX > tp->GetChiSquare()) chiX = tp->GetChiSquare();
       else{
 	delete tp;
 	TrackContX.erase(TrackContX.begin()+i);
 	continue;
       }
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
       
       for( int i2=TrackContX.size()-1; i2>i; --i2 ){
 	TrLocalTrack *tp2=TrackContX[i2];
-	int nh2=tp2->GetNHit(), flag=0;
-	for( int j=0; j<nh2; ++j )
+	int nhit2=tp2->GetNHit(), flag=0;
+	for( int j=0; j<nhit2; ++j )
 	  if( tp2->GetHit(j)->showFlags() ) ++flag;
 	if((flag) && tp2->GetChiSquare()>ChisquareCutVXU){
 	  delete tp2;
@@ -1679,20 +1679,20 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     /* U Plane  */    
     for( int i=0; i<int(TrackContU.size()); ++i ){
       TrLocalTrack *tp=TrackContU[i];
-      int nh=tp->GetNHit();
+      int nhit=tp->GetNHit();
       if(chiU > tp->GetChiSquare()) chiU = tp->GetChiSquare();
-      //      if(nh==nU && chiU > tp->GetChiSquare()) chiU = tp->GetChiSquare();
+      //      if(nhit==nU && chiU > tp->GetChiSquare()) chiU = tp->GetChiSquare();
       else{
 	delete tp;
 	TrackContU.erase(TrackContU.begin()+i);
 	continue;
       }
-      for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+      for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
       
       for( int i2=TrackContU.size()-1; i2>i; --i2 ){
 	TrLocalTrack *tp2=TrackContU[i2];
-	int nh2=tp2->GetNHit(), flag=0;
-	for( int j=0; j<nh2; ++j )
+	int nhit2=tp2->GetNHit(), flag=0;
+	for( int j=0; j<nhit2; ++j )
 	  if( tp2->GetHit(j)->showFlags() ) ++flag;
 	if((flag) && tp2->GetChiSquare()>ChisquareCutVXU){
 	  delete tp2;
@@ -2019,8 +2019,8 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     int nbefore=TrackCont.size();
     for( int i=0; i<nbefore; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	tp->GetHit(j)->clearFlags();
       }
     }
@@ -2053,17 +2053,17 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
   // Delete Tracks about (Nhit1 = Nhit2  && chi1 < chi2)
   for( int i=0; i<int(TrackCont.size()); ++i ){
     TrLocalTrack *tp=TrackCont[i];
-    int nh=tp->GetNHit();
+    int nhit=tp->GetNHit();
       double chi=tp->GetChiSquare();
-    for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+    for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
     
     for( int i2=TrackCont.size()-1; i2>i; --i2 ){
       TrLocalTrack *tp2=TrackCont[i2];
-      int nh2=tp2->GetNHit(), flag=0;
+      int nhit2=tp2->GetNHit(), flag=0;
       double chi2=tp2->GetChiSquare();
-      for( int j=0; j<nh2; ++j )
+      for( int j=0; j<nhit2; ++j )
 	if( tp2->GetHit(j)->showFlags() ) ++flag;
-      if((flag) && ((nh==nh2) && (chi<=chi2))){
+      if((flag) && ((nhit==nhit2) && (chi<=chi2))){
         delete tp2;
 	TrackCont.erase(TrackCont.begin()+i2);
       }
@@ -2099,8 +2099,8 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     int nbefore=TrackCont.size();
     for( int i=0; i<nbefore; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	tp->GetHit(j)->clearFlags();
       }
     }
@@ -2131,12 +2131,12 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
   
   for( int i=0; i<int(TrackCont.size()); ++i ){
     TrLocalTrack *tp=TrackCont[i];
-    int nh=tp->GetNHit();
-    for( int j=0; j<nh; ++j ) tp->GetHit(j)->setFlags();
+    int nhit=tp->GetNHit();
+    for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
     for( int i2=TrackCont.size()-1; i2>i; --i2 ){
       TrLocalTrack *tp2=TrackCont[i2];
-      int nh2=tp2->GetNHit(), flag=0;  
-      for( int j=0; j<nh2; ++j )
+      int nhit2=tp2->GetNHit(), flag=0;  
+      for( int j=0; j<nhit2; ++j )
 	if( tp2->GetHit(j)->showFlags() ) ++flag;
       if(flag){
 	delete tp2;
@@ -2150,8 +2150,8 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     int nbefore=TrackCont.size();
     for( int i=0; i<nbefore; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	tp->GetHit(j)->clearFlags();
       }
     }
@@ -2162,8 +2162,8 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
     int nn=TrackCont.size();
     for(int i=0; i<nn; ++i ){
       TrLocalTrack *tp=TrackCont[i];
-      int nh=tp->GetNHit();
-      for( int j=0; j<nh; ++j ){
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
 	int lnum = tp->GetHit(j)->GetLayer();
 	double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
 	tp->GetHit(j)->SetCalPosition(tp->GetX(zz), tp->GetY(zz));
@@ -2292,9 +2292,9 @@ bool MakeHitCluster( const TrHitContainer & HC,
 {  
   ConfMan *confMan=ConfMan::GetConfManager();
   
-int nh=HC.size(); 
+  int nhit=HC.size(); //number of raw hits in the layer
   
-  for( int i=0; i<nh; ++i ){
+  for( int i=0; i<nhit; ++i ){
     TrHit *hit=HC[i];
     if( hit ){
       int multi = hit->GetPosSize();

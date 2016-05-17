@@ -70,8 +70,8 @@ bool TrHit::CalcObservables( void )
   angle_=geomMan->GetTiltAngle(layer_);
   
   bool Status = true;
-  int nhpos  = pos_.size();
-  for (int i=0; i<nhpos; i++) {
+  int nhitpos  = pos_.size();//nhitpos : number of hits ?
+  for (int i=0; i<nhitpos; i++) {
     //     double ctime;
     //     if(!calibMan->GetTime( layer_, wire_, tdc_[i], ctime ))
     //       return false;

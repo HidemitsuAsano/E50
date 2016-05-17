@@ -67,8 +67,8 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	TrRawHit *rhit=cont[i];
 	
 	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
-	int nhpos= rhit->GetSize();
-	for( int j=0; j<nhpos; ++j ){
+	int nhitpos= rhit->GetSize();
+	for( int j=0; j<nhitpos; ++j ){
 	  hit->SetPos( rhit->GetDL(j) );
 	  
 #if check1
@@ -96,8 +96,8 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	TrRawHit *rhit=cont[i];
 	
 	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
-	int nhpos= rhit->GetSize();
-	for( int j=0; j<nhpos; ++j ){
+	int nhitpos= rhit->GetSize();
+	for( int j=0; j<nhitpos; ++j ){
 	  hit->SetPos( rhit->WireId() ); // set segment ID as a hit position ??? ->re-fill in the CalcObservables
 	  
 #if check1

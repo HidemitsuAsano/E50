@@ -4,6 +4,7 @@
   2012/5  K.Shirotori
 */
 
+#include "ConfMan.hh"
 #include "TrGeomRecord.hh"
 
 #include <cmath>
@@ -44,10 +45,29 @@ void TrGeomRecord::calcVectors( void )
 
 int TrGeomRecord::WireNumber( double pos ) const
 {
-  double dw=((pos-ofs_)/dd_)+w0_;
+  double dw=((pos-offset_)/dd_)+w0_;
   int iw=int(dw);
   if((dw-double(iw))>0.5)
     return iw+1;
   else
     return iw;
+}
+
+//Modified by H. Asano
+//this function returns local position of center of fiber (or wire)
+//The calculation is different on Type A and on Type B and C detector
+double TrGeomRecord::WirePos (double wire) const
+{ 
+  ConfMan *confMan=ConfMan::GetConfManager();
+  if(!confMan) return false;
+  //(dd_ = dXdW) dd_ is probably the width of the fiber
+  //offset_ is width/2.0 (mm) in type B and C detector
+  //w0: offset for the first segment
+  if( (confMan->AnaMode()) == 0 || 1 ){
+    return dd_*(wire - w0_)+offset_; 
+  }else if( (confMan->AnaMode()) > 1 ){    
+    return dd_*((int)((wire-1)/2.0+1) - w0_)+offset_*((int)(wire-1)%2);
+  }else{
+    return -9999.;
+  } 
 }
