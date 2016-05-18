@@ -46,7 +46,7 @@ bool ConfMan::Initialize()
   static const std::string funcname="[ConfMan::Initialize]";
 
   char buf[BufSize], buf1[BufSize];
-  double val1, val2, val3;
+  double val1;// val2, val3;
   int id;
 
   FILE *fp;

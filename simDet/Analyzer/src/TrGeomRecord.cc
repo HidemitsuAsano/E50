@@ -43,6 +43,8 @@ void TrGeomRecord::calcVectors( void )
   dudz_ =  ct1;
 }
 
+
+//TODO : modify for type B and C detector
 int TrGeomRecord::WireNumber( double pos ) const
 {
   double dw=((pos-offset_)/dd_)+w0_;
@@ -65,7 +67,7 @@ double TrGeomRecord::WirePos (double wire) const
   //w0: offset for the first segment
   if( (confMan->AnaMode()) == 0 || 1 ){
     return dd_*(wire - w0_)+offset_; 
-  }else if( (confMan->AnaMode()) > 1 ){    
+  }else if( (confMan->AnaMode()) > 1 ){//Type B, C detector. 1 layer has 2 sublayer
     return dd_*((int)((wire-1)/2.0+1) - w0_)+offset_*((int)(wire-1)%2);
   }else{
     return -9999.;

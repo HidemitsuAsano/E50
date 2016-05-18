@@ -680,7 +680,7 @@ bool TrLocalTrack::DoFitVXU( void )
 
   if(n < TrLocalMinNHitsVXU ) return status_ = false;
 
-  double a=0,b=0;// <-Add !!
+  //double a=0,b=0;// <-Add !!
   double w[n+1],z[n+1],x[n+1];
 
   for( std::size_t i=0; i<n; ++i ){

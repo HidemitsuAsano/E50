@@ -3,6 +3,9 @@
 
   2012/5  K.Shirotori
 */
+//added comments by H. Asano
+//TrHits object has the vector of hit positions and TrLTrackHit in one segment (layer /fiber or wire)
+
 
 #include <cmath>
 #include <iostream>
@@ -70,7 +73,7 @@ bool TrHit::CalcObservables( void )
   angle_=geomMan->GetTiltAngle(layer_);
   
   bool Status = true;
-  int nhitpos  = pos_.size();//nhitpos : number of hits ?
+  int nhitpos  = pos_.size();//nhitpos : number of hits 
   for (int i=0; i<nhitpos; i++) {
     //     double ctime;
     //     if(!calibMan->GetTime( layer_, wire_, tdc_[i], ctime ))

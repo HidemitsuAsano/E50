@@ -46,7 +46,7 @@ const double Rad2Deg = 180./acos(-1.);
 RawData::RawData():
   PrimHC(0),
   T0RHC(0),
-  SFTRHC() //vector of data object class for a single track in SFT
+  SFTRawHitContainer() //vector of data object class for a single track in SFT
 {}
 
 RawData::~RawData()
@@ -183,8 +183,8 @@ void RawData::clearAll()
   T0RHC.clear();
 
   for( int l=0; l<=PlMaxSFT; ++l){
-    for_each( SFTRHC[l].begin(),  SFTRHC[l].end(), DeleteObject());
-    SFTRHC[l].clear();
+    for_each( SFTRawHitContainer[l].begin(),  SFTRawHitContainer[l].end(), DeleteObject());
+    SFTRawHitContainer[l].clear();
   }
 
   return;
@@ -257,7 +257,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
       std::cout << "type1_1 =" << type << std::endl;
 #endif
 
-    AddTrRHit(SFTRHC[0], 0, 0, 0., 0., 0.);
+    AddTrRHit(SFTRawHitContainer[0], 0, 0, 0., 0., 0.);
     
     ////////////////////////////////////////////////////////////////////////////////
     ////Full tracking
@@ -291,7 +291,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 		double angle = geomMan.GetTiltAngle( lnum );
 		double l = x*cos(angle*Deg2Rad) + y*sin(angle*Deg2Rad);
 		dl = l + CLHEP::RandGauss::shoot( 0.0, confMan->GetSFTResol() );
-		AddTrRHit(SFTRHC[lnum-PlOffsSFT], lnum, wire, x, y, dl);
+		AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
 	      }
 	    }	    
       
@@ -302,7 +302,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	      
 	      //SFT only stores layer number and segment id
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
-		AddTrRHit(SFTRHC[lnum-PlOffsSFT], lnum, wire, x, y, dl);
+		AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
 	      }
 	    }	    
 
@@ -370,8 +370,8 @@ const HodoRHitContainer& RawData::GetT0RHC() const
   return T0RHC;
 }
 
-const TrRHitContainer & RawData::GetSFTRHC( int layer ) const
+const TrRHitContainer & RawData::GetSFTRawHitContainer( int layer ) const
 {
   if( layer<0 || layer>PlMaxSFT ) layer=0;
-  return SFTRHC[layer];
+  return SFTRawHitContainer[layer];
 }

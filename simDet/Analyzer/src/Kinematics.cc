@@ -95,7 +95,7 @@ const double TARGETcenterY = 0.0;
 
 ThreeVector CorrElossIn(const ThreeVector & Pin, const ThreeVector & Xin, const ThreeVector & vtx, double mass)
 {
-  double length, dE;
+  double length=0.0;//, dE;
   double mom_new, energy_new;
 
   ThreeVector CorPin = Pin;
@@ -303,7 +303,8 @@ double calcLengthScat(const ThreeVector & Pout, const ThreeVector & Xout, const 
 
 ThreeVector CorrElossOutCheck(const ThreeVector & Pout, const ThreeVector & Xout, const ThreeVector & vtx, double mass)
 {
-  double length, dE;
+  double length=0.0;
+  double dE=0.0;
   double energy_new, mom_new;
 
   double mom=Pout.mag();

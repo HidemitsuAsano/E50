@@ -14,6 +14,7 @@
 
 #include "TrAnalyzer.hh"
 #include "TrHit.hh"
+#include "TrHitCluster.hh"
 #include "TrLocalTrack.hh"
 #include "RawData.hh"
 #include "TrRawHit.hh"
@@ -40,7 +41,7 @@ TrAnalyzer::TrAnalyzer()
 TrAnalyzer::~TrAnalyzer()
 {
   clearTracksSFTT();
-
+  clearTrHitClusters();
   clearTrHits();
 }
 
@@ -59,11 +60,11 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
   //Type 0
   if( confMan->AnaMode()==0 ){
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRHC(layer);
-      int nh=cont.size();
+      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
+      int nhit=cont.size();
       //std::cout<< nh << std::endl;
       
-      for( int i=0; i<nh; ++i ){
+      for( int i=0; i<nhit; ++i ){
 	TrRawHit *rhit=cont[i];
 	
 	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
@@ -78,7 +79,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	if(!hit) continue; 
 	
 	if(hit->CalcObservables())
-	  SFTTHC[layer].push_back(hit);
+	  SFTTrHitContainer[layer].push_back(hit);
 	else
 	  delete hit;
       }
@@ -88,11 +89,11 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
   //Type A , B , C
   if( confMan->AnaMode()>=1 ){
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRHC(layer);
-      int nh=cont.size();
+      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
+      int nhit=cont.size();
       //std::cout<< nh << std::endl;
       
-      for( int i=0; i<nh; ++i ){
+      for( int i=0; i<nhit; ++i ){
 	TrRawHit *rhit=cont[i];
 	
 	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
@@ -107,12 +108,26 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	if(!hit) continue; 
 	
 	if(hit->CalcObservables())//hit position is calculated in this function, calling TrGeomRecord
-	  SFTTHC[layer].push_back(hit);
+	  SFTTrHitContainer[layer].push_back(hit);
 	else
 	  delete hit;
       }
     }
   }//if Type A, B ,C
+
+
+  return true;
+}
+
+////////////////////////////////////////////
+//SFT clustering
+////////////////////////////////////////////
+//
+//input: SFTTrHitContainer
+//output:SFTTrHitClusterContainer
+bool TrAnalyzer::SFTClustering( void )
+{
+   
 
 
   return true;
@@ -126,18 +141,28 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 bool TrAnalyzer::TrackSearchSFTT( void )
 {
   int ntrack =
-    LocalTrackSearch( &(SFTTHC[1]), TrackSFTTCol, 
+    LocalTrackSearch( &(SFTTrHitContainer[1]), TrackSFTTCol, 
 		      NumOfLayersSFT, MinNumOfHitsSFT );
   // std::cout<< "ntrack= " << ntrack << std::endl;
   
   return true;
 }
 
+
+
 void TrAnalyzer::clearTrHits( void )
 {
   for( int l=0; l<=NumOfLayersSFT; ++l ){
-    for_each( SFTTHC[l].begin(),  SFTTHC[l].end(),  DeleteObject() );
-    SFTTHC[l].clear();
+    for_each( SFTTrHitContainer[l].begin(),  SFTTrHitContainer[l].end(),  DeleteObject() );
+    SFTTrHitContainer[l].clear();
+  }
+}
+
+void TrAnalyzer::clearTrHitClusters( void )
+{
+  for( int l=0; l<=NumOfLayersSFT; ++l ){
+    for_each( SFTTrHitClusterContainer[l].begin(),  SFTTrHitClusterContainer[l].end(),  DeleteObject() );
+    SFTTrHitClusterContainer[l].clear();
   }
 }
 

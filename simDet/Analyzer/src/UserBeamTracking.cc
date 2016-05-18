@@ -210,6 +210,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     TrAna->DecodeRawHits( rawData );
     
     //SFT
+    //TrAna->Clustering(  ) :TO BE implemented
     TrAna->TrackSearchSFTT();
     int nt=TrAna->GetNtracksSFTT();
     event.ntr=nt;
