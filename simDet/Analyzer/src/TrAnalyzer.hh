@@ -12,10 +12,12 @@
 #include <vector>
 
 class TrHit;
+class TrHitCluster;
 class TrLocalTrack;
 class RawData;
 
 typedef std::vector <TrHit *> TrHitContainer;
+typedef std::vector <TrHitCluster *> TrHitClusterContainer;//added by H.Asano
 
 class TrAnalyzer
 {
@@ -27,15 +29,18 @@ private:
   TrAnalyzer & operator = ( const TrAnalyzer & );
 
 private:
-  TrHitContainer SFTTHC[NumOfLayersSFT+1];
+  TrHitContainer SFTTrHitContainer[NumOfLayersSFT+1];
+  TrHitClusterContainer SFTTrHitClusterContainer[NumOfLayersSFT+1];
 
   std::vector <TrLocalTrack *> TrackSFTTCol;//array of SFT track class 
 
 public:
   bool DecodeRawHits( RawData *rawData );
 
-  inline const TrHitContainer & GetSFTTHC( int layer ) const;
-
+  inline const TrHitContainer & GetSFTTrHitContainer( int layer ) const;
+  inline const TrHitClusterContainer & GetSFTTrHitClusterContainer( int layer ) const;
+   
+  bool SFTClustering(void);//TODO : actual implementation H.Asano
   bool TrackSearchSFTT( void );
 
   int GetNtracksSFTT( void ) const  { return TrackSFTTCol.size(); }
@@ -49,16 +54,23 @@ public:
 
 private:
   void clearTrHits( void );
+  void clearTrHitClusters( void );
   void clearTracksSFTT( void );
 
 public:
   void resetTracksSFTT( void ) { clearTracksSFTT(); }
 };
 
-inline const TrHitContainer & TrAnalyzer::GetSFTTHC( int layer ) const
+inline const TrHitContainer & TrAnalyzer::GetSFTTrHitContainer( int layer ) const
 {
   if( layer<0 || layer>NumOfLayersSFT ) layer=0;
-  return SFTTHC[layer];
+  return SFTTrHitContainer[layer];
+}
+
+inline const TrHitClusterContainer & TrAnalyzer::GetSFTTrHitClusterContainer( int layer ) const
+{
+  if( layer<0 || layer>NumOfLayersSFT ) layer=0;
+  return SFTTrHitClusterContainer[layer];
 }
 
 inline TrLocalTrack * TrAnalyzer::GetTrackSFTT( unsigned int i ) const

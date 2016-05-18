@@ -78,11 +78,11 @@ public:
   int GetPosSize( void ) const { return pos_.size(); }
   int GetDriftTimeSize( void ) const { return pos_.size(); }
   int GetDriftLengthSize( void ) const { return pos_.size(); }
-  double GetPos( int nh=0 ) const { return pos_[nh]; }
-//   int GetTdcTrailing( int nh=0 ) const { return trailing_[nh]; }
-  double GetDriftTime( int nh=0 ) const { return 0.; }
-  double GetDriftLength( int nh=0 ) const { return dl_[nh]; }
-//   double GetTrailingTime( int nh=0 ) const { return trailingTime_[nh]; }
+  double GetPos( int nhit=0 ) const { return pos_[nhit]; }
+//   int GetTdcTrailing( int nhit=0 ) const { return trailing_[nhit]; }
+  double GetDriftTime( int nhit=0 ) const { return 0.; }
+  double GetDriftLength( int nhit=0 ) const { return dl_[nhit]; }
+//   double GetTrailingTime( int nhit=0 ) const { return trailingTime_[nhit]; }
 
   double GetTiltAngle( void ) const { return angle_; }
   double GetWirePosition( void ) const { return wpos_; }
@@ -91,13 +91,13 @@ public:
 //   double GetMeamWire( void ) const { return mwire_; }
 //   double GetMeamWirePosition( void ) const { return mwpos_; }
 
-  void setFlags( int nh=0 ) { belongTrack_[nh]=true; }
-  void clearFlags( int nh=0 ) { belongTrack_[nh]=false; }
-  bool showFlags( int nh=0 ) const { return belongTrack_[nh]; }
-  bool rangecheck( int nh=0 ) const { return dlRange_[nh]; }
+  void setFlags( int nhit=0 ) { belongTrack_[nhit]=true; }
+  void clearFlags( int nhit=0 ) { belongTrack_[nhit]=false; }
+  bool showFlags( int nhit=0 ) const { return belongTrack_[nhit]; }
+  bool rangecheck( int nhit=0 ) const { return dlRange_[nhit]; }
   void setRangeCheckStatus( bool status, 
- 			    int nh ) 
-  { dlRange_[nh] = (status); }
+ 			    int nhit ) 
+  { dlRange_[nhit] = (status); }
 
   void RegisterHits( TrLTrackHit *hit ) const
   { Cont_.push_back(hit); }
