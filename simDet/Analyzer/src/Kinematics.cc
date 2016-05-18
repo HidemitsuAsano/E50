@@ -191,7 +191,8 @@ ThreeVector CorrElossOut(const ThreeVector & Pout, const ThreeVector & Xout, con
 {
   double FL,FH,FTMP;
   double Elow, Ehigh, Elast, EPS;
-  double E, length;
+  double E=0;
+  double length=0;
   
   ThreeVector CorPout = Pout;
   double mom = Pout.mag();
@@ -468,7 +469,7 @@ double calc_dE_dx(double beta)
   double W_max;
   double gamma;
   double X;
-  double delta;
+  double delta=0.0;
 
   double rho=0.0709;   /*g/cm^3 (C)*/
   double I=21.8;     /*eV*/

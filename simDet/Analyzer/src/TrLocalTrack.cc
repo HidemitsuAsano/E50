@@ -28,10 +28,10 @@ const double Deg2Rad = acos(-1.)/180.;
 const double Rad2Deg = 180./acos(-1.);
 
 const int ReservedNumOfHits = 16;
-const int TrLocalMinNHits  = 6;
-const int TrLocalMinNHitsVXU = 3;
-const int TrLocalMinNHitsVXU2= 4;
-const int TrLocalMinNHits2 = 8;
+const unsigned int TrLocalMinNHits  = 6;
+const unsigned int TrLocalMinNHitsVXU = 3;
+const unsigned int TrLocalMinNHitsVXU2= 4;
+const unsigned int TrLocalMinNHits2 = 8;
 
 inline bool TrLocalTrack::allocateBufferArea( void )
 {
@@ -169,7 +169,7 @@ bool TrLocalTrack::DoFit( void )
 	   <<"    A44="<<mtp[3][3]<<std::endl;
 #endif
 
-  double Org[4][4]={0},Red[4][4]={0},Final[4][4]={0};
+  double Org[4][4]={{0}},Red[4][4]={{0}},Final[4][4]={{0}};
   double Org_vec[4]={0}, Solution_vec[4]={0};
   for(int l=0; l<4;l++){
     for(int m=0; m<4; m++){
@@ -467,7 +467,7 @@ bool TrLocalTrack::DoFit2( void )
       	   <<"    A66="<<mtp[5][5] <<std::endl;
 #endif
 
-  double Org[6][6]={0},Red[6][6]={0},Final[6][6]={0};
+  double Org[6][6]={{0}},Red[6][6]={{0}},Final[6][6]={{0}};
   double Org_vec[6]={0}, Solution_vec[6]={0};
   for(int l=0; l<6;l++){
     for(int m=0; m<6; m++){
@@ -707,7 +707,7 @@ bool TrLocalTrack::DoFitVXU( void )
   }
 
   double A=0, B=0, C=0, D=0, E=0;// <-Add!! 
-  for(int i=0; i<n; ++i){
+  for(std::size_t i=0; i<n; ++i){
 
     A += z[i]/(w[i]*w[i]);
     B += 1/(w[i]*w[i]);
@@ -722,7 +722,7 @@ bool TrLocalTrack::DoFitVXU( void )
 
   double chisqr = 0.0;
 
-  for(int i=0; i<n; ++i){
+  for(std::size_t i=0; i<n; ++i){
     chisqr += (x[i]-a_*z[i]-b_)*(x[i]-a_*z[i]-b_)/(w[i]*w[i]);
   }
 
@@ -831,7 +831,7 @@ bool TrLocalTrack::DoFitVXU2( void )
   std::cout<<"    A31="<<mtp[2][0]<<"    A32="<<mtp[2][1]<<"    A33="<<mtp[2][2] <<std::endl;
 #endif
 
-  double Org[3][3]={0},Red[3][3]={0},Final[3][3]={0};
+  double Org[3][3]={{0}},Red[3][3]={{0}},Final[3][3]={{0}};
   double Org_vec[3]={0}, Solution_vec[3]={0};
   for(int l=0; l<3;l++){
     for(int m=0; m<3; m++){

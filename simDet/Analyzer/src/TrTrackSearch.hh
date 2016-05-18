@@ -18,22 +18,22 @@ class TrLTrackHit;
 //Full combination by Linear fitting
 int LocalTrackSearch( const TrHitContainer * HC,
 		      std::vector <TrLocalTrack *> &TrackCont,
-		      int NumOfLayers, int MinNumOfHits);
+		      int NumOfLayers, unsigned int MinNumOfHits);
 
 //Full combination by Quadra fitting
 int LocalTrackSearchQ( const TrHitContainer * HC,
 		       std::vector <TrLocalTrack *> &TrackCont,
-		       int NumOfLayers, int MinNumOfHits);
+		       int NumOfLayers, unsigned int MinNumOfHits);
 
 //VXU tracking by Linear fitting
 int LocalTrackSearch2( const TrHitContainer * HC,
 		       std::vector <TrLocalTrack *> &TrackCont, 
-		       int NumOfLayers, int MinNumOfHits);
+		       int NumOfLayers, unsigned int MinNumOfHits);
 
 //VXU tracking by by Quadra -> Quadra fitting
 int LocalTrackSearchQ2( const TrHitContainer * HC,
 			std::vector <TrLocalTrack *> &TrackCont,
-			int NumOfLayers, int MinNumOfHits);
+			int NumOfLayers, unsigned int MinNumOfHits);
 
 // //VXU tracking by by  Linear -> Quadra fitting
 // int LocalTrackSearchQ2( const TrHitContainer * HC,

@@ -37,7 +37,7 @@ int NhitGroup=0;
 //////////////////////////////////////////////////
 int LocalTrackSearch( const TrHitContainer * HC,
 		      std::vector <TrLocalTrack *> &TrackCont, 
-		      int NumOfLayers, int MinNumOfHits )
+		      int NumOfLayers, unsigned int MinNumOfHits )
 {
   static const std::string funcname = "[LocalTrackSearch]";
 
@@ -215,7 +215,7 @@ int LocalTrackSearch( const TrHitContainer * HC,
 //////////////////////////////////////////////////
 int LocalTrackSearchQ( const TrHitContainer * HC,
 		       std::vector <TrLocalTrack *> &TrackCont,
-		       int NumOfLayers, int MinNumOfHits )
+		       int NumOfLayers, unsigned int MinNumOfHits )
 		      
 {
   static const std::string funcname = "[LocalTrackSearch]";
@@ -394,11 +394,11 @@ int LocalTrackSearchQ( const TrHitContainer * HC,
 
 int LocalTrackSearch2( const TrHitContainer * HC,
 		      std::vector <TrLocalTrack *> &TrackCont,
-		      int NumOfLayers, int MinNumOfHits )
+		      int NumOfLayers, unsigned int MinNumOfHits )
 {
   static const std::string funcname = "[LocalTrackSearch]";
 
-  int MinNumOfHitsVXU = 3;
+  unsigned int MinNumOfHitsVXU = 3;
   std::vector <TrLocalTrack *>  TrackContV;
   std::vector <TrLocalTrack *>  TrackContX;
   std::vector <TrLocalTrack *>  TrackContU;
@@ -424,7 +424,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
   std::vector <int> nCombiX(NumOfLayers/3);
   std::vector <int> nCombiU(NumOfLayers/3);
 
-  int nV=0, nX=0, nU=0;
+  unsigned int nV=0, nX=0, nU=0;
 
   for( int i=0; i<NumOfLayers/3; ++i ){ 
     nCombiV[i]=(CandContV[i]).size();
@@ -996,7 +996,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	    Av=trackV->GetVXU_A();
 	    chiv=trackV->GetChiSquare();
 	    
-	    for( int l=0; l<(trackV->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackV->GetNHit()); ++l){
 	      TrLTrackHit *hitpV=trackV->GetHit(l);
 	      if(hitpV){
 		track->AddHit( hitpV ) ;
@@ -1005,7 +1005,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	  }
 	  if((i>=nnVT) && (nV>0)){
 	    TrLocalTrack *trackV = MakeTrack( CandContV, &((CombiIndexSV[i-nnVT])[0]) ); 
-	    for( int l=0; l<(trackV->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackV->GetNHit()); ++l){
 	      TrLTrackHit *hitpV=trackV->GetHit(l);
 	      if(hitpV){
 		track->AddHit( hitpV ) ;
@@ -1022,7 +1022,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	    TrLocalTrack *trackX=TrackContX[j];
 	    Ax=trackX->GetVXU_A();
 	    chix=trackX->GetChiSquare();
-	    for( int l=0; l<(trackX->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackX->GetNHit()); ++l){
 	      TrLTrackHit *hitpX=trackX->GetHit(l);
 	      if(hitpX){
 		track->AddHit( hitpX ) ;
@@ -1031,7 +1031,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	  }
 	  if((j>=nnXT) && (nX>0)){
 	    TrLocalTrack *trackX = MakeTrack( CandContX, &((CombiIndexSX[j-nnXT])[0]) ); 
-	    for( int l=0; l<(trackX->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackX->GetNHit()); ++l){
 	      TrLTrackHit *hitpX=trackX->GetHit(l);
 	      if(hitpX){
 		track->AddHit( hitpX ) ;
@@ -1049,7 +1049,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	    TrLocalTrack *trackU=TrackContU[k];
 	    Au=trackU->GetVXU_A();
 	    chiu=trackU->GetChiSquare();
-	    for( int l=0; l<(trackU->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackU->GetNHit()); ++l){
 	      TrLTrackHit *hitpU=trackU->GetHit(l);
 	      if(hitpU){
 		track->AddHit( hitpU ) ;
@@ -1059,7 +1059,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	  if((k>=nnUT) && (nU>0)){
 	    TrLocalTrack *trackU = MakeTrack( CandContU, &((CombiIndexSU[k-nnUT])[0]) ); 
 	    
-	    for( int l=0; l<(trackU->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackU->GetNHit()); ++l){
 	      TrLTrackHit *hitpU=trackU->GetHit(l);
 	      if(hitpU){
 		track->AddHit( hitpU ) ;
@@ -1293,11 +1293,11 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 //////////////////////////////////////////////////
 int LocalTrackSearchQ2( const TrHitContainer * HC,
 		       std::vector <TrLocalTrack *> &TrackCont,
-		       int NumOfLayers, int MinNumOfHits )
+		       int NumOfLayers, unsigned int MinNumOfHits )
 {
   static const std::string funcname = "[LocalTrackSearch]";
 
-  int MinNumOfHitsVXU = 7;
+  unsigned int MinNumOfHitsVXU = 7;
   std::vector <TrLocalTrack *>  TrackContV;
   std::vector <TrLocalTrack *>  TrackContX;
   std::vector <TrLocalTrack *>  TrackContU;
@@ -1323,7 +1323,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
   std::vector <int> nCombiX(NumOfLayers/3);
   std::vector <int> nCombiU(NumOfLayers/3);
 
-  int nV=0, nX=0, nU=0;
+  unsigned int nV=0, nX=0, nU=0;
 
   for( int i=0; i<NumOfLayers/3; ++i ){ 
     nCombiV[i]=(CandContV[i]).size();
@@ -1905,7 +1905,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	    Av=trackV->GetVXU_A();
 	    chiv=trackV->GetChiSquare();
 	    
-	    for( int l=0; l<(trackV->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackV->GetNHit()); ++l){
 	      TrLTrackHit *hitpV=trackV->GetHit(l);
 	      if(hitpV){
 		track->AddHit( hitpV ) ;
@@ -1914,7 +1914,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	  }
 	  if((i>=nnVT) && (nV>0)){
 	    TrLocalTrack *trackV = MakeTrack( CandContV, &((CombiIndexSV[i-nnVT])[0]) ); 
-	    for( int l=0; l<(trackV->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackV->GetNHit()); ++l){
 	      TrLTrackHit *hitpV=trackV->GetHit(l);
 	      if(hitpV){
 		track->AddHit( hitpV ) ;
@@ -1931,7 +1931,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	    TrLocalTrack *trackX=TrackContX[j];
 	    Ax=trackX->GetVXU_A();
 	    chix=trackX->GetChiSquare();
-	    for( int l=0; l<(trackX->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackX->GetNHit()); ++l){
 	      TrLTrackHit *hitpX=trackX->GetHit(l);
 	      if(hitpX){
 		track->AddHit( hitpX ) ;
@@ -1940,7 +1940,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	  }
 	  if((j>=nnXT) && (nX>0)){
 	    TrLocalTrack *trackX = MakeTrack( CandContX, &((CombiIndexSX[j-nnXT])[0]) ); 
-	    for( int l=0; l<(trackX->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackX->GetNHit()); ++l){
 	      TrLTrackHit *hitpX=trackX->GetHit(l);
 	      if(hitpX){
 		track->AddHit( hitpX ) ;
@@ -1958,7 +1958,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	    TrLocalTrack *trackU=TrackContU[k];
 	    Au=trackU->GetVXU_A();
 	    chiu=trackU->GetChiSquare();
-	    for( int l=0; l<(trackU->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackU->GetNHit()); ++l){
 	      TrLTrackHit *hitpU=trackU->GetHit(l);
 	      if(hitpU){
 		track->AddHit( hitpU ) ;
@@ -1968,7 +1968,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	  if((k>=nnUT) && (nU>0)){
 	    TrLocalTrack *trackU = MakeTrack( CandContU, &((CombiIndexSU[k-nnUT])[0]) ); 
 	    
-	    for( int l=0; l<(trackU->GetNHit()); ++l){
+	    for(unsigned int l=0; l<(trackU->GetNHit()); ++l){
 	      TrLTrackHit *hitpU=trackU->GetHit(l);
 	      if(hitpU){
 		track->AddHit( hitpU ) ;

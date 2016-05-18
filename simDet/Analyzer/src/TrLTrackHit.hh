@@ -15,13 +15,13 @@ class TrLTrackHit
 {
 public:
   TrLTrackHit( TrHit *hit, double pos, int nh ) 
-    : Hit_(hit), xl_(pos), nth_Hit_(nh)
+//    : Hit_(hit), xl_(pos), nth_Hit_(nh)
   { 
     Hit_->RegisterHits(this);
  }
   TrLTrackHit( const TrLTrackHit & right )
-    :Hit_(right.Hit_), nth_Hit_(right.nth_Hit_), xl_(right.xl_), xcl_(right.xcl_), 
-      xcal_(right.xcal_), ycal_(right.ycal_)
+//    :Hit_(right.Hit_), nth_Hit_(right.nth_Hit_), xl_(right.xl_), xcl_(right.xcl_), 
+//      xcal_(right.xcal_), ycal_(right.ycal_)
   { 
     Hit_->RegisterHits(this); 
 }

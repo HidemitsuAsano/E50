@@ -40,7 +40,7 @@ public:
 
   int GetNHitsT0( void ) const { return T0Cont.size(); };
 
-  inline HodoHit * GetHitT0( int i ) const;
+  inline HodoHit * GetHitT0(unsigned int i ) const;
 
   int GetNClustersT1( void ) const { return T0ClCont.size(); };
 
@@ -68,7 +68,7 @@ inline HodoCluster * HodoAnalyzer::GetClusterT0( unsigned int i ) const
     return 0;
 }
 
-inline HodoHit * HodoAnalyzer::GetHitT0( int i ) const
+inline HodoHit * HodoAnalyzer::GetHitT0(unsigned int i ) const
 {
   if( i>=0 && i<T0Cont.size() )
     return T0Cont[i];
