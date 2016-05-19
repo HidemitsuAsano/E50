@@ -29,8 +29,8 @@ private:
   TrAnalyzer & operator = ( const TrAnalyzer & );
 
 private:
-  TrHitContainer SFTTrHitContainer[NumOfLayersSFT+1];
-  TrHitClusterContainer SFTTrHitClusterContainer[NumOfLayersSFT+1];
+  TrHitContainer SFTTrHitContainer_[NumOfLayersSFT+1];
+  TrHitClusterContainer SFTTrHitClusterContainer_[NumOfLayersSFT+1];
 
   std::vector <TrLocalTrack *> TrackSFTTCol;//array of SFT track class 
 
@@ -64,13 +64,13 @@ public:
 inline const TrHitContainer & TrAnalyzer::GetSFTTrHitContainer( int layer ) const
 {
   if( layer<0 || layer>NumOfLayersSFT ) layer=0;
-  return SFTTrHitContainer[layer];
+  return SFTTrHitContainer_[layer];
 }
 
 inline const TrHitClusterContainer & TrAnalyzer::GetSFTTrHitClusterContainer( int layer ) const
 {
   if( layer<0 || layer>NumOfLayersSFT ) layer=0;
-  return SFTTrHitClusterContainer[layer];
+  return SFTTrHitClusterContainer_[layer];
 }
 
 inline TrLocalTrack * TrAnalyzer::GetTrackSFTT( unsigned int i ) const

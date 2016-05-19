@@ -20,6 +20,11 @@ int LocalTrackSearch( const TrHitContainer * HC,
 		      std::vector <TrLocalTrack *> &TrackCont,
 		      int NumOfLayers, unsigned int MinNumOfHits);
 
+//track search after clustering
+int LocalTrackSearchFromCluster( const TrHitClusterContainer *clustercont,
+		      std::vector <TrLocalTrack *> &TrackCont,
+		      int NumOfLayers, unsigned int MinNumOfHits);
+
 //Full combination by Quadra fitting
 int LocalTrackSearchQ( const TrHitContainer * HC,
 		       std::vector <TrLocalTrack *> &TrackCont,

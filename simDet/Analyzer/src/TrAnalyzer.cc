@@ -53,6 +53,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
   ConfMan *confMan = ConfMan::GetConfManager();
 
   clearTrHits();
+  clearTrHitClusters();
   clearTracksSFTT();
 
   //SFT
@@ -79,7 +80,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	if(!hit) continue; 
 	
 	if(hit->CalcObservables())
-	  SFTTrHitContainer[layer].push_back(hit);
+	  SFTTrHitContainer_[layer].push_back(hit);
 	else
 	  delete hit;
       }
@@ -107,8 +108,8 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	}
 	if(!hit) continue; 
 	
-	if(hit->CalcObservables())//hit position is calculated in this function, calling TrGeomRecord
-	  SFTTrHitContainer[layer].push_back(hit);
+	if(hit->CalcObservables())//hit position for each hit (before clustering) is calculated in this function, calling TrGeomRecord
+	  SFTTrHitContainer_[layer].push_back(hit);
 	else
 	  delete hit;
       }
@@ -123,8 +124,8 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 //SFT clustering
 ////////////////////////////////////////////
 //
-//input: SFTTrHitContainer
-//output:SFTTrHitClusterContainer
+//input: SFTTrHitContainer_ (member variable (vector of TrHit) if TrAnalyzer )
+//output:SFTTrHitClusterContainer_ (member variable (vector of TrHitCluster) if TrAnalyzer)
 bool TrAnalyzer::SFTClustering( void )
 {
    
@@ -141,7 +142,7 @@ bool TrAnalyzer::SFTClustering( void )
 bool TrAnalyzer::TrackSearchSFTT( void )
 {
   int ntrack =
-    LocalTrackSearch( &(SFTTrHitContainer[1]), TrackSFTTCol, 
+    LocalTrackSearch( &(SFTTrHitContainer_[1]), TrackSFTTCol, 
 		      NumOfLayersSFT, MinNumOfHitsSFT );
   // std::cout<< "ntrack= " << ntrack << std::endl;
   
@@ -153,16 +154,16 @@ bool TrAnalyzer::TrackSearchSFTT( void )
 void TrAnalyzer::clearTrHits( void )
 {
   for( int l=0; l<=NumOfLayersSFT; ++l ){
-    for_each( SFTTrHitContainer[l].begin(),  SFTTrHitContainer[l].end(),  DeleteObject() );
-    SFTTrHitContainer[l].clear();
+    for_each( SFTTrHitContainer_[l].begin(),  SFTTrHitContainer_[l].end(),  DeleteObject() );
+    SFTTrHitContainer_[l].clear();
   }
 }
 
 void TrAnalyzer::clearTrHitClusters( void )
 {
   for( int l=0; l<=NumOfLayersSFT; ++l ){
-    for_each( SFTTrHitClusterContainer[l].begin(),  SFTTrHitClusterContainer[l].end(),  DeleteObject() );
-    SFTTrHitClusterContainer[l].clear();
+    for_each( SFTTrHitClusterContainer_[l].begin(),  SFTTrHitClusterContainer_[l].end(),  DeleteObject() );
+    SFTTrHitClusterContainer_[l].clear();
   }
 }
 
