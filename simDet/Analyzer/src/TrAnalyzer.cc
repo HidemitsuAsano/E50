@@ -115,7 +115,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
       }
     }
   }//if Type A, B ,C
-
+  
 
   return true;
 }
@@ -126,13 +126,14 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 //
 //input: SFTTrHitContainer_ (member variable (vector of TrHit) if TrAnalyzer )
 //output:SFTTrHitClusterContainer_ (member variable (vector of TrHitCluster) if TrAnalyzer)
+//MakeHitCluster is implemented in TrTrackSearch.cc as a non-member function
 int TrAnalyzer::SFTClustering( void )
 {
-  int nfoundcluster = 0;
   for( int ilr=0; ilr<=NumOfLayersSFT; ++ilr ){
     MakeHitCluster(SFTTrHitContainer_[ilr],SFTTrHitClusterContainer_[ilr]);
   }
 
+  int nfoundcluster = 0;//SFTTrHitClusterContainer_.size();TODO:how to get ??
   return nfoundcluster;
 }
 

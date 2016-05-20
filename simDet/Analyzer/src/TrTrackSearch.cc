@@ -19,6 +19,7 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <functional>
 #include <cmath>
 
 const double Deg2Rad = acos(-1.)/180.;
@@ -2461,32 +2462,50 @@ makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 )
 }
 
 
-bool MakeHitCluster( const TrHitContainer & HC,
+//make cluster layer by layer
+bool MakeHitCluster( const TrHitContainer & trhitcontainer,
 		     std::vector <TrHitCluster *> & Cont )
 {  
   ConfMan *confMan=ConfMan::GetConfManager();
   
-  int nhit=HC.size(); //number of raw hits in the layer
+  int nhit=trhitcontainer.size(); //number of raw hits in the layer
   
-  for( int i=0; i<nhit; ++i ){
-    TrHit *hit=HC[i];
-    if( hit ){
-      int multi = hit->GetPosSize();
-      for (int m=0; m<multi; m++) {
-	if( !(hit->rangecheck(m)) ) continue;
-	double pos=hit->GetPos(m);	
-	double wp=hit->GetWirePosition();
-	//double dl=hit->GetDriftLength(m);
+  //sort by wire (segment number)
 
-	if( confMan->AnaMode()==0 ){
-	  Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,pos,m) ) );
-	}
-	if( confMan->AnaMode()>=1 ){//clustering is assumed  ?
-	  Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,wp,m) ) );
-	}
-      }
-    }
-  }
+  for( int i=0; i<nhit; ++i ){
+    TrHit *hit=trhitcontainer[i];
+    if( hit ){
+      int multiplicity = hit->GetPosSize();
+      if( confMan->AnaMode()==0 ){
+        for (int im=0; im<multiplicity; im++) {
+        //if( !(hit->rangecheck(m)) ) continue; //checking the range of drift length
+        
+          double pos=hit->GetPos(im);	
+          double wp=hit->GetWirePosition();//local-x position
+        //double dl=hit->GetDriftLength(m);
+  
+          Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,pos,im) ) );
+        }
+      }else if( confMan->AnaMode()>=1 ){//clustering is assumed  ?
+        int layer = hit->GetLayer(); 
+        double segment= hit->GetWire();
+        //double pos=hit->GetPos();	
+        double wp=hit->GetWirePosition();//local-x position
+        if(multiplicity>1){
+          std::cout << __FILE__ << "  " << __LINE__ << " multiple hits on one segment!!: " << multiplicity << std::endl;
+          std::cout << "layer: " << layer << " segment: " << segment << std::endl;  
+        }
+        //
+        //write down clustering algorithm here
+        //
+        //search neighboring hits at first
+        
+
+        Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,wp,0) ) );
+
+      }//Type A, B, C detector
+    }//if TrHit
+  }//i hit
 
   return true;
 }

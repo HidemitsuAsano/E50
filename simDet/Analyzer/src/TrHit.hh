@@ -11,6 +11,7 @@
 #include <deque>
 #include <string>
 #include <iostream>
+#include <functional>
 
 typedef std::vector <bool> BoolVec;
 typedef std::vector <int> IntVec;
@@ -106,7 +107,18 @@ public:
   { return CalcObservables(); }
 //   bool ReCalcMWPC( bool applyRecursively=false ) 
 //   { return CalcMWPCObservables(); }
-
+//
+  
+  static bool compareTrHitPredicate(TrHit lhs, TrHit rhs) { return (lhs.wire_ < rhs.wire_); }
+  /*
+  struct compareTrHitFunctor : public std::binary_function<TrHit, TrHit, bool>
+    {
+      bool operator()( TrHit lhs, TrHit rhs)
+      {
+        return (lhs.wire_ < rhs.wire_);
+      }
+    };
+   */
 private:
   void clearRegisteredHits( void );
 
