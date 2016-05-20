@@ -1,0 +1,57 @@
+1. delete TrGeomRecord class.
+2. assign geometry for the raw hit.
+
+
+--
+clustering 
+1. rawhit (fiber ID) 
+-> 
+2.set local position (named "pos_[i]" in the TrHit.cc) and z
+modify TrGeomMan.cc
+double TrGeomMan::calcWirePosition(int lnum, double wire) const
+
+-> 
+3.clustering -> done in LocalTrackSearch (???)
+TODO: change it
+
+(done) add container of cluster (TrHitClusterContainer)
+
+1) decode, call TrAnalyzer::DecodeRawHits( RawData *rawData )  
+2) SFT clustering, call TrAnalyzer::ClusteringSFT(void);
+(not implemented yet: TODO list)
+-> add mean position on the center of cluster and cluster size
+
+TrAnalyzer::ClusteringSFT(void)
+calls 
+MakeHitCluster( const TrHitContainer & HC, 
+                  std::vector <TrHitCluster *> & Cont )  
+(not a member function. defined in TrTrackSeacrh.cc (TODO:move it somewhere) 
+
+3) track search from cluster, not rawhits (TODO)
+
+
+Rawhits info.
+-layer
+-ID
+-MPPC no. 1,2 (not fiber no.)
+-MPPC ADC 1,2 (Peak hold or charge sum ?)
+-MPPC TDC 1,2
+
+
+Cluster info.
+-layer
+-ID
+-MPPC no. list 
+-MPPC ADC list
+-MPPC TDC list
+
+Rawhits ID <-> Cluster ID 
+list
+
+Track info.
+-ID
+-Fitting quality 
+-ndf
+-fit results
+-associated clusters' ID
+

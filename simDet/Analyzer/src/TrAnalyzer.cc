@@ -126,12 +126,14 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 //
 //input: SFTTrHitContainer_ (member variable (vector of TrHit) if TrAnalyzer )
 //output:SFTTrHitClusterContainer_ (member variable (vector of TrHitCluster) if TrAnalyzer)
-bool TrAnalyzer::SFTClustering( void )
+int TrAnalyzer::SFTClustering( void )
 {
-   
+  int nfoundcluster = 0;
+  for( int ilr=0; ilr<=NumOfLayersSFT; ++ilr ){
+    MakeHitCluster(SFTTrHitContainer_[ilr],SFTTrHitClusterContainer_[ilr]);
+  }
 
-
-  return true;
+  return nfoundcluster;
 }
 
 //////////////////////////////////////////////////////
