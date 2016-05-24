@@ -187,7 +187,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   //SFT
   {
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRHC(layer);
+      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nh=cont.size();
       event.sftnhits = nh;
       for( int i=0; i<nh; ++i ){
@@ -208,7 +208,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   //////////////////////////Tracking
   {  
     TrAna->DecodeRawHits( rawData );
-    
+    TrAna->SortTrHits( );//sort TrHits by segment ID
     //SFT
     //TrAna->Clustering(  ) :TO BE implemented
     TrAna->TrackSearchSFTT();

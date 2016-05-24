@@ -139,7 +139,7 @@ bool EventMonitor::ProcessingNormal( std::ifstream &In )
   //SFT
   {
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRHC(layer);
+      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nh=cont.size();
       for( int i=0; i<nh; ++i ){
   	TrRawHit *hit=cont[i];

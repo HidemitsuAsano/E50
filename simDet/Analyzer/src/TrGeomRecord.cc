@@ -65,10 +65,19 @@ double TrGeomRecord::WirePos (double wire) const
   //(dd_ = dXdW) dd_ is probably the width of the fiber
   //offset_ is width/2.0 (mm) in type B and C detector
   //w0: offset for the first segment
-  if( (confMan->AnaMode()) == 0 || 1 ){
+  if( (confMan->AnaMode()) <= 1 ){
     return dd_*(wire - w0_)+offset_; 
   }else if( (confMan->AnaMode()) > 1 ){//Type B, C detector. 1 layer has 2 sublayer
-    return dd_*((int)((wire-1)/2.0+1) - w0_)+offset_*((int)(wire-1)%2);
+    //return dd_*((int)((wire-1)/2.0+1) - w0_)+offset_*((int)(wire-1)%2);
+    double pos = dd_*((int)((wire-1)/2.0+1) - w0_)+offset_*((int)(wire-1)%2);
+    /*
+    std::cout << "wire " << wire << std::endl;
+    std::cout << "dd_ " << dd_ << std::endl;
+    std::cout << "w0_ " << w0_ << std::endl;
+    std::cout << "offset " << offset_ << std::endl;
+    std::cout << "xl pos " << pos << std::endl;
+    */
+    return pos;
   }else{
     return -9999.;
   } 

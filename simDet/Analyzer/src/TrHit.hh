@@ -109,7 +109,7 @@ public:
 //   { return CalcMWPCObservables(); }
 //
   
-  static bool compareTrHitPredicate(TrHit lhs, TrHit rhs) { return (lhs.wire_ < rhs.wire_); }
+  static bool compareTrHitPredicate(TrHit *lhs, TrHit *rhs) { return (lhs->wire_ < rhs->wire_); }
   /*
   struct compareTrHitFunctor : public std::binary_function<TrHit, TrHit, bool>
     {

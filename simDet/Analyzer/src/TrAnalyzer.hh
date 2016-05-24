@@ -36,6 +36,7 @@ private:
 
 public:
   bool DecodeRawHits( RawData *rawData );
+  bool SortTrHits();
 
   inline const TrHitContainer & GetSFTTrHitContainer( int layer ) const;
   inline const TrHitClusterContainer & GetSFTTrHitClusterContainer( int layer ) const;

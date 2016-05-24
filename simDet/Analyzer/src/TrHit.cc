@@ -34,6 +34,7 @@ TrHit::TrHit()
 TrHit::TrHit( int layer, double wire )
   : layer_(layer), wire_(wire)
 {
+
 }
 
 TrHit::~TrHit()
@@ -60,10 +61,16 @@ bool TrHit::CalcObservables( void )
   static const std::string funcname="[TrHit::CalcObservables]";
   
   ConfMan *confMan=ConfMan::GetConfManager();
-  if(!confMan) return false;
+  if(!confMan){
+    std::cout << "Can not find ConfManager !! " << std::endl;
+    return false;
+  }
 
   TrGeomMan *geomMan=confMan->GetTrGeomManager();
-  if(!geomMan) return false;
+  if(!geomMan){
+    std::cout << "Can not find GeomManager !! " << std::endl;
+    return false;
+  }
 //   TrTdcCalibMan *calibMan=confMan->GetTrTdcCalibManager();
 //   if(!calibMan) return false;
 //   TrDriftParamMan *driftMan=confMan->GetTrDriftParamManager();

@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 
   if (!gconfManager->Initialize())
     return 0;
-
+  std::cout << "ConfMan::AnaMode " << gconfManager->AnaMode() << std::endl;
   if( !InputData ) return 0;
   int evNum=0;
   while( !InputData.eof() ){

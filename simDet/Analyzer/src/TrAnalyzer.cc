@@ -53,7 +53,6 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
   ConfMan *confMan = ConfMan::GetConfManager();
 
   clearTrHits();
-  clearTrHitClusters();
   clearTracksSFTT();
 
   //SFT
@@ -77,7 +76,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	  std::cout<< rhit->LayerId() << " " << rhit->GetDL(j) << std::endl;
 #endif
 	}
-	if(!hit) continue; 
+	//if(!hit) continue; 
 	
 	if(hit->CalcObservables())
 	  SFTTrHitContainer_[layer].push_back(hit);
@@ -99,26 +98,56 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	
 	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
 	int nhitpos= rhit->GetSize();
-	for( int j=0; j<nhitpos; ++j ){
-	  hit->SetPos( rhit->WireId() ); // set segment ID as a hit position ??? ->re-fill in the CalcObservables
+  for( int j=0; j<nhitpos; ++j ){
+	  hit->SetPos( rhit->WireId() ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
+                                   // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
 	  
 #if check1
-	  std::cout<< rhit->LayerId() << " " << rhit->WireId(j) << std::endl;
+	  std::cout<< __FILE__ << "  "  << __LINE__ << ": " << << rhit->LayerId() << " " << rhit->WireId() << std::endl;
 #endif
 	}
-	if(!hit) continue; 
+	//if(!hit) continue; 
 	
-	if(hit->CalcObservables())//hit position for each hit (before clustering) is calculated in this function, calling TrGeomRecord
+	if(hit->CalcObservables()){//hit position for each hit (before clustering) is calculated in this function, calling TrGeomRecord
 	  SFTTrHitContainer_[layer].push_back(hit);
-	else
-	  delete hit;
-      }
-    }
+	}else{
+    std::cout << __FILE__ << "TrHit::CalcObservables fail " << __LINE__ << std::endl;
+  }
+  //  delete hit; //why ???
+      }//for nhit
+    }//for ilayer
   }//if Type A, B ,C
+  
   
 
   return true;
 }
+
+bool TrAnalyzer::SortTrHits()
+{
+
+  //sort row hits here by wire id
+  for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+    std::sort(SFTTrHitContainer_[layer].begin(),SFTTrHitContainer_[layer].end(),TrHit::compareTrHitPredicate);//simple sort does not work
+  }
+
+  //test
+  for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+    int nhit = SFTTrHitContainer_[layer].size();
+    std::cout << "layer : size" << layer << " : " << nhit << std::endl;
+    for(int ihit = 0;ihit<nhit; ihit++){
+      TrHit *hit = SFTTrHitContainer_[layer][ihit];
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "layer " << layer << std::endl; 
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "layer stored " << hit->GetLayer() << std::endl; 
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "wire stored " << hit->GetWire() << std::endl; 
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "pos stored " << hit->GetPos() << std::endl; 
+    }
+  }
+
+  return true;
+
+}
+
 
 ////////////////////////////////////////////
 //SFT clustering
@@ -147,7 +176,7 @@ bool TrAnalyzer::TrackSearchSFTT( void )
   int ntrack =
     LocalTrackSearch( &(SFTTrHitContainer_[1]), TrackSFTTCol, 
 		      NumOfLayersSFT, MinNumOfHitsSFT );
-  // std::cout<< "ntrack= " << ntrack << std::endl;
+//  std::cout<< __FILE__ << "  " << __LINE__ << "ntrack= " << ntrack << std::endl;
   
   return true;
 }
