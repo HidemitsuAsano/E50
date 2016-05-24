@@ -36,7 +36,7 @@ int NhitGroup=0;
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
-int LocalTrackSearch( const TrHitContainer * HC,
+int LocalTrackSearch( const TrHitContainer * hitcontainer,
 		      std::vector <TrLocalTrack *> &TrackCont, 
 		      int NumOfLayers, unsigned int MinNumOfHits )
 {
@@ -46,18 +46,21 @@ int LocalTrackSearch( const TrHitContainer * HC,
   CandCont.resize(NumOfLayers);
 
   for( int i=0; i<NumOfLayers; ++i ){
-    MakeHitCluster( HC[i], CandCont[i] );
+    MakeHitCluster( hitcontainer[i], CandCont[i] );
   }
   
   std::vector <int> nCombi(NumOfLayers);
-  for( int i=0; i<NumOfLayers; ++i ){ 
-    nCombi[i]=(CandCont[i]).size();
+  for( int ilr=0; ilr<NumOfLayers; ++ilr ){ 
+    nCombi[ilr]=(CandCont[ilr]).size();
 
     // If #Cluster>MaxNumerOfCluster,  error return
 
-    if(nCombi[i]>MaxNumberOfClusters){
-      for( int i=0; i<NumOfLayers; ++i )
-	for_each( CandCont[i].begin(), CandCont[i].end(), DeleteObject() );
+    if(nCombi[ilr]>MaxNumberOfClusters){
+      std::cout << __FILE__ <<" : " << __LINE__ << " : "<< "MaxNumbeOfClusters exceed!! " << std::endl;
+      std::cout << "layer: " << ilr << " MaxNumbefOfCluster : "  << MaxNumberOfClusters << " # of clusteres reconstructed : "<< 
+    nCombi[ilr] << std::endl;
+      for( int jlr=0; jlr<NumOfLayers; ++jlr )
+        for_each( CandCont[jlr].begin(), CandCont[jlr].end(), DeleteObject() );
       return 0;
     } 
   }
@@ -97,7 +100,7 @@ int LocalTrackSearch( const TrHitContainer * HC,
 	track->DoFit() &&
 	track->GetChiSquare()<MaxChisquare ){
       TrackCont.push_back(track);
-      double chisqr = track->GetChiSquare();
+  //    double chisqr = track->GetChiSquare();
     }
     else{
       //      std::cout << "No tracks available" << std::endl;
@@ -220,19 +223,22 @@ int LocalTrackSearchFromCluster( const TrHitClusterContainer *clustercont,
   static const std::string funcname = "[LocalTrackSearchFromCluster]";
 
   
+  //check the number of cluster 
   std::vector <int> nCombi(NumOfLayers);
-  for( int i=0; i<NumOfLayers; ++i ){ 
-    nCombi[i]=(clustercont[i]).size();
+  for( int ilr=0; ilr<NumOfLayers; ++ilr ){ 
+    nCombi[ilr]=(clustercont[ilr]).size();
 
     // If #Cluster>MaxNumerOfCluster,  error return
 
-    if(nCombi[i]>MaxNumberOfClusters){
-      //for( int i=0; i<NumOfLayers; ++i ){
-      //  for_each( CandCont[i].begin(), CandCont[i].end(), DeleteObject() );
-      //}
-      std::cout << "exceed Maximum number of clusters: " << MaxNumberOfClusters << std::endl;
-
-      return 0;
+    if(nCombi[ilr]>MaxNumberOfClusters){
+      if(nCombi[ilr]>MaxNumberOfClusters){
+        std::cout << __FILE__ <<" : " << __LINE__ << " : "<< "MaxNumbeOfClusters exceed!! " << std::endl;
+        std::cout << "layer: " << ilr << " MaxNumbefOfCluster : "  << MaxNumberOfClusters << " # of clusteres reconstructed : "<< 
+          nCombi[ilr] << std::endl;
+        for( int jlr=0; jlr<NumOfLayers; ++jlr )
+          for_each( clustercont[jlr].begin(), clustercont[jlr].end(), DeleteObject() );
+        return 0;
+      } 
     } 
   }
 
@@ -450,7 +456,7 @@ int LocalTrackSearchQ( const TrHitContainer * HC,
 	track->DoFit2() &&
 	track->GetChiSquare()<MaxChisquare ){
       TrackCont.push_back(track);
-      double chisqr = track->GetChiSquare();
+     // double chisqr = track->GetChiSquare();
     }
     else{
       //      std::cout << "No tracks available" << std::endl;
@@ -709,7 +715,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	    << std::endl;
 #endif
 
-  int NHitV=0,NHitX=0,NHitU=0,NResV=0,NResX=0,NResU=0;
+  int NHitV=0,NHitX=0,NHitU=0;//,NResV=0,NResX=0,NResU=0;
 
   //for( int i=0; i<1; ++i ){
   for( int i=0; i<nnCombiV; ++i ){
@@ -720,7 +726,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	track->GetChiSquare()<MaxChisquareVXU ){
       TrackContV.push_back(track);
       NHitV = track->GetNHit();
-      double chisqr = track->GetChiSquare();
+      //double chisqr = track->GetChiSquare();
     }
     else{
       delete track;
@@ -734,7 +740,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	track->GetChiSquare()<MaxChisquareVXU ){
       TrackContX.push_back(track);
       NHitX = track->GetNHit();
-      double chisqr = track->GetChiSquare();
+      //double chisqr = track->GetChiSquare();
     }
     else{
       delete track;
@@ -748,7 +754,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	track->GetChiSquare()<MaxChisquareVXU ){
       TrackContU.push_back(track);
       NHitU = track->GetNHit();
-      double chisqr = track->GetChiSquare();
+      //double chisqr = track->GetChiSquare();
     }
     else{
       delete track;
@@ -1161,8 +1167,8 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	chiv=-1.0,chix=-1.0,chiu=-1.0;
 	TrLocalTrack *track = new TrLocalTrack();
 	
-	int mV=0,mX=0,mU=0;
-	int mmV=0,mmX=0,mmU=0;
+	//int mV=0,mX=0,mU=0;
+	//int mmV=0,mmX=0,mmU=0;
 	
 	/* V Plane  */
 	if(i>-1){
@@ -1188,7 +1194,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	    }
 	    delete trackV ;
 	  }
-	  int NHitV = track->GetNHit();
+	  //int NHitV = track->GetNHit();
 	}
 
 	/* X Plane  */
@@ -1216,7 +1222,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	  }
 
 
-	  int NHitX = track->GetNHit();
+	  //int NHitX = track->GetNHit();
 	}
 	/* U Plane  */
 	if(k>-1){
@@ -1242,7 +1248,7 @@ int LocalTrackSearch2( const TrHitContainer * HC,
 	    }
 	    delete trackU;
 	  }
-	  int NHitU = track->GetNHit();
+	  //int NHitU = track->GetNHit();
 	}
 	
 	track->SetAv(Av);
@@ -1608,7 +1614,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	    << std::endl;
 #endif
 
-  int NHitV=0,NHitX=0,NHitU=0,NResV=0,NResX=0,NResU=0;
+  int NHitV=0,NHitX=0,NHitU=0;//,NResV=0,NResX=0,NResU=0;
 
   //for( int i=0; i<1; ++i ){
   for( int i=0; i<nnCombiV; ++i ){
@@ -1619,7 +1625,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	track->GetChiSquare()<MaxChisquareVXU ){
       TrackContV.push_back(track);
       NHitV = track->GetNHit();
-      double chisqr = track->GetChiSquare();
+      //double chisqr = track->GetChiSquare();
     }
     else{
       delete track;
@@ -1633,7 +1639,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	track->GetChiSquare()<MaxChisquareVXU ){
       TrackContX.push_back(track);
       NHitX = track->GetNHit();
-      double chisqr = track->GetChiSquare();
+      //double chisqr = track->GetChiSquare();
     }
     else{
       delete track;
@@ -1647,7 +1653,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	track->GetChiSquare()<MaxChisquareVXU ){
       TrackContU.push_back(track);
       NHitU = track->GetNHit();
-      double chisqr = track->GetChiSquare();
+      //double chisqr = track->GetChiSquare();
     }
     else{
       delete track;
@@ -2070,8 +2076,8 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	chiv=-1.0,chix=-1.0,chiu=-1.0;
 	TrLocalTrack *track = new TrLocalTrack();
 	
-	int mV=0,mX=0,mU=0;
-	int mmV=0,mmX=0,mmU=0;
+  //	int mV=0,mX=0,mU=0;
+  //	int mmV=0,mmX=0,mmU=0;
 	
 	/* V Plane  */
 	if(i>-1){
@@ -2097,7 +2103,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	    }
 	    delete trackV ;
 	  }
-	  int NHitV = track->GetNHit();
+	  //int NHitV = track->GetNHit();
 	}
 
 	/* X Plane  */
@@ -2125,7 +2131,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	  }
 
 
-	  int NHitX = track->GetNHit();
+	  //int NHitX = track->GetNHit();
 	}
 	/* U Plane  */
 	if(k>-1){
@@ -2151,7 +2157,7 @@ int LocalTrackSearchQ2( const TrHitContainer * HC,
 	    }
 	    delete trackU;
 	  }
-	  int NHitU = track->GetNHit();
+	  //int NHitU = track->GetNHit();
 	}
 	
 	track->SetAv(Av);
@@ -2410,7 +2416,7 @@ makeindex( int ndim_org, int minimumHit, int ndim, const int *index1 )
       } else {
         index.push_back(elem);
       }
-      int size1=index.size();
+    //  int size1=index.size();
     }
   }
 
@@ -2454,7 +2460,7 @@ makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 )
       } else {
         index.push_back(elem);
       }
-      int size1=index.size();
+      //int size1=index.size();
     }
   }
 
@@ -2463,6 +2469,8 @@ makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 )
 
 
 //make cluster layer by layer
+//input: TrHitContainer 
+//output: the vector of TrHitCluster 
 bool MakeHitCluster( const TrHitContainer & trhitcontainer,
 		     std::vector <TrHitCluster *> & Cont )
 {  
@@ -2470,8 +2478,7 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
   
   int nhit=trhitcontainer.size(); //number of raw hits in the layer
   
-  //sort by wire (segment number)
-
+  std::vector <int> vLinkSegment; //store the candidate of segment # for clustering
   for( int i=0; i<nhit; ++i ){
     TrHit *hit=trhitcontainer[i];
     if( hit ){
@@ -2481,29 +2488,58 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
         //if( !(hit->rangecheck(m)) ) continue; //checking the range of drift length
         
           double pos=hit->GetPos(im);	
-          double wp=hit->GetWirePosition();//local-x position
-        //double dl=hit->GetDriftLength(m);
+          //double wp=hit->GetWirePosition();//local-x position
+          //double dl=hit->GetDriftLength(m);
   
           Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,pos,im) ) );
         }
-      }else if( confMan->AnaMode()>=1 ){//clustering is assumed  ?
+      }else if( confMan->AnaMode()>=1 ){//Type A, B,C detector
         int layer = hit->GetLayer(); 
-        double segment= hit->GetWire();
+        int segment= hit->GetWire();
         //double pos=hit->GetPos();	
-        double wp=hit->GetWirePosition();//local-x position
+        double lxpos=hit->GetWirePosition();//local-x position
         if(multiplicity>1){
           std::cout << __FILE__ << "  " << __LINE__ << " multiple hits on one segment!!: " << multiplicity << std::endl;
           std::cout << "layer: " << layer << " segment: " << segment << std::endl;  
         }
+        
+        unsigned int vlinksize = vLinkSegment.size();
+        int seglink1stcandidate = -1;
+        //int seglink2ndcandidate = -1;
+        if(vlinksize == 0){
+          vLinkSegment.push_back(segment);
+        }else if(vlinksize>0){
+          seglink1stcandidate = vLinkSegment.at(vlinksize);
+          //candidates for clustering are always located in segment-1 or segment-2 
+          //, since TrHits are sorted by ascending order
+          if( ((segment - seglink1stcandidate) == 1) 
+            || ((segment - seglink1stcandidate) == 2)
+           ){
+            //add this hit for clustering
+            vLinkSegment.push_back(segment);
+          }else{
+            //this is not for clustering
+            vLinkSegment.clear();
+            //
+            vLinkSegment.push_back(segment);
+          }//if clustering OK
+        }//if vlinksize >0 
+        
+        /*
+        if(vlinksize>2){
+          seglink2ndcandidate = vLinkSegment.at(vlinksize-2);
+          if((segment - seglink1stcandidate) == 2){
+
+          }
+        }*/
         //
         //write down clustering algorithm here
         //
         //search neighboring hits at first
+        std::cout << "layer: " << layer << "segment: " << segment << "local-pos: " << lxpos << std::endl;
         
-
-        Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,wp,0) ) );
-
-      }//Type A, B, C detector
+        Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,lxpos,0) ) );
+      }//if Type A, B, C detector
     }//if TrHit
   }//i hit
 

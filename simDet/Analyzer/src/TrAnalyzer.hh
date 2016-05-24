@@ -27,7 +27,7 @@ public:
 private:
   TrAnalyzer( const TrAnalyzer & );
   TrAnalyzer & operator = ( const TrAnalyzer & );
-
+  bool isTrHitsSorted_;
 private:
   TrHitContainer SFTTrHitContainer_[NumOfLayersSFT+1];
   TrHitClusterContainer SFTTrHitClusterContainer_[NumOfLayersSFT+1];

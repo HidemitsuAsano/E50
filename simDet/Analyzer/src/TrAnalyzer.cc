@@ -34,7 +34,7 @@ const double MaxChiSqrScatTrack = 10000.;
 
 #define check1 0
 
-TrAnalyzer::TrAnalyzer()
+TrAnalyzer::TrAnalyzer():isTrHitsSorted_(false)
 {
 }
 
@@ -113,16 +113,19 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	}else{
     std::cout << __FILE__ << "TrHit::CalcObservables fail " << __LINE__ << std::endl;
   }
-  //  delete hit; //why ???
+  //  delete hit; //why ??? (Asano)
       }//for nhit
     }//for ilayer
   }//if Type A, B ,C
-  
   
 
   return true;
 }
 
+
+//sort TrHits for the clustering
+//input: SFTTrHitContainer_ before sorting
+//output: SFTTrHitContainer_ after sorting
 bool TrAnalyzer::SortTrHits()
 {
 
@@ -143,6 +146,8 @@ bool TrAnalyzer::SortTrHits()
       std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "pos stored " << hit->GetPos() << std::endl; 
     }
   }
+
+  isTrHitsSorted_ = true;
 
   return true;
 
@@ -173,7 +178,7 @@ int TrAnalyzer::SFTClustering( void )
 //SFT
 bool TrAnalyzer::TrackSearchSFTT( void )
 {
-  int ntrack =
+//  int ntrack =
     LocalTrackSearch( &(SFTTrHitContainer_[1]), TrackSFTTCol, 
 		      NumOfLayersSFT, MinNumOfHitsSFT );
 //  std::cout<< __FILE__ << "  " << __LINE__ << "ntrack= " << ntrack << std::endl;

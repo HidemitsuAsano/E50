@@ -31,10 +31,10 @@ TrHit::TrHit()
 {
 }
 
-TrHit::TrHit( int layer, double wire )
+TrHit::TrHit( int layer, int wire )
   : layer_(layer), wire_(wire)
 {
-
+  hitcounter_=0;
 }
 
 TrHit::~TrHit()
@@ -47,6 +47,8 @@ void TrHit::SetPos( double pos )
   pos_.push_back(pos); 
   belongTrack_.push_back(false);
   dlRange_.push_back(true);
+  hitcounter_++;
+  hitID_.push_back(hitcounter_);
 }
 
 void TrHit::clearRegisteredHits( void )

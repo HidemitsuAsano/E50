@@ -38,9 +38,9 @@ ThreeVector VertexPointByHonly( const ThreeVector & Xin,
 				const ThreeVector & Pin, 
 				const ThreeVector & Pout )
 {
-  double xi=Xin.x(), yi=Xin.y(), xo=Xout.x(), yo=Xout.y();
+  double xi=Xin.x(), yi=Xin.y(), xo=Xout.x(); //,yo=Xout.y();
   double ui=Pin.x()/Pin.z(), vi=Pin.y()/Pin.z();
-  double uo=Pout.x()/Pout.z(), vo=Pout.y()/Pout.z();
+  double uo=Pout.x()/Pout.z();//, vo=Pout.y()/Pout.z();
 
   double z=(xi-xo)/(uo-ui);
   return ThreeVector( xi+ui*z, yi+vi*z, z+z_offset );
@@ -304,7 +304,7 @@ double calcLengthScat(const ThreeVector & Pout, const ThreeVector & Xout, const 
 ThreeVector CorrElossOutCheck(const ThreeVector & Pout, const ThreeVector & Xout, const ThreeVector & vtx, double mass)
 {
   double length=0.0;
-  double dE=0.0;
+  //double dE=0.0;
   double energy_new, mom_new;
 
   double mom=Pout.mag();

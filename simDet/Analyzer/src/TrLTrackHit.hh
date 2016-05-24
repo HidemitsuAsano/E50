@@ -40,7 +40,7 @@ public:
   void SetCalPosition( double x, double y ) { xcal_=x; ycal_=y; }
 
   int GetLayer( void ) const { return Hit_->GetLayer(); }
-  double GetWire( void ) const { return Hit_->GetWire(); }
+  int GetWire( void ) const { return Hit_->GetWire(); }
   //   int GetTdcVal( void ) const { return Hit_->GetTdcVal(nth_Hit_); }
   int GetTdcSize( void ) const { return Hit_->GetPosSize(); }
 

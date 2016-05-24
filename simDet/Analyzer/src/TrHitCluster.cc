@@ -7,10 +7,10 @@
 #include "TrHitCluster.hh"
 
 TrHitCluster::TrHitCluster( TrLTrackHit *hitA, TrLTrackHit *hitB )
-  : hitA_(hitA), hitB_(hitB), nhits_(0)
+  : hitA_(hitA), hitB_(hitB), clustersize_(0)
 {
-  if(hitA_) ++nhits_;
-  if(hitB_) ++nhits_;
+  if(hitA_) ++clustersize_;
+  if(hitB_) ++clustersize_;
 }
 
 TrHitCluster::~TrHitCluster()

@@ -17,10 +17,10 @@ public:
 
 private:
   TrLTrackHit *hitA_, *hitB_;
-  int nhits_;
+  int clustersize_;
   
 public:
-  int NumberOfHits( void ) const { return nhits_; }
+  int NumberOfHits( void ) const { return clustersize_; }
   TrLTrackHit *GetHit( int i ) const
   {
     if(i==0)      return hitA_;

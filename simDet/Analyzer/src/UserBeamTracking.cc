@@ -210,7 +210,9 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     TrAna->DecodeRawHits( rawData );
     TrAna->SortTrHits( );//sort TrHits by segment ID
     //SFT
+    //TODO check the TrHits are sorted or not
     //TrAna->Clustering(  ) :TO BE implemented
+    //
     TrAna->TrackSearchSFTT();
     int nt=TrAna->GetNtracksSFTT();
     event.ntr=nt;

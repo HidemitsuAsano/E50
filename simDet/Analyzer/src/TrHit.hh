@@ -23,7 +23,7 @@ class TrHit
 {
 public:
   TrHit();
-  TrHit( int layer, double wire ); 
+  TrHit( int layer, int wire ); 
 
   ~TrHit();
 
@@ -33,9 +33,11 @@ private:
 
 private:
   int layer_;
-  double wire_;//here wire means one segment of scintillating fiber 
+  int wire_;//here wire means one segment of scintillating fiber 
   DoubleVec pos_;//vector of hit position in the layer local coordinate
   DoubleVec dt_, dl_;//drift time , drift length
+  IntVec hitID_;//vector of hit ID 
+  int hitcounter_;
 //   IntVec tdc_;
 //   IntVec trailing_;
 //   DoubleVec dt_, dl_;
@@ -57,7 +59,7 @@ public:
   bool CalcObservables( void );
 
   void SetLayer( int layer ) { layer_=layer; }
-  void SetWire( double wire ) { wire_=wire; }  
+  void SetWire( int wire ) { wire_=wire; }  
   void SetPos( double pos );
 
   void SetTdcVal( int tdc );
@@ -74,12 +76,14 @@ public:
   void SetWirePosition( double wpos ) { wpos_ = wpos; }
 
   int GetLayer( void ) const { return layer_; }
-  double GetWire( void )  const { return wire_;}
+  int GetWire( void )  const { return wire_;}
 
   int GetPosSize( void ) const { return pos_.size(); }
+  int GetIDSize( void ) const { return hitID_.size(); }
   int GetDriftTimeSize( void ) const { return pos_.size(); }
   int GetDriftLengthSize( void ) const { return pos_.size(); }
   double GetPos( int nhit=0 ) const { return pos_[nhit]; }
+  int GetHitID( int nhit=0 ) const { return hitID_[nhit]; }
 //   int GetTdcTrailing( int nhit=0 ) const { return trailing_[nhit]; }
   double GetDriftTime( int nhit=0 ) const { return 0.; }
   double GetDriftLength( int nhit=0 ) const { return dl_[nhit]; }
