@@ -9,6 +9,15 @@ clustering
 2.set local position (named "pos_[i]" in the TrHit.cc) and z
 modify TrGeomMan.cc
 double TrGeomMan::calcWirePosition(int lnum, double wire) const
+->DONE and CONFIRM
+
+TODO: change the structure of TrHit
+
+TODO: need sort function before clustering by wire (segment) ID.
+->DONE and CONFIRM
+
+TODO: Divide decoding function and Sorting function
+->DONE and CONFIRM
 
 -> 
 3.clustering -> done in LocalTrackSearch (???)
@@ -54,4 +63,12 @@ Track info.
 -ndf
 -fit results
 -associated clusters' ID
+
+
+
+make BSFTReco.C and integrate reconstruction functions
+make **Reco.C for each subsystem
+
+
+
 
