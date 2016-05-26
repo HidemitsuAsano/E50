@@ -17,6 +17,9 @@
 #include "HistHelper.hh"
 #include "DetectorID.hh"
 #include "RawData.hh"
+#include "TrHit.hh"
+#include "TrHitCluster.hh"
+#include "TrAnalyzer.hh"
 #include "PrimInfo.hh"
 #include "SpecLib.hh"
 
@@ -87,6 +90,9 @@ struct Event{
   int    sftnhits;
   std::vector<int> sftlayer;
   std::vector<double> sftposx, sftposy;//always 0 in type A,B,C
+  int    sftnclus;
+  std::vector<int> sftlayerc;
+  std::vector<double> sftposlxc, sftposlzc;//always 0 in type A,B,C
   std::vector<double> sftdl;
 
   //T0
@@ -213,14 +219,28 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     //TODO check the TrHits are sorted or not
     //TrAna->Clustering(  ) :TO BE implemented
     //
-    TrAna->TrackSearchSFTT();
+    TrAna->TrackSearchSFTT();//clustering, making index
+    /*
+    for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+      const TrHitClusterContainer &cluscont= TrAna->GetSFTTrHitClusterContainer(layer);
+      int nclus = cluscont.size();
+      event.sftnclus = nclus;
+      for( int iclus=0; iclus<nclus;iclus++){
+        TrHitCluster *trhitclus = cluscont[iclus];
+        int clustersize_ = trhitclus->
+
+      }
+    }*/
+    
+    
+    
     int nt=TrAna->GetNtracksSFTT();
     event.ntr=nt;
     for( int it=0; it<nt; ++it ){
       TrLocalTrack *tp=TrAna->GetTrackSFTT(it);
       int nh=tp->GetNHit();
       double chisqr=tp->GetChiSquare();
-      double x0=tp->GetX0(), y0=tp->GetY0();
+      //     double x0=tp->GetX0(), y0=tp->GetY0();
       double u0=tp->GetU0(), v0=tp->GetV0();
       double xtgt=tp->GetX( 0.0 ), ytgt=tp->GetY( 0.0 );
       double utgt=u0, vtgt=v0;
@@ -232,12 +252,12 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
       event.v0.push_back(vtgt); 
       
       for( int ih=0; ih<nh; ++ih ){
-  	TrLTrackHit *hit=tp->GetHit(ih);
-  	int layerId=hit->GetLayer(); 
-  	event.layer.push_back(layerId);  
-  	double pos=hit->GetLocalHitPos(), res=hit->GetResidual();
-  	event.pos.push_back(pos);
-  	event.res.push_back(res);
+        TrLTrackHit *hit=tp->GetHit(ih);
+        int layerId=hit->GetLayer(); 
+        event.layer.push_back(layerId);  
+        double pos=hit->GetLocalHitPos(), res=hit->GetResidual();
+        event.pos.push_back(pos);
+        event.res.push_back(res);
       }
     }
   }
@@ -271,10 +291,14 @@ void EventBeamTracking::InitializeEvent( void )
   event.priphicm2 = -9999.0;
 
   //SFT
-  event.sftnhits = -1;
+  event.sftnhits = 0;
   event.sftlayer.clear();
   event.sftposx.clear();
   event.sftposy.clear();
+  event.sftnclus = 0;
+  event.sftlayerc.clear();
+  event.sftposlxc.clear();
+  event.sftposlzc.clear();
   event.sftdl.clear();
 
   //T0
@@ -344,7 +368,9 @@ bool ConfMan:: InitializeHistograms()
   tree->Branch("sftnhits", &event.sftnhits);
   tree->Branch("sftlayer", &event.sftlayer);
   tree->Branch("sftposx", &event.sftposx);//hit position of raw hits
-  tree->Branch("sftposy", &event.sftposy);//hit position if raw hits
+  tree->Branch("sftposy", &event.sftposy);//hit position of raw hits
+  tree->Branch("sftposlxc", &event.sftposlxc);//local hit position of cluster
+  tree->Branch("sftposlzc", &event.sftposlzc);//local hit position of cluster
   tree->Branch("sftdl", &event.sftdl);
 
   //T0

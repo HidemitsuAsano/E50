@@ -50,7 +50,17 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 {
   const std::string funcname = "[TrAnalyzer::DecodeRawHits]";
 
-  ConfMan *confMan = ConfMan::GetConfManager();
+  ConfMan *confMan=ConfMan::GetConfManager();
+  if(!confMan){
+    std::cout << "Can not find ConfManager !! " << std::endl;
+    return false;
+  }
+
+  TrGeomMan *geomMan=confMan->GetTrGeomManager();
+  if(!geomMan){
+    std::cout << "Can not find GeomManager !! " << std::endl;
+    return false;
+  }
 
   clearTrHits();
   clearTracksSFTT();
@@ -96,10 +106,12 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
       for( int i=0; i<nhit; ++i ){
 	TrRawHit *rhit=cont[i];
 	
-	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
+  int rlayerID = rhit->LayerId();
+  int rwireID  = rhit->WireId();
+	TrHit *hit=new TrHit(rlayerID ,rwireID);
 	int nhitpos= rhit->GetSize();
   for( int j=0; j<nhitpos; ++j ){
-	  hit->SetPos( rhit->WireId() ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
+	  hit->SetPos( rwireID ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
                                    // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
 	  
 #if check1
@@ -108,11 +120,16 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	}
 	//if(!hit) continue; 
 	
-	if(hit->CalcObservables()){//hit position for each hit (before clustering) is calculated in this function, calling TrGeomRecord
-	  SFTTrHitContainer_[layer].push_back(hit);
-	}else{
-    std::cout << __FILE__ << "TrHit::CalcObservables fail " << __LINE__ << std::endl;
-  }
+  double wpos = geomMan->calcWirePosition(rlayerID,rwireID);
+  double angle = geomMan->GetTiltAngle(rlayerID);
+  hit->SetWirePosition(wpos);
+  hit->SetTiltAngle(angle);
+  //std::cout << __FILE__ << " : " << __LINE__ << " layer: " << rlayerID << " segment " <<rwireID  <<  ": wpos "<< wpos << "angle " << angle << std::endl;
+//	if(hit->CalcObservables()){//hit position for each hit (before clustering) is calculated in this function, calling TrGeomRecord
+  SFTTrHitContainer_[layer].push_back(hit);
+//	}else{
+ //   std::cout << __FILE__ << "TrHit::CalcObservables fail " << __LINE__ << std::endl;
+//  }
   //  delete hit; //why ??? (Asano)
       }//for nhit
     }//for ilayer
@@ -128,12 +145,25 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 //output: SFTTrHitContainer_ after sorting
 bool TrAnalyzer::SortTrHits()
 {
-
+  //test
+  /*
+  for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+    int nhit = SFTTrHitContainer_[layer].size();
+    std::cout << "layer : size" << layer << " : " << nhit << std::endl;
+    for(int ihit = 0;ihit<nhit; ihit++){
+      TrHit *hit = SFTTrHitContainer_[layer][ihit];
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "layer " << layer << std::endl; 
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "layer stored " << hit->GetLayer() << std::endl; 
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "wire stored " << hit->GetWire() << std::endl; 
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "pos stored " << hit->GetWirePosition() << std::endl; 
+    }
+  }*/
   //sort row hits here by wire id
   for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
     std::sort(SFTTrHitContainer_[layer].begin(),SFTTrHitContainer_[layer].end(),TrHit::compareTrHitPredicate);//simple sort does not work
   }
-
+  
+  /*
   //test
   for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
     int nhit = SFTTrHitContainer_[layer].size();
@@ -145,7 +175,7 @@ bool TrAnalyzer::SortTrHits()
       std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "wire stored " << hit->GetWire() << std::endl; 
       std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "pos stored " << hit->GetPos() << std::endl; 
     }
-  }
+  }*/
 
   isTrHitsSorted_ = true;
 

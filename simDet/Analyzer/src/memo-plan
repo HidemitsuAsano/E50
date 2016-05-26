@@ -36,6 +36,8 @@ MakeHitCluster( const TrHitContainer & HC,
                   std::vector <TrHitCluster *> & Cont )  
 (not a member function. defined in TrTrackSeacrh.cc (TODO:move it somewhere) 
 
+->give global position for each cluster (localx and z)
+
 3) track search from cluster, not rawhits (TODO)
 
 
@@ -68,7 +70,4 @@ Track info.
 
 make BSFTReco.C and integrate reconstruction functions
 make **Reco.C for each subsystem
-
-
-
 

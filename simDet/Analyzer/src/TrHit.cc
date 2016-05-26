@@ -80,6 +80,8 @@ bool TrHit::CalcObservables( void )
 
   wpos_=geomMan->calcWirePosition(layer_,wire_);
   angle_=geomMan->GetTiltAngle(layer_);
+
+  std::cout << __FILE__ << " : " << __LINE__ << " layer: " << layer_ << " segment " <<wire_  <<  ": wpos_ "<< wpos_ << "angle " << angle_ << std::endl;
   
   bool Status = true;
   int nhitpos  = pos_.size();//nhitpos : number of hits 
