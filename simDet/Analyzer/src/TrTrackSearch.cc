@@ -2477,103 +2477,135 @@ makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 )
 bool MakeHitCluster( const TrHitContainer & trhitcontainer,
 		     std::vector <TrHitCluster *> & Cont )
 {  
-  ConfMan *confMan=ConfMan::GetConfManager();
+//  ConfMan *confMan=ConfMan::GetConfManager();
 //  std::cout << __FILE__ << std::endl;
   int nhit=trhitcontainer.size(); //number of raw hits in the layer
-  
+  if(nhit == 0) return true;
   std::vector <int> vLinkSegment; //store the candidate of segment # for clustering
   std::vector <double> vLinkSegmentPos; //store the mean position of candidate of segment # for clustering
   //std::vector <double> vLinkSegmentADC; //store the sum of ADC of candidate of segment # for clustering
   int clusterID=0;
   int vlinklxsize = 1;
   int vlinklzsize = 1;
-  for( int i=0; i<nhit; ++i ){
-    TrHit *hit=trhitcontainer[i];
+  for( int ihit=0; ihit<nhit; ++ihit ){
+    TrHit *hit=trhitcontainer[ihit];
     if( hit ){
-      int multiplicity = hit->GetPosSize();
-      if( confMan->AnaMode()==0 ){
-        for (int im=0; im<multiplicity; im++) {
-          //if( !(hit->rangecheck(m)) ) continue; //checking the range of drift length
-        
-          //double pos=hit->GetPos(im);	
-          //double wp=hit->GetWirePosition();//local-x position
-          //double dl=hit->GetDriftLength(m);
-  
-          //Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,pos,im) ) );
-        }
-      }else if( confMan->AnaMode()>=1 ){//Type A, B,C detector
-        int layer = hit->GetLayer(); 
-        int segment= hit->GetWire();
-        //double pos=hit->GetPos();	
-        double lxpos=hit->GetWirePosition();//local-x position
-        if(multiplicity>1){
-          std::cout << __FILE__ << "  " << __LINE__ << " multiple hits on one segment!!: " << multiplicity << std::endl;
-          std::cout << "layer: " << layer << " segment: " << segment << std::endl;  
-        }
-        
-        unsigned int vlinksize = vLinkSegment.size();
-        int seglinkcandidate = -1;
-        bool isclusteringOK = false;
-        if(vlinksize == 0){
-          vLinkSegment.push_back(segment);
-          vLinkSegmentPos.push_back(lxpos);
-        }else if(vlinksize>0){
-          //std::cout << __FILE__ << " : " << __LINE__ << " : " <<
-          //"layer: " << layer <<
-          //"ID: " << clusterID << std::endl;
-          //std::cout << "size" << vlinksize << std::endl;
-          seglinkcandidate = vLinkSegment.at(vlinksize-1);
-          //std::cout << "segment " << segment << " linkcandidate " << seglinkcandidate << std::endl;
-          //candidates for clustering are always located in segment-1 or segment-2 
-          //, since TrHits are sorted by ascending order
-          if( ((segment - seglinkcandidate) == 1) 
-            || ((segment - seglinkcandidate) == 2)
-           ){
-            //this cluster can be bigger
-            //add this hit for clustering
-            vLinkSegment.push_back(segment);
-            vLinkSegmentPos.push_back(lxpos);
-            //increase lxcluster size
-            if( (segment - seglinkcandidate) == 1) vlinklxsize++;
-            //increase lzcluster size
-            if( (segment - seglinkcandidate) == 2) vlinklzsize++;
-          }else{
-            //make cluster for the previous contents
-            isclusteringOK = true;
-          }//if clustering OK
-        }//if vlinksize >0 
-        
-        if(isclusteringOK){
-       //   std::cout << __FILE__ << " : " << __LINE__ << " : " <<
-        //  "layer: " << layer <<
-        //  "ID: " << clusterID << std::endl;
-        //  std::cout << "size" << vlinksize << std::endl;
-          
-          TrHitCluster *hitcluster = new TrHitCluster();
-          hitcluster->SetClusterID(clusterID);
-          clusterID++;
-          hitcluster->SetClusterSize(vlinksize);
-          
-          double calclxpos=0;
-          for(unsigned int ihit =0 ; ihit<vlinksize ;ihit++){
-            calclxpos += vLinkSegmentPos.at(ihit);
-          }
-          //mean position of local-x
-          calclxpos = calclxpos/(double)vlinksize;
-          hitcluster->SetLocalX(calclxpos);
+      //int multiplicity = hit->GetPosSize();
+      /*
+         if( confMan->AnaMode()==0 ){
+         for (int im=0; im<multiplicity; im++) {
+      //if( !(hit->rangecheck(m)) ) continue; //checking the range of drift length
 
-          Cont.push_back(hitcluster);
-          
-          //when clustering is finished,
-          //clear the link vector and push back the next cluster candidate
-          vLinkSegment.clear();
-          vLinkSegmentPos.clear();
+      //double pos=hit->GetPos(im);	
+      //double wp=hit->GetWirePosition();//local-x position
+      //double dl=hit->GetDriftLength(m);
+
+      //Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,pos,im) ) );
+      }
+      }else if( confMan->AnaMode()>=1 ){//Type A, B,C detector */
+
+      //int layer = hit->GetLayer(); 
+      int segment= hit->GetWire();
+      double lxpos=hit->GetWirePosition();//local-x position
+      /*
+         if(multiplicity>1){
+      //   std::cout << __FILE__ << "  " << __LINE__ << " multiple hits on one segment!!: " << multiplicity << std::endl;
+      //   std::cout << "layer: " << layer << " segment: " << segment << std::endl;  
+      }*/
+
+      unsigned int vlinksize = vLinkSegment.size();
+      int seglinkcandidate = -9999;
+      bool isclusteringOK = false;
+      /*
+         std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
+         " layer: " << layer << " segment " << segment << 
+         " clusterID: " << clusterID << std::endl;
+         std::cout << " size " << vlinksize << std::endl;
+         */
+      if(vlinksize == 0){
+        vLinkSegment.push_back(segment);
+        vLinkSegmentPos.push_back(lxpos);
+      }else{
+        seglinkcandidate = vLinkSegment.at(vlinksize-1);
+        //std::cout << "segment " << segment << " linkcandidate " << seglinkcandidate << std::endl;
+        //candidates for clustering are always located in segment-1 or segment-2 
+        //, since TrHits are sorted by ascending order
+        if( ((segment - seglinkcandidate) == 1) 
+            || ((segment - seglinkcandidate) == 2)
+          ){
+          //this cluster can be bigger
+          //add this hit for clustering
           vLinkSegment.push_back(segment);
           vLinkSegmentPos.push_back(lxpos);
-        }//ifclustering OK
-      }//if Type A, B, C detector
+          //std::cout << "add segment " << segment << std::endl;
+          //increase lzcluster size
+          if( (segment - seglinkcandidate) == 1) vlinklzsize++;
+          //increase lxcluster size
+          if( (segment - seglinkcandidate) == 2) vlinklxsize++;
+        }else{
+          isclusteringOK = true;
+
+          /*
+             std::cout << __FILE__ << " : " << __LINE__ << " clustering OK" << std::endl;
+
+             std::cout << "ihit " << ihit << " nhit " << nhit << 
+             " layer: " << layer <<
+             " ID: " << clusterID << std::endl;
+             std::cout << " size " << vlinksize << std::endl;
+             */
+        }//if clustering OK
+      }//if vlinksize >0 
+
+      if(isclusteringOK || (ihit == nhit-1 )){ // if it is last hit, finish clustering
+        unsigned int currentvlinksize = vLinkSegment.size();
+
+        TrHitCluster *hitcluster = new TrHitCluster();
+        hitcluster->SetClusterID(clusterID);
+        hitcluster->SetClusterSize(currentvlinksize);
+        hitcluster->SetClusterLzSize(vlinklzsize);
+        float LocalxSize  = (float) vlinklxsize;
+        if(vlinklzsize%2 == 0) LocalxSize += 0.5;//this should be offset from param.file
+        hitcluster->SetClusterLzSize(LocalxSize);
+
+        double calclxpos=0;
+        for(unsigned int jhit =0 ; jhit<currentvlinksize ;jhit++){
+          calclxpos += vLinkSegmentPos.at(jhit);
+        }
+        //mean position of local-x
+        calclxpos = calclxpos/(double)currentvlinksize;
+        hitcluster->SetLocalX(calclxpos);
+
+
+        //Cont.push_back(hitcluster);
+        //test
+        delete hitcluster;
+        /*
+           std::cout << __FILE__ << " : " << __LINE__ << " : " <<
+           "ihit " << ihit << " nhit " << nhit << 
+           " layer: " << layer <<
+           " ID: " << clusterID << std::endl;
+           std::cout << " cluster size: " << currentvlinksize << " lx cluster size " << LocalxSize << " lz cluster size " << vlinklzsize   << std::endl;
+           std::cout << "clustered segment ";
+           for(unsigned int icls =0 ;icls<currentvlinksize;icls++){
+           std::cout << vLinkSegment.at(icls) << "  " ;
+           }
+           std::cout << std::endl;
+           std::cout << "local -x " << calclxpos << std::endl;
+           */
+
+        //when clustering is finished,
+        //clear the link vector and push back the next cluster candidate
+        clusterID++;
+        vLinkSegment.clear();
+        vLinkSegmentPos.clear();
+        vlinklxsize = 1;
+        vlinklzsize = 1;
+        vLinkSegment.push_back(segment);
+        vLinkSegmentPos.push_back(lxpos);
+      }//ifclustering OK
+      // }//if Type A, B, C detector
     }//if TrHit
-  }//i hit
+  }//for i hit
 
   return true;
 }

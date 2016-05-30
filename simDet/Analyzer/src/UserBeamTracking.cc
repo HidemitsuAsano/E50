@@ -222,13 +222,21 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     TrAna->TrackSearchSFTT();//clustering, making index
     /*
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-      const TrHitClusterContainer &cluscont= TrAna->GetSFTTrHitClusterContainer(layer);
+      const TrHitClusterContainer &cluscont = TrAna->GetSFTTrHitClusterContainer(layer);
       int nclus = cluscont.size();
       event.sftnclus = nclus;
       for( int iclus=0; iclus<nclus;iclus++){
         TrHitCluster *trhitclus = cluscont[iclus];
-        int clustersize_ = trhitclus->
-
+        unsigned int clsID = trhitclus->GetClusterID();
+        int clustersize = trhitclus->GetClusterSize();
+        int clusterlxsize = trhitclus->GetClusterLxSize();
+        int clusterlzsize = trhitclus->GetClusterLzSize();
+        double lx = trhitclus->GetLocalX();
+        //double adc = trhitclus->GetAdcSum();
+        event.sftlayerc.push_back(layer);
+        event.sftposlxc.push_back(clusterlxsize);
+        event.sftposlzc.push_back(clusterlzsize);
+        event.sft
       }
     }*/
     

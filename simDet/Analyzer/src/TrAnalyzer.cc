@@ -63,6 +63,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
   }
 
   clearTrHits();
+  clearTrHitClusters();
   clearTracksSFTT();
 
   //SFT
