@@ -23,10 +23,10 @@ private:
   int clusterlzsize_; // 1 or 2 (max number = number of sublayer)
   unsigned int clusterID_;
   float localx_;//mean (maybe weighted mean) of TrHits
-  float adcsum_;//sum of adc of each MPPC
+//  float adcsum_;//sum of adc of each MPPC
                  //TODO : how to deal with TDC info ?
-  float tiltangle_; // maybe don't need to implement here, since tiltangle and z position can be obtained from the confmanager
-  float zpos_;      //
+//  float tiltangle_; // maybe don't need to implement here, since tiltangle and z position can be obtained from the confmanager
+//  float zpos_;      //
 
 public:
   unsigned int GetClusterID(void) const { return clusterID_; }
@@ -39,8 +39,8 @@ public:
   void SetClusterLzSize(int lzsize) { clusterlzsize_ = lzsize; }
   float GetLocalX( void ) const { return localx_; }
   void SetLocalX(float lx )  { localx_=lx; }
-  float GetAdcSum( void ) const { return adcsum_; }
-  void SetAdcSum(float adc )  { adcsum_=adc; }
+//  float GetAdcSum( void ) const { return adcsum_; }
+//  void SetAdcSum(float adc )  { adcsum_=adc; }
   
   /*
   TrLTrackHit *GetHit( int i ) const
