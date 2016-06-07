@@ -43,6 +43,7 @@ public:
   double GetTiltAngle( int lnum ) const;
   double GetRotAngle1( int lnum ) const;
   double GetRotAngle2( int lnum ) const;
+  double GetOffset( int lnum ) const;
   const ThreeVector & GetGlobalPosition( int lnum ) const;
   ThreeVector NormalVector( int lnum ) const;
   ThreeVector UnitVector( int lnum ) const;

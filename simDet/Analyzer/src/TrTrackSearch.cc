@@ -55,6 +55,7 @@ int LocalTrackSearch( const TrHitContainer * hitcontainer,
     MakeHitCluster( hitcontainer[ilr], CandCont[ilr] );
   }
   
+  //this way make too many candidates if there are multiple tracks (e.g. 2**12 layers) 
   int nCombi[NumOfLayers];
   for( int ilr=0; ilr<NumOfLayers; ++ilr ){ 
     nCombi[ilr]=(CandCont[ilr]).size();
@@ -315,7 +316,7 @@ makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 )
 bool MakeHitCluster( const TrHitContainer & trhitcontainer,
 		     std::vector <TrHitCluster *> & Cont )
 {  
-//  ConfMan *confMan=ConfMan::GetConfManager();
+  ConfMan *confMan=ConfMan::GetConfManager();
 //  std::cout << __FILE__ << std::endl;
   int nhit=trhitcontainer.size(); //number of raw hits in the layer
   if(nhit == 0) return true;
@@ -342,7 +343,7 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
       }
       }else if( confMan->AnaMode()>=1 ){//Type A, B,C detector */
 
-      //int layer = hit->GetLayer(); 
+      int layer = hit->GetLayer(); 
       int segment= hit->GetWire();
       double lxpos=hit->GetWirePosition();//local-x position
       /*
@@ -352,7 +353,8 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
       }*/
 
       unsigned int vlinksize = vLinkSegment.size();
-      int seglinkcandidate = -9999;
+      int seglinkcandidate1 = -9999;//last hit
+      int seglinkcandidate2 = -9999;//2nd last hit
       bool isclusteringOK = false;
       /*
          std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
@@ -364,12 +366,12 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
         vLinkSegment.push_back(segment);
         vLinkSegmentPos.push_back(lxpos);
       }else{
-        seglinkcandidate = vLinkSegment.at(vlinksize-1);
+        seglinkcandidate1 = vLinkSegment.at(vlinksize-1);
         //std::cout << "segment " << segment << " linkcandidate " << seglinkcandidate << std::endl;
         //candidates for clustering are always located in segment-1 or segment-2 
         //, since TrHits are sorted by ascending order
-        if( ((segment - seglinkcandidate) == 1) 
-            || ((segment - seglinkcandidate) == 2)
+        if( ((segment - seglinkcandidate1) == 1) 
+            || ((segment - seglinkcandidate1) == 2)
           ){
           //this cluster can be bigger
           //add this hit for clustering
@@ -377,9 +379,11 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
           vLinkSegmentPos.push_back(lxpos);
           //std::cout << "add segment " << segment << std::endl;
           //increase lzcluster size
-          if( (segment - seglinkcandidate) == 1) vlinklzsize++;
+          if( (segment - seglinkcandidate1) == 1) vlinklzsize++;
           //increase lxcluster size
-          if( (segment - seglinkcandidate) == 2) vlinklxsize++;
+          if(vlinksize>1) seglinkcandidate2 = vLinkSegment.at(vlinksize-2);//if there more than 1 hit for clustering, check also 2nd last hit
+          if( (segment - seglinkcandidate1) == 2) vlinklxsize++;
+          else if( (segment -seglinkcandidate2) == 2) vlinklxsize++;
         }else{
           isclusteringOK = true;
 
@@ -394,7 +398,7 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
         }//if clustering OK
       }//if vlinksize >0 
 
-      if(isclusteringOK || (ihit == nhit-1 )){ // if it is last hit, finish clustering
+      if(isclusteringOK || (ihit == nhit-1 )){ // if it is last hit in the layer, finish clustering
         unsigned int currentvlinksize = vLinkSegment.size();
 
         TrHitCluster *hitcluster = new TrHitCluster();
@@ -402,7 +406,9 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
         hitcluster->SetClusterSize(currentvlinksize);
         hitcluster->SetClusterLzSize(vlinklzsize);
         float LocalxSize  = (float) vlinklxsize;
-        if(vlinklzsize%2 == 0) LocalxSize += 0.5;//this should be offset from param.file
+        TrGeomMan *geomMan=confMan->GetTrGeomManager();
+        float offset = geomMan->GetOffset(layer);
+        if(vlinklzsize%2 == 0) LocalxSize += offset;//offset from parameter file
         hitcluster->SetClusterLzSize(LocalxSize);
 
         double calclxpos=0;
@@ -427,7 +433,7 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
            }
            std::cout << std::endl;
            std::cout << "local -x " << calclxpos << std::endl;
-           */
+        */ 
 
         //when clustering is finished,
         //clear the link vector and push back the next cluster candidate

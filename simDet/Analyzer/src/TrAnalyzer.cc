@@ -159,7 +159,7 @@ bool TrAnalyzer::SortTrHits()
       std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "pos stored " << hit->GetWirePosition() << std::endl; 
     }
   }*/
-  //sort row hits here by wire id
+  //sort row hits here by segment id
   for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
     std::sort(SFTTrHitContainer_[layer].begin(),SFTTrHitContainer_[layer].end(),TrHit::compareTrHitPredicate);//simple sort does not work
   }
@@ -189,8 +189,8 @@ bool TrAnalyzer::SortTrHits()
 //SFT clustering
 ////////////////////////////////////////////
 //
-//input: SFTTrHitContainer_ (member variable (vector of TrHit) if TrAnalyzer )
-//output:SFTTrHitClusterContainer_ (member variable (vector of TrHitCluster) if TrAnalyzer)
+//input: SFTTrHitContainer_ (member variable (vector of TrHit) of TrAnalyzer )
+//output:SFTTrHitClusterContainer_ (member variable (vector of TrHitCluster) of TrAnalyzer)
 //MakeHitCluster is implemented in TrTrackSearch.cc as a non-member function
 int TrAnalyzer::SFTClustering( void )
 {

@@ -93,6 +93,18 @@ double TrGeomMan::GetRotAngle2( int lnum ) const
   }
 }
 
+double TrGeomMan::GetOffset(int lnum) const 
+{
+  static const std::string funcname = "[TrGeomMan::GetOffset(int)]";
+  TrGeomRecord *pGeo = geomRecord_[lnum];
+  if( pGeo ) return pGeo->offset_;
+  else{
+    std::cerr << funcname << ": No record. Layer#=" 
+	      << lnum << std::endl;
+    throw std::out_of_range(funcname+": No record" );
+  }
+}
+
 const ThreeVector & TrGeomMan::GetGlobalPosition( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::GetGlobalPosition(int)]";
