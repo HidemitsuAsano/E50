@@ -6,17 +6,33 @@
 #define r_DetectorSize_h 1
 
 /////////////////////
-////Real detectors
+////Realistic detectors
 /////////////////////
 
+static const G4int    rBSFT_nLayer = 12;
+static const G4double rBSFT_SegSpacing =    1.0*mm;
+static const G4int    rBSFT_SegNum     =   10;
+//SFT_B round fiber Multi Cladding
+static const G4double rBSFT_B_Radius     =    0.5*mm;
+static const G4double rBSFT_B_Length     =  200.0*mm;
+static const G4double rBSFT_B_TiltAngle  =   30.0*degree;
+static const G4double rBSFT_B_SegSpacing =    1.0*mm;
+static const G4int    rBSFT_B_SegNum     =   10;
+static const G4double rBSFT_B_FramesizeX =  200.0*mm;
+static const G4double rBSFT_B_BoxThick   =   30.0*mm;
+static const G4double rBSFT_B_FrameThick =   30.0*mm;
+
+static const G4double rBSFT_B_Corefraction = 0.94;//fraction of senstive area of fiber
+static const G4double rBSFT_B_InnerCladding = 0.03;//fraction of inner cladding of fiber
+static const G4double rBSFT_B_OuterCladding = 0.03;//fraction of outer cladding of fiber
 //////Tracker size
-//BFT
-static const G4double rBFT_LaysizeX   = 120.0*mm;
-static const G4double rBFT_LaysizeY   = 120.0*mm;
-static const G4double rBFT_LaysizeZ   =   1.0*mm;
-static const G4double rBFT_TiltAngle  =  30.0*degree;
-static const G4double rBFT_BoxThick   =  30.0*mm;
-static const G4double rBFT_FrameThick =  10.0*mm;
+//BSFT
+static const G4double rBSFT_LaysizeX   = 120.0*mm;
+static const G4double rBSFT_LaysizeY   = 120.0*mm;
+static const G4double rBSFT_LaysizeZ   =   1.0*mm;
+static const G4double rBSFT_TiltAngle  =  30.0*degree;
+static const G4double rBSFT_BoxThick   =  30.0*mm;
+static const G4double rBSFT_FrameThick =  10.0*mm;
 
 //SFT
 static const G4double rSFT_LaysizeX   =  600.0*mm;

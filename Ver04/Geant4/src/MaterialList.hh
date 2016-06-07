@@ -78,7 +78,9 @@ public:
   G4Material *NaI;
   G4Material *SUS316L;
   G4Material *Aerogel;
-  G4Material *Scin;
+  G4Material *Scin;//Polystyrene
+  G4Material *PMMA;//Polymethylmethacrylate
+  G4Material *FP;//Fluorinated polymter
   G4Material *Polyethylene;
   G4Material *LiO;
   G4Material *LiN;

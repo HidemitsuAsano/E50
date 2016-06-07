@@ -113,9 +113,22 @@ MaterialList::MaterialList()
   Aerogel->AddElement( elO,  2 );
 
   // PolyStylene
-  Scin = new G4Material( "Scintillator", 1.032*g/cm3, 2 );
-  Scin->AddElement( elC, 9 );
-  Scin->AddElement( elH, 10 );
+//  Scin = new G4Material( "Scintillator", 1.032*g/cm3, 2 );
+ // Scin->AddElement( elC, 9 ); //natom
+ // Scin->AddElement( elH, 10 );
+  Scin = new G4Material( "Scintillator", 1.05*g/cm3, 2 ); //name, density , ncomponents
+  Scin->AddElement( elC, 8 ); //natom
+  Scin->AddElement( elH, 8 );
+
+  PMMA = new G4Material( "Polymethylmethacrylate", 1.19*g/cm3, 3);
+  PMMA->AddElement( elC, 5 );
+  PMMA->AddElement( elH, 2 );
+  PMMA->AddElement( elO, 8 );
+  
+  //no chemical information in the Kuraray catalog
+  FP = new G4Material( "Fluorinated polymter", 1.43*g/cm3, 2);
+  FP->AddElement( elC, 2 );
+  FP->AddElement( elH, 4 );
 
   // Polyethylene
   Polyethylene= new G4Material( "Polyethylene", 0.93*g/cm3, 2 );
