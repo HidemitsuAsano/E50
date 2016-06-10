@@ -92,7 +92,13 @@ int LocalTrackSearch( const TrHitContainer * hitcontainer,
 			    NumOfLayers, 
 			    &(nCombi[0]) );
   int nnCombi=CombiIndex.size();
-
+   
+  /* 
+  std::cout << " ===> " << nnCombi << " combinations will be checked.." 
+    << std::endl;
+  for(int ilr=0;ilr<12;ilr++){ 
+    std::cout << "lay " << ilr << "  " <<  nCombi[ilr] << std::endl;
+  }*/
 #if 0
   std::cout << " ===> " << nnCombi << " combinations will be checked.." 
 	    << std::endl;
@@ -220,7 +226,9 @@ int LocalTrackSearch( const TrHitContainer * hitcontainer,
 
 
 
-
+//ndim = Number of layers
+//ninimumHit : 8 is required so far
+//index -> 12C12 + 12C11 + 12C10 + 12C9 + 12C8
 std::vector< std::vector<int> > 
 makeindex( int ndim_org, int minimumHit, int ndim, const int *index1 )
 {
@@ -317,7 +325,8 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
 		     std::vector <TrHitCluster *> & Cont )
 {  
   ConfMan *confMan=ConfMan::GetConfManager();
-//  std::cout << __FILE__ << std::endl;
+  TrGeomMan *geomMan=confMan->GetTrGeomManager();
+  //  std::cout << __FILE__ << std::endl;
   int nhit=trhitcontainer.size(); //number of raw hits in the layer
   if(nhit == 0) return true;
   std::vector <int> vLinkSegment; //store the candidate of segment # for clustering
@@ -367,21 +376,19 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
         vLinkSegmentPos.push_back(lxpos);
       }else{
         seglinkcandidate1 = vLinkSegment.at(vlinksize-1);
-        //std::cout << "segment " << segment << " linkcandidate " << seglinkcandidate << std::endl;
         //candidates for clustering are always located in segment-1 or segment-2 
         //, since TrHits are sorted by ascending order
         if( ((segment - seglinkcandidate1) == 1) 
             || ((segment - seglinkcandidate1) == 2)
           ){
-          //this cluster can be bigger
-          //add this hit for clustering
+          //this cluster can be bigger, add this hit for clustering
           vLinkSegment.push_back(segment);
           vLinkSegmentPos.push_back(lxpos);
-          //std::cout << "add segment " << segment << std::endl;
           //increase lzcluster size
           if( (segment - seglinkcandidate1) == 1) vlinklzsize++;
-          //increase lxcluster size
-          if(vlinksize>1) seglinkcandidate2 = vLinkSegment.at(vlinksize-2);//if there more than 1 hit for clustering, check also 2nd last hit
+          
+          //if there more than 1 hit for clustering, check also 2nd last hit
+          if(vlinksize>1) seglinkcandidate2 = vLinkSegment.at(vlinksize-2);
           if( (segment - seglinkcandidate1) == 2) vlinklxsize++;
           else if( (segment -seglinkcandidate2) == 2) vlinklxsize++;
         }else{
@@ -406,7 +413,6 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
         hitcluster->SetClusterSize(currentvlinksize);
         hitcluster->SetClusterLzSize(vlinklzsize);
         float LocalxSize  = (float) vlinklxsize;
-        TrGeomMan *geomMan=confMan->GetTrGeomManager();
         float offset = geomMan->GetOffset(layer);
         if(vlinklzsize%2 == 0) LocalxSize += offset;//offset from parameter file
         hitcluster->SetClusterLzSize(LocalxSize);
@@ -418,7 +424,7 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
         //mean position of local-x
         calclxpos = calclxpos/(double)currentvlinksize;
         hitcluster->SetLocalX(calclxpos);
-
+        
 
         Cont.push_back(hitcluster);
         /*
@@ -548,3 +554,185 @@ TrLocalTrack *MakeTrack(  std::vector <TrHitCluster *> *CandCont,
   return tp;
 }
 
+
+int LocalTrackSearchWindow( const TrHitContainer * hitcontainer,
+		      std::vector <TrLocalTrack *> &TrackCont, 
+		      int NumOfLayers, unsigned int MinNumOfHits )
+{
+  static const std::string funcname = "[LocalTrackSearchWindow]";
+  
+  //vector of vector of TrHitCluster 
+  //1st row is layer 
+  //2nd row is cluster in each layer
+  //std::vector < std::vector <TrHitCluster *> > CandCont;
+  std::vector <TrHitCluster *>  CandCont[NumOfLayers];
+  //CandCont.resize(NumOfLayers);
+  
+  //doing clustering here
+  //TODO : move this to another function
+  for( int ilr=0; ilr<NumOfLayers; ++ilr ){
+    MakeHitCluster( hitcontainer[ilr], CandCont[ilr] );
+  }
+  
+  int nclus[NumOfLayers];
+  for( int ilr=0; ilr<NumOfLayers; ++ilr ){ 
+    nclus[ilr]=(CandCont[ilr]).size();
+
+    // If #Cluster>MaxNumerOfCluster,  error return
+    if(nclus[ilr]>MaxNumberOfClusters){
+      std::cout << __FILE__ <<" : " << __LINE__ << " : "<< "MaxNumbeOfClusters exceed!! " << std::endl;
+      std::cout << "layer: " << ilr << " MaxNumbefOfCluster : "  << MaxNumberOfClusters << " # of clusteres reconstructed : "<< 
+    nclus[ilr] << std::endl;
+      for( int jlr=0; jlr<NumOfLayers; ++jlr )
+        for_each( CandCont[jlr].begin(), CandCont[jlr].end(), DeleteObject() );
+      return 0;
+    } 
+  }
+
+#if 0
+  std::cout << funcname << ": #Hits of each group" << std::endl;
+  for( int i=0; i<NumOfLayers; ++i ) std::cout << std::setw(4) << nCombi[i];
+  std::cout << std::endl;
+  for( int i=0; i<NumOfLayers; ++i ){
+    int n=CandCont[i].size();
+    std::cout << "[" << std::setw(3) << i << "]: "
+	      << std::setw(3) << n << " ";
+    for( int j=0; j<n; ++j ){
+      std::cout << ((TrLTrackHit *)CandCont[i][j]->GetHit(0))->GetWire() << " ";
+    }
+    std::cout << std::endl;
+  }
+#endif
+  
+  
+  std::vector < std::vector <int> > 
+    CombiIndex = makeindex( NumOfLayers, 
+			    MinNumOfHits, 
+			    NumOfLayers, 
+			    &(nclus[0]) );
+  int nnCombi=CombiIndex.size();
+  
+#if 0
+  std::cout << " ===> " << nnCombi << " combinations will be checked.." 
+	    << std::endl;
+#endif
+  if( nnCombi>MaxCombi )  return 0;
+  for( int i=0; i<nnCombi; ++i ){
+    TrLocalTrack *track = MakeTrack( CandCont, &((CombiIndex[i])[0]) );
+    if( !track ) continue;
+    if( track->GetNHit()>=MinNumOfHits && 
+	track->DoFit() &&
+	track->GetChiSquare()<MaxChisquare ){
+      TrackCont.push_back(track);
+  //    double chisqr = track->GetChiSquare();
+    }
+    else{
+      //      std::cout << "No tracks available" << std::endl;
+      delete track;
+    }
+  }
+
+  // Clear Flags
+  int nbefore=TrackCont.size();
+  for( int i=0; i<nbefore; ++i ){
+    TrLocalTrack *tp=TrackCont[i];
+    int nhit=tp->GetNHit(); 
+    for( int j=0; j<nhit; ++j ) {
+      //if(tp->GetHit(j)->showFlags()) 
+	tp->GetHit(j)->clearFlags();
+    }
+  }
+
+#if 0
+  {
+    int nn=TrackCont.size();
+    std::cout << funcname << ": Before Sorting. #Tracks = " 
+	      << nn << std::endl;
+
+    for( int i=0; i<nn; ++i ){
+      TrLocalTrack *track=TrackCont[i];
+      std::cout << std::setw(3) << i << " #Hits="
+		<< std::setw(2) << track->GetNHit() 
+		<< " ChiSqr=" << track->GetChiSquare()
+		<< std::endl;
+    }
+    std::cout << std::endl;
+
+  }
+#endif
+
+  partial_sort( TrackCont.begin(), TrackCont.end(), 
+		TrackCont.end(), TrLTrackComp() );
+
+#if 0
+  {
+    int nn=TrackCont.size();
+    std::cout << funcname << ": After Sorting. #Tracks = " 
+	      << nn << std::endl;
+
+    for( int i=0; i<nn; ++i ){
+      TrLocalTrack *track=TrackCont[i];
+      std::cout << std::setw(3) << i << " #Hits="
+		<< std::setw(2) << track->GetNHit() 
+		<< " ChiSqr=" << track->GetChiSquare()
+		<< std::endl;
+    }
+    std::cout << std::endl;
+
+  }
+#endif
+
+  // Delete Duplicated Tracks
+  for( int i=0; i<int(TrackCont.size()); ++i ){
+    TrLocalTrack *tp=TrackCont[i];
+    int nhit=tp->GetNHit();
+    for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
+
+    for( int i2=TrackCont.size()-1; i2>i; --i2 ){
+      TrLocalTrack *tp2=TrackCont[i2];
+      int nhit2=tp2->GetNHit(), flag=0;
+      for( int j=0; j<nhit2; ++j )
+	if( tp2->GetHit(j)->showFlags() ) ++flag;
+      if(flag){
+	delete tp2;
+	TrackCont.erase(TrackCont.begin()+i2);
+      }
+    }      
+  }
+
+  {
+    int nn=TrackCont.size();
+    for(int i=0; i<nn; ++i ){
+      TrLocalTrack *tp=TrackCont[i];
+      int nhit=tp->GetNHit();
+      for( int j=0; j<nhit; ++j ){
+	int lnum = tp->GetHit(j)->GetLayer();
+	double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
+	tp->GetHit(j)->SetCalPosition(tp->GetX(zz), tp->GetY(zz));
+      }
+    }
+  }
+
+#if 0
+  {
+    int nn=TrackCont.size();
+    std::cout << funcname << ": After Deleting. #Tracks = " 
+	      << nn << std::endl;
+
+    for( int i=0; i<nn; ++i ){
+      TrLocalTrack *track=TrackCont[i];
+      std::cout << std::setw(3) << i << " #Hits="
+		<< std::setw(2) << track->GetNHit() 
+		<< " ChiSqr=" << track->GetChiSquare()
+		<< std::endl;
+    }
+    std::cout << std::endl;
+
+  }
+#endif
+
+  for( int i=0; i<NumOfLayers; ++i )
+    for_each( CandCont[i].begin(), CandCont[i].end(), DeleteObject() );
+  
+  return TrackCont.size();
+}

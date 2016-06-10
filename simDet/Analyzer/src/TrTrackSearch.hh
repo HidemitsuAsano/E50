@@ -20,6 +20,10 @@ int LocalTrackSearch( const TrHitContainer * HC,
 		      std::vector <TrLocalTrack *> &TrackCont,
 		      int NumOfLayers, unsigned int MinNumOfHits);
 
+//link cluster with search window
+int LocalTrackSearchWindow( const TrHitContainer * HC,
+		      std::vector <TrLocalTrack *> &TrackCont,
+		      int NumOfLayers, unsigned int MinNumOfHits);
 
 std::vector< std::vector<int> > makeindex( int ndim_org, int minimumHit, int ndim, const int *index1 ); 
 std::vector< std::vector<int> > makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 ); 
