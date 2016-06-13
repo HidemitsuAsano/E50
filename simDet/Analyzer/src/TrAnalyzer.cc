@@ -41,7 +41,7 @@ TrAnalyzer::TrAnalyzer():isTrHitsSorted_(false)
 TrAnalyzer::~TrAnalyzer()
 {
   clearTracksSFTT();
-  clearTrHitClusters();
+//  clearTrHitClusters();
   clearTrHits();
 }
 
@@ -113,7 +113,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	int nhitpos= rhit->GetSize();
   for( int j=0; j<nhitpos; ++j ){
 	  hit->SetPos( rwireID ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
-                                   // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
+                            // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
 	  
 #if check1
 	  std::cout<< __FILE__ << "  "  << __LINE__ << ": " << << rhit->LayerId() << " " << rhit->WireId() << std::endl;
@@ -161,7 +161,7 @@ bool TrAnalyzer::SortTrHits()
   }*/
   //sort row hits here by segment id
   for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-    std::sort(SFTTrHitContainer_[layer].begin(),SFTTrHitContainer_[layer].end(),TrHit::compareTrHitPredicate);//simple sort does not work
+    std::sort(SFTTrHitContainer_[layer].begin(),SFTTrHitContainer_[layer].end(),TrHit::compareTrHitPredicate);//
   }
   
   /*
@@ -210,7 +210,7 @@ int TrAnalyzer::SFTClustering( void )
 bool TrAnalyzer::TrackSearchSFTT( void )
 {
 //  int ntrack =
-    LocalTrackSearch( &(SFTTrHitContainer_[1]), TrackSFTTCol, 
+    LocalTrackSearch( &(SFTTrHitClusterContainer_[1]), TrackSFTTCol, 
 		      NumOfLayersSFT, MinNumOfHitsSFT );
 //  std::cout<< __FILE__ << "  " << __LINE__ << "ntrack= " << ntrack << std::endl;
   

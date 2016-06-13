@@ -223,10 +223,10 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 
     if( type==PrimInfoF ){
       while( type!=PrimInfoFEnd ){ 
-	double x, y, z, pb, ub, vb, abmom;
-	double m1, p1, theta1, phi1, thetacm1, phicm1;
-	double m2, p2, theta2, phi2, thetacm2, phicm2;
-	double pbeam; 
+	double x=0, y=0, z=0, pb=0, ub=0, vb=0, abmom=0;
+	double m1=0, p1=0, theta1=0, phi1=0, thetacm1=0, phicm1=0;
+	double m2=0, p2=0, theta2=0, phi2=0, thetacm2=0, phicm2=0;
+	double pbeam=0; 
 	
 	In >> x;
 	if( x==PrimInfoFEnd ) break;
@@ -273,8 +273,8 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	  
 	//Tracker
 	if( type==FullTrackTF ){ 
-	  int lnum, wire=1;
-	  double x, y, dl;
+	  int lnum=0, wire=1;
+	  double x=0, y=0, dl=0;
 
 
 	  while( lnum!=FullTrackTFEnd ){
@@ -318,10 +318,10 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	
 	//Counter
 	if( type==FullTrackCF ){ 
-	  int lnum;
-	  int hits;
-	  int layer, seg, pid;
-	  double time, edep, path, mom, x, y, beta;
+	  int lnum=0;
+	  int hits=0;
+	  int layer=0, seg=0, pid=0;
+	  double time=0, edep=0, path=0, mom=0, x=0, y=0, beta=0;
 	  
 	  while( lnum!=FullTrackCFEnd ){
 	    In >> lnum;

@@ -16,12 +16,13 @@ class TrLocalTrack;
 class TrLTrackHit;
 
 //Full combination by Linear fitting
-int LocalTrackSearch( const TrHitContainer * HC,
+//int LocalTrackSearch( const TrHitContainer * HC,
+int LocalTrackSearch(const  TrHitClusterContainer * HC,
 		      std::vector <TrLocalTrack *> &TrackCont,
 		      int NumOfLayers, unsigned int MinNumOfHits);
 
 //link cluster with search window
-int LocalTrackSearchWindow( const TrHitContainer * HC,
+int LocalTrackSearchWindow( const TrHitClusterContainer * HC,
 		      std::vector <TrLocalTrack *> &TrackCont,
 		      int NumOfLayers, unsigned int MinNumOfHits);
 

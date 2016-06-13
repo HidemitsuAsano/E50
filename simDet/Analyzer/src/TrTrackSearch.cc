@@ -36,7 +36,7 @@ int NhitGroup=0;
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
-int LocalTrackSearch( const TrHitContainer * hitcontainer,
+int LocalTrackSearch(const  TrHitClusterContainer *HC,
 		      std::vector <TrLocalTrack *> &TrackCont, 
 		      int NumOfLayers, unsigned int MinNumOfHits )
 {
@@ -49,15 +49,15 @@ int LocalTrackSearch( const TrHitContainer * hitcontainer,
   std::vector <TrHitCluster *>  CandCont[NumOfLayers];
   //CandCont.resize(NumOfLayers);
   
+  
   //doing clustering here
-  //TODO : move this to another function
-  for( int ilr=0; ilr<NumOfLayers; ++ilr ){
-    MakeHitCluster( hitcontainer[ilr], CandCont[ilr] );
+  for( int ilr=1; ilr<=NumOfLayers; ++ilr ){
+    CandCont[ilr] = HC[ilr];
   }
   
   //this way make too many candidates if there are multiple tracks (e.g. 2**12 layers) 
   int nCombi[NumOfLayers];
-  for( int ilr=0; ilr<NumOfLayers; ++ilr ){ 
+  for( int ilr=1; ilr<=NumOfLayers; ++ilr ){ 
     nCombi[ilr]=(CandCont[ilr]).size();
 
     // If #Cluster>MaxNumerOfCluster,  error return
@@ -65,7 +65,7 @@ int LocalTrackSearch( const TrHitContainer * hitcontainer,
       std::cout << __FILE__ <<" : " << __LINE__ << " : "<< "MaxNumbeOfClusters exceed!! " << std::endl;
       std::cout << "layer: " << ilr << " MaxNumbefOfCluster : "  << MaxNumberOfClusters << " # of clusteres reconstructed : "<< 
     nCombi[ilr] << std::endl;
-      for( int jlr=0; jlr<NumOfLayers; ++jlr )
+      for( int jlr=1; jlr<=NumOfLayers; ++jlr )
         for_each( CandCont[jlr].begin(), CandCont[jlr].end(), DeleteObject() );
       return 0;
     } 
@@ -417,15 +417,17 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
         if(vlinklzsize%2 == 0) LocalxSize += offset;//offset from parameter file
         hitcluster->SetClusterLzSize(LocalxSize);
 
-        double calclxpos=0;
+        double calclxpos=0.0;
         for(unsigned int jhit =0 ; jhit<currentvlinksize ;jhit++){
           calclxpos += vLinkSegmentPos.at(jhit);
         }
         //mean position of local-x
         calclxpos = calclxpos/(double)currentvlinksize;
         hitcluster->SetLocalX(calclxpos);
-        
-
+        double clslocalz = geomMan->GetLocalZ(layer);//get localz position from geometry file
+        hitcluster->SetLocalZ(clslocalz);
+        double tiltangle = geomMan->GetTiltAngle(layer);
+        hitcluster->SetTiltAngle(tiltangle);
         Cont.push_back(hitcluster);
         /*
            std::cout << __FILE__ << " : " << __LINE__ << " : " <<

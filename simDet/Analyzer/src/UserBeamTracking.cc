@@ -23,8 +23,13 @@
 #include "PrimInfo.hh"
 #include "SpecLib.hh"
 
+#include <TStopwatch.h>
+
 const double Deg2Rad = acos(-1.)/180.;
 const double Rad2Deg = 180./acos(-1.);
+
+//const int Verbosity = 100;
+const int Verbosity = 0;
 
  VEvent::VEvent()
  {
@@ -92,7 +97,10 @@ struct Event{
   std::vector<double> sftposx, sftposy;//always 0 in type A,B,C
   int    sftnclus;
   std::vector<int> sftlayerc;
-  std::vector<double> sftposlxc, sftposlzc;//always 0 in type A,B,C
+  std::vector<int> sftclssize;
+  std::vector<double> sftclssizelx, sftclssizelz;//
+  std::vector<double> sftposlxc, sftposlzc;//
+  std::vector<double> sftposgxc,sftposgyc;//global position calculated from localx and tiltangle
   std::vector<double> sftdl;
 
   //T0
@@ -195,6 +203,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
       const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nh=cont.size();
+      //std::cout << "N raw hit " << nh << std::endl;
       event.sftnhits = nh;
       for( int i=0; i<nh; ++i ){
   	TrRawHit *hit=cont[i];
@@ -214,31 +223,47 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   //////////////////////////Tracking
   {  
     TrAna->DecodeRawHits( rawData );
-    TrAna->SortTrHits( );//sort TrHits by segment ID
+    TrAna->SortTrHits();//sort TrHits by segment ID
     //SFT
     //TODO check the TrHits are sorted or not
-    //TrAna->Clustering(  ) :TO BE implemented
+    TrAna->SFTClustering();//clustering, 
     //
-    TrAna->TrackSearchSFTT();//clustering, making index
-    /*
+    TrAna->TrackSearchSFTT();//making index
+    
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
       const TrHitClusterContainer &cluscont = TrAna->GetSFTTrHitClusterContainer(layer);
       int nclus = cluscont.size();
       event.sftnclus = nclus;
+      if(Verbosity>2){
+        std::cout << "nclus " << nclus << std::endl;
+      }
       for( int iclus=0; iclus<nclus;iclus++){
         TrHitCluster *trhitclus = cluscont[iclus];
         unsigned int clsID = trhitclus->GetClusterID();
         int clustersize = trhitclus->GetClusterSize();
-        int clusterlxsize = trhitclus->GetClusterLxSize();
-        int clusterlzsize = trhitclus->GetClusterLzSize();
+        double clusterlxsize = trhitclus->GetClusterLxSize();
+        double clusterlzsize = trhitclus->GetClusterLzSize();
         double lx = trhitclus->GetLocalX();
+        double lz = trhitclus->GetLocalZ();
+        double angle = trhitclus->GetTiltAngle();
+        double globalx = lx * cos(angle);
+        double globaly = lx * sin(angle);
+        if(Verbosity>3){
+          std::cout << "clsID " << clsID << std::endl;
+          std::cout << "lx " << lx << std::endl;
+          std::cout << "lz " << lz << std::endl;
+        }
         //double adc = trhitclus->GetAdcSum();
         event.sftlayerc.push_back(layer);
-        event.sftposlxc.push_back(clusterlxsize);
-        event.sftposlzc.push_back(clusterlzsize);
-        event.sft
+        event.sftclssize.push_back(clustersize);
+        event.sftclssizelx.push_back(clusterlxsize);
+        event.sftclssizelz.push_back(clusterlzsize);
+        event.sftposlxc.push_back(lx);
+        event.sftposlzc.push_back(lz);
+        event.sftposgxc.push_back(globalx);
+        event.sftposgyc.push_back(globaly);
       }
-    }*/
+    }
     
     
     
@@ -271,7 +296,9 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   }
 
   tree->Fill();
-
+  if(Verbosity>0){
+    std::cout << __FILE__ << "  " << __LINE__ << " fill " << std::endl;
+  }
   return true;
 }
 
@@ -305,8 +332,12 @@ void EventBeamTracking::InitializeEvent( void )
   event.sftposy.clear();
   event.sftnclus = 0;
   event.sftlayerc.clear();
+  event.sftclssizelx.clear();
+  event.sftclssizelz.clear();
   event.sftposlxc.clear();
   event.sftposlzc.clear();
+  event.sftposgxc.clear();
+  event.sftposgyc.clear();
   event.sftdl.clear();
 
   //T0
@@ -332,6 +363,10 @@ void EventBeamTracking::InitializeEvent( void )
   event.v0.clear();
   event.pos.clear();
   event.res.clear();
+  
+  if(Verbosity>0){
+    std::cout << __FILE__ << "  " << __LINE__ << " Init. end " << std::endl;
+  }
 }
 
 bool EventBeamTracking::ProcessingEnd()
@@ -377,8 +412,14 @@ bool ConfMan:: InitializeHistograms()
   tree->Branch("sftlayer", &event.sftlayer);
   tree->Branch("sftposx", &event.sftposx);//hit position of raw hits
   tree->Branch("sftposy", &event.sftposy);//hit position of raw hits
+  tree->Branch("sftclssizelx", &event.sftclssizelx);//local hit position of cluster
+  tree->Branch("sftclssizelz", &event.sftclssizelz);//local hit position of cluster
   tree->Branch("sftposlxc", &event.sftposlxc);//local hit position of cluster
   tree->Branch("sftposlzc", &event.sftposlzc);//local hit position of cluster
+  tree->Branch("sftposgxc", &event.sftposgxc);//local hit position of cluster
+  tree->Branch("sftposgyc", &event.sftposgyc);//local hit position of cluster
+  
+  
   tree->Branch("sftdl", &event.sftdl);
 
   //T0
