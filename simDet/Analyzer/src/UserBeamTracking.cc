@@ -75,6 +75,7 @@ EventBeamTracking::~EventBeamTracking()
 }
 
 struct Event{
+  unsigned int nevents;
   //Primary
   int    prinhits;
   double priposx, priposy, priposz;
@@ -231,11 +232,11 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     TrAna->TrackSearchSFTT();//making index
     
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-      const TrHitClusterContainer &cluscont = TrAna->GetSFTTrHitClusterContainer(layer);
+      const TrHitClusterContainer cluscont = TrAna->GetSFTTrHitClusterContainer(layer);
       int nclus = cluscont.size();
       event.sftnclus = nclus;
       if(Verbosity>2){
-        std::cout << "nclus " << nclus << std::endl;
+        std::cout << __FILE__ << "  " << __LINE__ << " nclus " << nclus << std::endl;
       }
       for( int iclus=0; iclus<nclus;iclus++){
         TrHitCluster *trhitclus = cluscont[iclus];
@@ -249,6 +250,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
         double globalx = lx * cos(angle);
         double globaly = lx * sin(angle);
         if(Verbosity>3){
+          std::cout << "layer " << layer << std::endl;
           std::cout << "clsID " << clsID << std::endl;
           std::cout << "lx " << lx << std::endl;
           std::cout << "lz " << lz << std::endl;
@@ -294,7 +296,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
       }
     }
   }
-
+  event.nevents++;
   tree->Fill();
   if(Verbosity>0){
     std::cout << __FILE__ << "  " << __LINE__ << " fill " << std::endl;
@@ -385,7 +387,8 @@ bool ConfMan:: InitializeHistograms()
 {  
   HBTree("tree","tree of Spec");
   TTree *tree = dynamic_cast<TTree *>(gFile->Get("tree"));
-
+  
+  tree->Branch("event", &event.nevents);
   //PriInfo  
   tree->Branch("priposx", &event.priposx);
   tree->Branch("priposy", &event.priposy);

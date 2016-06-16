@@ -33,13 +33,14 @@ ConfMan::ConfMan( const std::string & filename )
   }
   confManager_=this;
 }
+
 ConfMan::~ConfMan( )
 {
   if(TrGeomManager_) delete TrGeomManager_;
   confManager_=0;
 }
 
-const int BufSize=300;
+const int BufSize=1024;
 
 bool ConfMan::Initialize()
 {

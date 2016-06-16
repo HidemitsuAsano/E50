@@ -32,41 +32,46 @@ const double MaxCombi = 1.0e6;
 const double MaxChisquareVXU = 100.;
 const double ChisquareCutVXU = 100.;
 int NhitGroup=0;
+int Verbosity=0;
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
 
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
-int LocalTrackSearch(const  TrHitClusterContainer *HC,
+//LocalTrackSearch 
+//input : array of TrHitClusterContainer
+//output :  array of TrackCont
+int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
 		      std::vector <TrLocalTrack *> &TrackCont, 
 		      int NumOfLayers, unsigned int MinNumOfHits )
 {
   static const std::string funcname = "[LocalTrackSearch]";
-  
+  if(Verbosity>0){
+    std::cout <<  __FILE__ << "  " << __LINE__ << "  " << funcname << std::endl;
+  }
   //vector of vector of TrHitCluster 
   //1st row is layer 
   //2nd row is cluster in each layer
   //std::vector < std::vector <TrHitCluster *> > CandCont;
-  std::vector <TrHitCluster *>  CandCont[NumOfLayers];
+  //std::vector <TrHitCluster *>  CandCont[NumOfLayers];
   //CandCont.resize(NumOfLayers);
   
-  
   //doing clustering here
-  for( int ilr=1; ilr<=NumOfLayers; ++ilr ){
-    CandCont[ilr] = HC[ilr];
-  }
+ // for( int ilr=0; ilr<=NumOfLayers; ++ilr ){
+ //   CandCont[ilr] = HC[ilr];
+ // }
   
   //this way make too many candidates if there are multiple tracks (e.g. 2**12 layers) 
-  int nCombi[NumOfLayers];
-  for( int ilr=1; ilr<=NumOfLayers; ++ilr ){ 
-    nCombi[ilr]=(CandCont[ilr]).size();
+  int nCombi[NumOfLayers+1];
+  for( int ilr=0; ilr<=NumOfLayers; ++ilr ){ 
+    nCombi[ilr]=(ClusterCont[ilr]).size();
 
     // If #Cluster>MaxNumerOfCluster,  error return
     if(nCombi[ilr]>MaxNumberOfClusters){
       std::cout << __FILE__ <<" : " << __LINE__ << " : "<< "MaxNumbeOfClusters exceed!! " << std::endl;
       std::cout << "layer: " << ilr << " MaxNumbefOfCluster : "  << MaxNumberOfClusters << " # of clusteres reconstructed : "<< 
     nCombi[ilr] << std::endl;
-      for( int jlr=1; jlr<=NumOfLayers; ++jlr )
-        for_each( CandCont[jlr].begin(), CandCont[jlr].end(), DeleteObject() );
+      for( int jlr=0; jlr<=NumOfLayers; ++jlr )
+        for_each( ClusterCont[jlr].begin(), ClusterCont[jlr].end(), DeleteObject() );
       return 0;
     } 
   }
@@ -76,16 +81,18 @@ int LocalTrackSearch(const  TrHitClusterContainer *HC,
   for( int i=0; i<NumOfLayers; ++i ) std::cout << std::setw(4) << nCombi[i];
   std::cout << std::endl;
   for( int i=0; i<NumOfLayers; ++i ){
-    int n=CandCont[i].size();
+    int n=ClusterCont[i].size();
     std::cout << "[" << std::setw(3) << i << "]: "
 	      << std::setw(3) << n << " ";
     for( int j=0; j<n; ++j ){
-      std::cout << ((TrLTrackHit *)CandCont[i][j]->GetHit(0))->GetWire() << " ";
+      std::cout << ((TrLTrackHit *)ClusterCont[i][j]->GetHit(0))->GetWire() << " ";
     }
     std::cout << std::endl;
   }
 #endif
-  
+  if(Verbosity>0){
+    std::cout << __FILE__ << "   " << __LINE__ << "  making intex ...." << nCombi[0] << std::endl;
+  }
   std::vector < std::vector <int> > 
     CombiIndex = makeindex( NumOfLayers, 
 			    MinNumOfHits, 
@@ -93,19 +100,21 @@ int LocalTrackSearch(const  TrHitClusterContainer *HC,
 			    &(nCombi[0]) );
   int nnCombi=CombiIndex.size();
    
-  /* 
-  std::cout << " ===> " << nnCombi << " combinations will be checked.." 
-    << std::endl;
-  for(int ilr=0;ilr<12;ilr++){ 
-    std::cout << "lay " << ilr << "  " <<  nCombi[ilr] << std::endl;
-  }*/
+   
+  if(Verbosity>0){
+    std::cout << __FILE__ << "   " << __LINE__ << " ===> " << nnCombi << " combinations will be checked.." 
+      << std::endl;
+    for(int ilr=1;ilr<NumOfLayers;ilr++){ 
+      std::cout << "layer " << ilr << "  " <<  nCombi[ilr] << std::endl;
+    }
+  }
 #if 0
   std::cout << " ===> " << nnCombi << " combinations will be checked.." 
 	    << std::endl;
 #endif
   if( nnCombi>MaxCombi )  return 0;
   for( int i=0; i<nnCombi; ++i ){
-    TrLocalTrack *track = MakeTrack( CandCont, &((CombiIndex[i])[0]) );
+    TrLocalTrack *track = MakeTrack( ClusterCont, &((CombiIndex[i])[0]) );
     if( !track ) continue;
     if( track->GetNHit()>=MinNumOfHits && 
 	track->DoFit() &&
@@ -218,8 +227,8 @@ int LocalTrackSearch(const  TrHitClusterContainer *HC,
   }
 #endif
 
-  for( int i=0; i<NumOfLayers; ++i )
-    for_each( CandCont[i].begin(), CandCont[i].end(), DeleteObject() );
+//  for( int i=0; i<NumOfLayers; ++i )
+//    for_each( ClusterCont[i].begin(), ClusterCont[i].end(), DeleteObject() );
   
   return TrackCont.size();
 }
@@ -318,16 +327,17 @@ makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 )
 }
 
 
-//make cluster layer by layer
-//input: TrHitContainer 
+//do clustering layer by layer
+//input: TrHitContainer  (object of associated hits in each layer)
 //output: the vector of TrHitCluster 
-bool MakeHitCluster( const TrHitContainer & trhitcontainer,
-		     std::vector <TrHitCluster *> & Cont )
+bool MakeHitCluster( const TrHitContainer &trhitcontainer,
+//		     std::vector <TrHitCluster *>  Cont )
+     TrHitClusterContainer &Cont )
 {  
   ConfMan *confMan=ConfMan::GetConfManager();
   TrGeomMan *geomMan=confMan->GetTrGeomManager();
-  //  std::cout << __FILE__ << std::endl;
   int nhit=trhitcontainer.size(); //number of raw hits in the layer
+  //std::cout << __FILE__ << "  " << __LINE__ << " nhit " << nhit << std::endl;
   if(nhit == 0) return true;
   std::vector <int> vLinkSegment; //store the candidate of segment # for clustering
   std::vector <double> vLinkSegmentPos; //store the mean position of candidate of segment # for clustering
@@ -461,7 +471,7 @@ bool MakeHitCluster( const TrHitContainer & trhitcontainer,
 }
 
 //TrLocalTrack *MakeTrack(  const std::vector < std::vector <TrHitCluster *> > &CandCont,
-TrLocalTrack *MakeTrack(  std::vector <TrHitCluster *> *CandCont,
+TrLocalTrack *MakeTrack(const std::vector <TrHitCluster *> *CandCont,
 			  const int *combination )
 {
   static const std::string funcname = "[MakeTrack]";
@@ -556,7 +566,7 @@ TrLocalTrack *MakeTrack(  std::vector <TrHitCluster *> *CandCont,
   return tp;
 }
 
-
+/*
 int LocalTrackSearchWindow( const TrHitContainer * hitcontainer,
 		      std::vector <TrLocalTrack *> &TrackCont, 
 		      int NumOfLayers, unsigned int MinNumOfHits )
@@ -738,3 +748,4 @@ int LocalTrackSearchWindow( const TrHitContainer * hitcontainer,
   
   return TrackCont.size();
 }
+*/

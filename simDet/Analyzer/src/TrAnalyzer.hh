@@ -16,6 +16,7 @@ class TrHitCluster;
 class TrLocalTrack;
 class RawData;
 
+//vector of hit/cluster object in each layer 
 typedef std::vector <TrHit *> TrHitContainer;
 typedef std::vector <TrHitCluster *> TrHitClusterContainer;//added by H.Asano
 
@@ -32,7 +33,7 @@ private:
   TrHitContainer SFTTrHitContainer_[NumOfLayersSFT+1];
   TrHitClusterContainer SFTTrHitClusterContainer_[NumOfLayersSFT+1];
 
-  std::vector <TrLocalTrack *> TrackSFTTCol;//array of SFT track class 
+  std::vector <TrLocalTrack *> TrackSFTTCol;//vector of SFT track class 
 
 public:
   bool DecodeRawHits( RawData *rawData );

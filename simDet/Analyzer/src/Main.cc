@@ -59,7 +59,8 @@ int main(int argc, char* argv[])
   std::vector<std::string> arg(argv, argv + argc);
 
   const std::string& confFile = arg[kArgConfFile];
-  std::ifstream InputData(argv[kArgInFile]);
+  std::ifstream InputData;//(argv[kArgInFile]);
+  InputData.open(argv[kArgInFile],std::ios::in);
   const std::string& rootFile = arg[kArgOutRootFile];
 
   ConfMan* gconfManager =new ConfMan( confFile );
@@ -75,13 +76,16 @@ int main(int argc, char* argv[])
   std::cout << "ConfMan::AnaMode " << gconfManager->AnaMode() << std::endl;
   if( !InputData ) return 0;
   int evNum=0;
-  while( !InputData.eof() ){
+  while( InputData ){
     VEvent* event = gconfManager->EventAllocator();
-    if ( event->ProcessingNormal( InputData ) )
+    if ( event->ProcessingNormal( InputData ) ){
       delete event;
-    else break;
+    }else{ 
+      std::cout << "break ! " << std::endl;
+      break;
+    }
     ++evNum;
-    if( evNum%1000 == 0 ){
+    if( evNum%500 == 0 ){
       std::cout << "EventNum=" << evNum << std::endl;
     }
   }

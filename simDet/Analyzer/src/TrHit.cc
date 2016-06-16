@@ -29,6 +29,7 @@ const double Rad2Deg = 180./acos(-1);
 TrHit::TrHit()
   : layer_(-1), wire_(-1),wpos_(0),angle_(0)
 {
+  hitcounter_=0;
 }
 
 TrHit::TrHit( int layer, int wire )

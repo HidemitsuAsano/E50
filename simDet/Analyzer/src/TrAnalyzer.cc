@@ -210,7 +210,7 @@ int TrAnalyzer::SFTClustering( void )
 bool TrAnalyzer::TrackSearchSFTT( void )
 {
 //  int ntrack =
-    LocalTrackSearch( &(SFTTrHitClusterContainer_[1]), TrackSFTTCol, 
+    LocalTrackSearch( (SFTTrHitClusterContainer_), TrackSFTTCol, 
 		      NumOfLayersSFT, MinNumOfHitsSFT );
 //  std::cout<< __FILE__ << "  " << __LINE__ << "ntrack= " << ntrack << std::endl;
   

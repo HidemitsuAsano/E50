@@ -35,7 +35,7 @@ private:
   double T0Resol_;
 
 public:
-  ConfMan( const std::string & filename );
+  explicit ConfMan( const std::string & filename );
   ~ConfMan();
 
   static ConfMan *GetConfManager( void ) { return confManager_; }
