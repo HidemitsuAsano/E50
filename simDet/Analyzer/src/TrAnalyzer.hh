@@ -43,6 +43,7 @@ public:
   inline const TrHitClusterContainer & GetSFTTrHitClusterContainer( int layer ) const;
    
   int SFTClustering(void);//TODO : actual implementation H.Asano
+  bool MakeHitCluster(const TrHitContainer &trhitcontainer,TrHitClusterContainer &Cont );
   bool TrackSearchSFTT( void );
 
   int GetNtracksSFTT( void ) const  { return TrackSFTTCol.size(); }

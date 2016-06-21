@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
     if ( event->ProcessingNormal( InputData ) ){
       delete event;
     }else{ 
-      std::cout << "break ! " << std::endl;
+      std::cout << "Analysis finished ! " << std::endl;
       break;
     }
     ++evNum;

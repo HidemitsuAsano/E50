@@ -271,11 +271,14 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     
     int nt=TrAna->GetNtracksSFTT();
     event.ntr=nt;
+    if(Verbosity>10){
+      std::cout << __FILE__ << "  " << __LINE__ << " ntrack  " << nt << std::endl;
+    }
     for( int it=0; it<nt; ++it ){
       TrLocalTrack *tp=TrAna->GetTrackSFTT(it);
       int nh=tp->GetNHit();
       double chisqr=tp->GetChiSquare();
-      //     double x0=tp->GetX0(), y0=tp->GetY0();
+      //double x0=tp->GetX0(), y0=tp->GetY0();
       double u0=tp->GetU0(), v0=tp->GetV0();
       double xtgt=tp->GetX( 0.0 ), ytgt=tp->GetY( 0.0 );
       double utgt=u0, vtgt=v0;
@@ -334,6 +337,7 @@ void EventBeamTracking::InitializeEvent( void )
   event.sftposy.clear();
   event.sftnclus = 0;
   event.sftlayerc.clear();
+  event.sftclssize.clear();
   event.sftclssizelx.clear();
   event.sftclssizelz.clear();
   event.sftposlxc.clear();
@@ -415,13 +419,13 @@ bool ConfMan:: InitializeHistograms()
   tree->Branch("sftlayer", &event.sftlayer);
   tree->Branch("sftposx", &event.sftposx);//hit position of raw hits
   tree->Branch("sftposy", &event.sftposy);//hit position of raw hits
-  tree->Branch("sftclssizelx", &event.sftclssizelx);//local hit position of cluster
-  tree->Branch("sftclssizelz", &event.sftclssizelz);//local hit position of cluster
+  tree->Branch("sftclssize", &event.sftclssize);//cluster size = number of hit segment
+  tree->Branch("sftclssizelx", &event.sftclssizelx);//cluster size in local x coordinate
+  tree->Branch("sftclssizelz", &event.sftclssizelz);//cluster size in local z coordiante
   tree->Branch("sftposlxc", &event.sftposlxc);//local hit position of cluster
   tree->Branch("sftposlzc", &event.sftposlzc);//local hit position of cluster
   tree->Branch("sftposgxc", &event.sftposgxc);//local hit position of cluster
   tree->Branch("sftposgyc", &event.sftposgyc);//local hit position of cluster
-  
   
   tree->Branch("sftdl", &event.sftdl);
 
