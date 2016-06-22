@@ -5,7 +5,6 @@
 */
 
 
-
 #include "TrLocalTrack.hh"
 #include "TrLTrackHit.hh"
 #include "TrGeomMan.hh"

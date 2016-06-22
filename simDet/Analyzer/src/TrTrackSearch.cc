@@ -325,9 +325,11 @@ makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 )
 }
 
 
-
+//input :1. pointer of the  TrHitClusterContainer (vector of cluster in each layer)
+//       2. the number of combination for the track fit
+//output: the pointer of the TrLocalTrack
 //TrLocalTrack *MakeTrack(  const std::vector < std::vector <TrHitCluster *> > &CandCont,
-TrLocalTrack *MakeTrack(const std::vector <TrHitCluster *> *CandCont,
+TrLocalTrack *MakeTrack(const TrHitClusterContainer *CandCont,
 			  const int *combination )
 {
   static const std::string funcname = "[MakeTrack]";
@@ -340,11 +342,11 @@ TrLocalTrack *MakeTrack(const std::vector <TrHitCluster *> *CandCont,
   }    
 
   //int n=CandCont.size();
-  const int n = 12;//NumOfLayers;
-  for( int i=0; i<n; ++i ){
-    int m=combination[i];
+  const int nlayer = 12;//NumOfLayers;
+  for( int ilr=0; ilr<nlayer; ++ilr ){
+    int m=combination[ilr];
     TrHitCluster *cluster=0;
-    if(m>=0) cluster=CandCont[i][m];
+    if(m>=0) cluster=CandCont[ilr][m];
 #if 0
     std::cout << funcname << ":" << std::setw(3)
 	      << i << std::setw(3) << m  << " "

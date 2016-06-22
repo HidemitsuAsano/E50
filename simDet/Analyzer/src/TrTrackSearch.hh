@@ -29,10 +29,8 @@ int LocalTrackSearchWindow( const TrHitClusterContainer * HC,
 std::vector< std::vector<int> > makeindex( int ndim_org, int minimumHit, int ndim, const int *index1 ); 
 std::vector< std::vector<int> > makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 ); 
 
-//bool MakeHitCluster( const TrHitContainer & HC,  
-//		     TrHitClusterContainer &Cont );
 
-TrLocalTrack *MakeTrack(const std::vector <TrHitCluster *> *CandCont,
+TrLocalTrack *MakeTrack(const TrHitClusterContainer *CandCont,
 			 const int *combination );
 
 #endif

@@ -25,14 +25,14 @@ private:
 
 private:
   std::vector <TrLTrackHit *> hitArray;
-
-  double Av_;
-  double Ax_;
-  double Au_;
-  double Chiv_;
-  double Chix_;
-  double Chiu_;
-
+  /*
+  double Av_;//not used
+  double Ax_;//not used
+  double Au_;//not used
+  double Chiv_;//not used
+  double Chix_;//not used
+  double Chiu_;//not used
+  */
 public:
   void AddHit( TrLTrackHit *hitp ) { hitArray.push_back( hitp ); }
   bool DoFit( void );//Liner func
@@ -44,12 +44,12 @@ public:
   // optional extension by Yone
   bool DoFitVXU( void );//Liner func
   bool DoFitVXU2( void );//Quadrotic func
-  void SetAv( double Av) { Av_=Av; }
-  void SetAx( double Ax) { Ax_=Ax; }
-  void SetAu( double Au) { Au_=Au; }
-  void SetChiv( double Chiv) { Chiv_=Chiv; }
-  void SetChix( double Chix) { Chix_=Chix; }
-  void SetChiu( double Chiu) { Chiu_=Chiu; }
+  //void SetAv( double Av) { Av_=Av; }
+  //void SetAx( double Ax) { Ax_=Ax; }
+  //void SetAu( double Au) { Au_=Au; }
+  //void SetChiv( double Chiv) { Chiv_=Chiv; }
+  //void SetChix( double Chix) { Chix_=Chix; }
+  //void SetChiu( double Chiu) { Chiu_=Chiu; }
 
   double GetX0( void ) const { return x0_; }
   double GetY0( void ) const { return y0_; }
@@ -61,10 +61,11 @@ public:
   double GetVXU_A( void ) const { return a_; }
   double GetVXU_B( void ) const { return b_; }
   double GetVXU_C( void ) const { return c_; }
-  double GetAv( void ) const { return Av_; }
-  double GetAx( void ) const { return Ax_; }
-  double GetAu( void ) const { return Au_; }
-
+  //double GetAv( void ) const { return Av_; }
+  //double GetAx( void ) const { return Ax_; }
+  //double GetAu( void ) const { return Au_; }
+  
+  /*
   double GetDifVXU( void ) 
     const { return (Av_/cos(acos(-1.)/180.*(-15.0))-Ax_)*(Av_/cos(acos(-1.)/180.*(-15.0))-Ax_)
       +(Ax_-Au_/cos(acos(-1.)/180.*(15.0)))*(Ax_-Au_/cos(acos(-1.)/180.*(15.0)))
@@ -81,11 +82,11 @@ public:
       +(Au_*sin(acos(-1.)/180.*(30.0))
 	-Av_*sin(acos(-1.)/180.*(30.0)))*(Au_*sin(acos(-1.)/180.*(30.0))
 					  -Av_*sin(acos(-1.)/180.*(30.0))) ; }
-
+  */
   double GetChiSquare( void ) const { return chisqr_; }
-  double GetChiV( void ) const { return Chiv_; }
-  double GetChiX( void ) const { return Chix_; }
-  double GetChiU( void ) const { return Chiu_; }
+  //double GetChiV( void ) const { return Chiv_; }
+  //double GetChiX( void ) const { return Chix_; }
+  //double GetChiU( void ) const { return Chiu_; }
   double GetX( double z ) const { return x0_+u0_*z+u1_*z*z; } 
   double GetY( double z ) const { return y0_+v0_*z+v1_*z*z; } 
   bool GetStatus( void ) const { return status_; } 
