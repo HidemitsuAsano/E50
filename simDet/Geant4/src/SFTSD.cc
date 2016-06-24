@@ -101,7 +101,7 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
     if( id == trackNo && layer == hitLayer ) return true;
   }
 
-  G4int layerId, segId;
+  G4int layerId=-1, segId=-1;
   if( confMan->DetectorType()==0 ){
     layerId= hitLayer;
     segId  = hitSegment;

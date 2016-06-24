@@ -1,9 +1,11 @@
 /*
   r_SFT_B.cc
 
-  Segmented SFT
-  -> Multi Caldding round Fiber + Frame
-  Kuraray's Scintillation fiber SCSF-78M is implemented
+  code for placement of Segmented SFT
+  -Multi Caldding round Fiber + Frame
+  -Kuraray's Scintillation fiber SCSF-78M is implemented
+  
+  10 fibers (r=0.5 mm) x 2 sublayers x 12 layers (x,u,v x,u,v, u,v,x, u,v,x)
 
   Apr. 27th H.Asano
 */
@@ -14,6 +16,7 @@
 #include <sstream>
 #include <string>
 
+/*
 const G4double LzLayer[rSFT_nLayer]={
 -165.0*mm,
 -135.0*mm,
@@ -27,7 +30,7 @@ const G4double LzLayer[rSFT_nLayer]={
  105.0*mm,
  135.0*mm,
  165.0*mm
-};
+};*/
 
 
 
@@ -51,6 +54,7 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
 		  const G4ThreeVector *gPos, 
 		  const G4ThreeVector &OffsetLocal,
 		  G4int *detid,
+      const G4double *LzLayer,
 		  G4Material *matScin, 
 		  G4Material *matPMMA, 
 		  G4Material *matFP, 

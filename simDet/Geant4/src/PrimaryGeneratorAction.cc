@@ -2,6 +2,8 @@
   PrimaryGeneratorAction.cc
 
   2016/1  K.Shirotori
+
+  2016/5 modified by H. Asano
 */
 
 #include "PrimaryGeneratorAction.hh"
@@ -49,12 +51,17 @@ void PrimaryGeneratorAction::GeneratePrimaries( G4Event *anEvent )
 {
   ConfMan *confMan = ConfMan::GetConfManager();
   G4int reactionMode = confMan->ReactionMode();
+  G4int nparticle = confMan->GetNumberOfParticles();
 
   if(!BP_) BP_ = new BeamParam( this );
 
   switch(reactionMode){
   case 1:
-    GPBeamGaussInUVGaussInXY( anEvent ); break;
+    for(int ipart=0;ipart<nparticle;ipart++){
+      GPBeamGaussInUVGaussInXY( anEvent ); //break;
+      // GPBeamGaussInUVGaussInXY( anEvent ); break;
+    }
+    break;
   case 2:
     GPBeamGaussInUVUniformInXY( anEvent ); break;
   case 3:
@@ -304,7 +311,7 @@ void PrimaryGeneratorAction::GPBeamGaussInUVGaussInXY( G4Event *anEvent )
   BP_->gun->SetParticlePosition( gPos );
   BP_->gun->SetParticleMomentum( p*gDir );
   BP_->gun->GeneratePrimaryVertex( anEvent );
-
+  
   if( anaMan_ ){
     SetPrimaryInformation( LPos, 0.,0.,0.,0.,0.,0., p*LDir, 0. );
   }
@@ -349,6 +356,7 @@ GPBeamUniformInUVUniformInXY( G4Event *anEvent )
   BP_->gun->SetParticleMomentum( p*gDir );
   BP_->gun->GeneratePrimaryVertex( anEvent );
 
+  ConfMan *confMan = ConfMan::GetConfManager(); 
   //  G4cout << "ParticleGenerator: gun:" 
   //	 << BP_->gun->GetParticleDefinition()->GetParticleName() << G4endl;
 
@@ -374,7 +382,7 @@ void PrimaryGeneratorAction::GPBeamUniformInUVGaussInXY( G4Event *anEvent )
   BP_->gun->SetParticlePosition( gPos );
   BP_->gun->SetParticleMomentum( p*gDir );
   BP_->gun->GeneratePrimaryVertex( anEvent );
-
+  
   if( anaMan_ ){
     SetPrimaryInformation( LPos, 0.,0.,0.,0.,0.,0., p*LDir, 0. );
   }

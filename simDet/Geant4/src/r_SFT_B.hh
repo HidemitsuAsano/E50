@@ -29,6 +29,7 @@ public:
 	   const G4ThreeVector *gPos1, 
 	   const G4ThreeVector & OffsetLocal,
 	   G4int *id, 
+     const G4double *LzLayer,
 	   G4Material *matScin, 
 	   G4Material *matPMMA, 
 	   G4Material *matFP, 
@@ -55,5 +56,8 @@ public:
 			 const G4VisAttributes *attArea,
 			 const G4VisAttributes *attBox );
   void SetSensitiveDetector( G4VSensitiveDetector *SD );
+
+
+
 };
 #endif

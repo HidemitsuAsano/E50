@@ -6,7 +6,7 @@
 #define r_DetectorSize_h 1
 
 /////////////////////
-////Simple detectors
+////Realistic detectors
 /////////////////////
 
 static const G4int    rSFT_nLayer = 12;
@@ -39,11 +39,11 @@ static const G4double rSFT_B_InnerCladding = 0.03;//fraction of inner cladding o
 static const G4double rSFT_B_OuterCladding = 0.03;//fraction of outer cladding of fiber
 
 //SFT_C 0.5mm square fiber Single Cladding
-static const G4double rSFT_C_LaysizeX   =    0.5*mm;
+static const G4double rSFT_C_LaysizeX   =    0.2*mm;
 static const G4double rSFT_C_LaysizeY   =  200.0*mm;
-static const G4double rSFT_C_LaysizeZ   =    0.5*mm;
-static const G4double rSFT_C_SegSpacing =    0.5*mm;
-static const G4int    rSFT_C_SegNum     =   20;
+static const G4double rSFT_C_LaysizeZ   =    0.2*mm;
+static const G4double rSFT_C_SegSpacing =    0.2*mm;
+static const G4int    rSFT_C_SegNum     =   50;
 
 
 //////Counter size

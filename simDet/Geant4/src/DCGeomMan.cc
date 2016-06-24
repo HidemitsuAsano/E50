@@ -192,7 +192,7 @@ bool DCGeomMan::Initialize( void )
 
   FILE *fp;
 
-  if( ( fp = fopen( filename_.c_str(), "r" ) ) == 0 ){
+  if( ( fp = fopen( filename_.c_str(), "r" ) ) == 0 ){ //
     throw std::invalid_argument(funcname+": file open fail");
   }
 

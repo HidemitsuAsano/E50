@@ -87,6 +87,9 @@ public:
   double GetCoEdep( void ) const { return coEdep_; }
   bool DetectEveryThing( void ) const { return detEVT_; }
   bool DetRootFill( void ) const { return detRootFill_; }
+  
+  void SetNumberOfParticles(int np) { nparticle_ = np; }
+  int GetNumberOfParticles( void ) { return nparticle_; }
 
 private:
   // ConfMan
@@ -107,6 +110,7 @@ private:
 
   // Primary Generation
   int ReactionMode_;
+  int nparticle_;//Number of particles / event
 
   // Beam parameters in mm, GeV, GeV/c and degree
   double x0,y0,z0,u0,v0,p0;

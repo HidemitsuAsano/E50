@@ -40,7 +40,8 @@
 
 #include "r_DetectorSize.hh"
 #include "r_SFT_A.hh" //square ,1mm signle cladding fiber
-#include "r_SFT_B.hh" //round  ,double caldding fiber
+#include "r_SFT_B.hh" //round  ,double caldding fiber,
+                      //layer z position is adjuested in this code.
 #include "r_SFT_C.hh" //square ,0.5 mm single caldding fiber
 
 #include "G4SDManager.hh"
@@ -93,7 +94,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
   if( confMan->DetectorType()==0 ) DetType=0;//simple detector
   else if( confMan->DetectorType()==1 ) DetType=1;//square fiber 1mm
   else if( confMan->DetectorType()==2 ) DetType=2;//round fiber 1mm
-  else if( confMan->DetectorType()==3 ) DetType=3;//square fiber 0.5mm
+  else if( confMan->DetectorType()==3 ) DetType=3;//round fiber 1mm M-line configulation    //square fiber 0.5mm (obsolete)
   else { G4cout << "invalid Detector type ! (DetType = 0, 1, 2) " << G4endl; return;}
   G4cout << "   "  << G4endl;
   G4cout << "DetType " << confMan->DetectorType() << G4endl;
@@ -239,7 +240,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
   }
   
   //Type B real SFT Round Fiber Double Cladding
-  else if( DetType==2 ){
+  else if( DetType==2 || DetType==3){
     ///////////////////// SFT(x,u,v,x,u,v, u,v,x,u,v,x)
     G4int detid[12];
     detid[0]=geomMan.GetDetectorId("SFT-x-1");
@@ -255,17 +256,51 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     detid[10]=geomMan.GetDetectorId("SFT-v-4");
     detid[11]=geomMan.GetDetectorId("SFT-x-4");
     
+
     G4ThreeVector gPos[12];
     for(int ilr=0;ilr<12;ilr++){
       gPos[ilr] = geomMan.GetGlobalPosition(detid[ilr]);
     }
     G4ThreeVector OfsLSFT( 0.0, 0.0, 0.0 );
 
+    //default 
+
+    G4double LzLayer[rSFT_nLayer]={0.};
+    
+    if(DetType==2){
+      LzLayer[0]= -165.0*mm;//x
+      LzLayer[1]= -135.0*mm;//u
+      LzLayer[2]= -105.0*mm;//v
+      LzLayer[3]= -75.0*mm;//x
+      LzLayer[4]= -45.0*mm;//u
+      LzLayer[5]= -15.0*mm;//v
+      LzLayer[6]=  15.0*mm;//u
+      LzLayer[7]=  45.0*mm;//v
+      LzLayer[8]=  75.0*mm;//x
+      LzLayer[9]= 105.0*mm;//u
+      LzLayer[10] = 135.0*mm;//v
+      LzLayer[11] =  165.0*mm;//x
+    }else if(DetType==3){//x,u,v layers are close to each other
+      LzLayer[0]= -165.0*mm;//x
+      LzLayer[1]= -164.0*mm;//u
+      LzLayer[2]= -163.0*mm;//v
+      LzLayer[3]= -46.0*mm;//x
+      LzLayer[4]= -45.0*mm;//u
+      LzLayer[5]= -44.0*mm;//v
+      LzLayer[6]=  44.0*mm;//u
+      LzLayer[7]=  45.0*mm;//v
+      LzLayer[8]=  46.0*mm;//x
+      LzLayer[9]= 163.0*mm;//u
+      LzLayer[10] = 164.0*mm;//v
+      LzLayer[11] =  165.0*mm;//x
+    }
+
     r_SFT_B *r_SF1 =
       new r_SFT_B( "SFT", pMother, RM, 
 		   gPos, 
 		   OfsLSFT, 
 		   detid,
+       LzLayer,
 		   mList_->Scin, 
 		   mList_->PMMA, 
 		   mList_->FP, 
@@ -300,7 +335,8 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     SDMan->AddNewDetector( sftSD );  
     r_SF1->SetSensitiveDetector( sftSD );
   }
-  
+   
+  /*
   //Type C real SFT Square Fiber 0.5 mm Single Cladding
   else if( DetType==3 ){
     ///////////////////// SFT(x,u,v,x,u,v, u,v,x,u,v,x)
@@ -359,7 +395,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     SDMan->AddNewDetector( sftSD );  
     r_SF1->SetSensitiveDetector( sftSD );
   }
-  
+  */
 
 
 

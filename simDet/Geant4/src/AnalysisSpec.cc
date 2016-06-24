@@ -81,6 +81,7 @@ struct Event{
   G4double pribeta1, pribeta2;
   G4double pbeam, ubeam, vbeam;
   G4double prip3, priu3, priv3;
+ // G4int    pnpart;
 
   //T0
   G4int    t0nhits;

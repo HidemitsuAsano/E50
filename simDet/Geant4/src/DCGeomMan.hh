@@ -58,7 +58,7 @@ public:
   
 private:
   static DCGeomMan *geomMan_;
-  std::string filename_;
+  std::string filename_;//
   mutable std::map <int, DCGeomRecord *> geomRecord_;
   int TOFid_, SMFid_;
 

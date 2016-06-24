@@ -19,7 +19,7 @@ ConfMan * ConfMan::confManager_ = 0;
 ConfMan::ConfMan( const std::string & filename )
   : ConfFileName_(filename), DCGeomFileName_(defDCGeomFile),
     DCGeomManager_(0), fGeom(0), fDetType_(0),
-    fPhysProc(0), fStepping(0), ReactionMode_(0), 
+    fPhysProc(0), fStepping(0), ReactionMode_(0),nparticle_(1),
     x0(0.0), y0(0.0), z0(0.0), u0(0.0), v0(0.0), p0(-1.0), 
     dx(0.0), dy(0.0), dz(0.0), du(0.0), dv(0.0), dp(0.0),
     MomBeam_(false), beamPid(1), 
@@ -58,7 +58,7 @@ bool ConfMan::Initialize( void )
   std::cout << "Conf file Open " << ConfFileName_.c_str() << std::endl;
 
   while( fgets( buf, BufSize, fp ) != 0 ){
-    if( buf[0]!='#' ){
+    if( buf[0]!='#' ){//'#' is comment line
       // Geometry
       if( sscanf(buf,"DCGEO: %s",buf1)==1 ){
 	DCGeomFileName_=buf1;
@@ -96,6 +96,9 @@ bool ConfMan::Initialize( void )
       // Primary Generation
       else if( sscanf(buf,"REACTION: %d", &id )==1 ){
 	ReactionMode_=id;
+      }
+      else if( sscanf(buf,"NPART: %d", &id )==1 ){
+	nparticle_=id;
       }
       else if( sscanf(buf,"BPART: %d",&id )==1 ){
 	beamPid=id;
@@ -151,8 +154,8 @@ bool ConfMan::Initialize( void )
   }
 
   fclose(fp);
-  PrintParameters();
   InitializeParameterFiles();
+  PrintParameters();
 
   return true;
 }
@@ -180,6 +183,7 @@ void ConfMan::PrintParameters( void )
   std::cout << "Electron Stop;      " << GetFStopE(fStepping) << std::endl;
   std::cout << "************ Primary Generation ****" << std::endl;
   std::cout << "Reaction Mode: " << ReactionMode_ << std::endl;
+  std::cout << "Number of Particles/event: " << nparticle_ << std::endl;
   std::cout << "Beam Particle: " << beamPid << " " 
 	    << PIDParticleName(beamPid) << std::endl;
   std::cout << "Beam Param. X [mm]:    " << x0 << " " << dx << std::endl;
