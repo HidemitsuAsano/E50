@@ -24,7 +24,7 @@ static const G4double rSFT_FrameThick =   30.0*mm;
 
 static const G4double rSFT_livefraction = 0.96;//fraction of senstive area of fiber
 
-//SFT_B round fiber Multi Cladding
+//SFT_B round fiber Multi Cladding r=1mm
 static const G4double rSFT_B_Radius     =    0.5*mm;
 static const G4double rSFT_B_Length     =  200.0*mm;
 static const G4double rSFT_B_TiltAngle  =   30.0*degree;
@@ -46,6 +46,19 @@ static const G4double rSFT_C_SegSpacing =    0.2*mm;
 static const G4int    rSFT_C_SegNum     =   50;
 
 
+//SFT_D 0.5 mm round fibe Multi Cladding r=0.25*mm
+static const G4double rSFT_D_Radius     =    0.25*mm;
+static const G4double rSFT_D_Length     =  200.0*mm;
+static const G4double rSFT_D_TiltAngle  =   30.0*degree;
+static const G4double rSFT_D_SegSpacing =    1.0*mm;
+static const G4int    rSFT_D_SegNum     =   20;
+static const G4double rSFT_D_FramesizeX =  200.0*mm;
+static const G4double rSFT_D_BoxThick   =   30.0*mm;
+static const G4double rSFT_D_FrameThick =   30.0*mm;
+
+static const G4double rSFT_D_Corefraction = 0.94;//fraction of senstive area of fiber
+static const G4double rSFT_D_InnerCladding = 0.03;//fraction of inner cladding of fiber
+static const G4double rSFT_D_OuterCladding = 0.03;//fraction of outer cladding of fiber
 //////Counter size
 //T0
 static const G4double rT0_SegsizeX   =   9.0*mm;
