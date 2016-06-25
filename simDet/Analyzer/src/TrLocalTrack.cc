@@ -30,7 +30,26 @@ const unsigned int TrLocalMinNHitsVXU = 3;
 const unsigned int TrLocalMinNHitsVXU2= 4;
 const unsigned int TrLocalMinNHits2 = 8;
 
-inline bool TrLocalTrack::allocateBufferArea( void )
+
+TrLocalTrack::TrLocalTrack()
+  : status_(false), 
+    x0_(0.0), y0_(0.0), 
+    u0_(0.0), v0_(0.0),
+    u1_(0.0), v1_(0.0),
+    a_(0.0),b_(0.0),c_(0.0),
+    chisqr_(0),
+    gftstatus_(true)
+{
+  hitArray.reserve( ReservedNumOfHits );
+  Coefficients_x[0]=0;
+  Coefficients_y[0]=0;
+}
+
+TrLocalTrack::~TrLocalTrack()
+{
+}
+
+bool TrLocalTrack::allocateBufferArea( void )
 {
   double *buf = new double [6*12];
   if(buf==0){
@@ -41,23 +60,6 @@ inline bool TrLocalTrack::allocateBufferArea( void )
     Coefficients_y[i]= &(buf[i*12]);
   }
   return true;
-}
-
-TrLocalTrack::TrLocalTrack()
-  : status_(false), 
-    x0_(0.0), y0_(0.0), 
-    u0_(0.0), v0_(0.0),
-    u1_(0.0), v1_(0.0),
-    a_(0.0),b_(0.0),
-    gftstatus_(true)
-{
-  hitArray.reserve( ReservedNumOfHits );
-  Coefficients_x[0]=0;
-  Coefficients_y[0]=0;
-}
-
-TrLocalTrack::~TrLocalTrack()
-{
 }
 
 TrLTrackHit *TrLocalTrack::GetHit( std::size_t nth ) const
@@ -76,6 +78,8 @@ TrLTrackHit *TrLocalTrack::GetHitOfLayerNumber( int lnum ) const
   return 0;
 }
 
+
+//liner fitting
 bool TrLocalTrack::DoFit( void )
 {
   const std::string funcname = "[TrLocalTrack::DoFit()]";

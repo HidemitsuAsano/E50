@@ -247,8 +247,6 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
       }*/
 
       unsigned int vlinksize = vLinkSegment.size();
-      int seglinkcandidate1 = -9999;//last hit
-      int seglinkcandidate2 = -9999;//2nd last hit
       bool isclusteringOK = false;
       /*
          std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
@@ -260,7 +258,7 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
         vLinkSegment.push_back(segment);
         vLinkSegmentPos.push_back(lxpos);
       }else{
-        seglinkcandidate1 = vLinkSegment.at(vlinksize-1);
+        int seglinkcandidate1 = vLinkSegment.at(vlinksize-1);
         //candidates for clustering are always located in segment-1 or segment-2 
         //, since TrHits are sorted by ascending order
         if( ((segment - seglinkcandidate1) == 1) 
@@ -273,7 +271,9 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
           if( (segment - seglinkcandidate1) == 1) vlinklzsize++;
           
           //if there more than 1 hit for clustering, check also 2nd last hit
+          int seglinkcandidate2 = -9999;//2nd last hit
           if(vlinksize>1) seglinkcandidate2 = vLinkSegment.at(vlinksize-2);
+          
           if( (segment - seglinkcandidate1) == 2) vlinklxsize++;
           else if( (segment -seglinkcandidate2) == 2) vlinklxsize++;
         }else{
