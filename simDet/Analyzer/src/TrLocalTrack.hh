@@ -36,7 +36,7 @@ private:
 public:
   void AddHit( TrLTrackHit *hitp ) { hitArray.push_back( hitp ); }
   bool DoFit( void );//Liner func
-  bool DoFit2( void );//Quadrotic func
+  bool DoFit2( void );//Quadrotic func , not used so far
   std::size_t GetNHit( void ) const { return hitArray.size(); }
   TrLTrackHit * GetHit( std::size_t nth ) const;
   TrLTrackHit * GetHitOfLayerNumber( int lnum ) const;
@@ -96,15 +96,15 @@ public:
   bool ReCalc( bool ApplyRecursively=false );  
 
 private:
-  bool status_;
+  bool status_;//status of fitting : fail or success
   double x0_, y0_, u0_, v0_, u1_, v1_; // x0_, y0_ .. : fitting results of beam position at (0,0,0) in SFT coordinate system.
   double a_,b_,c_;
   double chisqr_;
-  bool gftstatus_;
+  bool gftstatus_;// gft : Good For Tracking 
 
   double *Coefficients_x[6];
   double *Coefficients_y[6];
-  inline bool allocateBufferArea( void );
+  bool allocateBufferArea( void );
 
 };
 
@@ -128,6 +128,7 @@ struct TrLTrackComp
   }
 };
 
+/*
 struct TrLTrackComp1 
   : public std::binary_function <TrLocalTrack *, TrLocalTrack *, bool>
 {
@@ -198,7 +199,7 @@ struct TrLTrackComp4
     }
   }
 };
-
+*/
 
 
 #endif
