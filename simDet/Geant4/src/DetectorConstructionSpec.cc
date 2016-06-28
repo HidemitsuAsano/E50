@@ -2,6 +2,7 @@
   DetectorConstructionSpec.hh
 
   2016/4  K.Shirotori
+  2016/4  update H. Asano
 */
 
 #include "DetectorConstructionSpec.hh"
@@ -40,13 +41,14 @@
 
 #include "r_DetectorSize.hh"
 #include "r_SFT_A.hh" //square ,1mm signle cladding fiber
-#include "r_SFT_B.hh" //round  ,double caldding fiber,
+#include "r_SFT_B.hh" //round  ,double cladding fiber, r=0.5 mm
                       //layer z position is adjuested in this code.
 #include "r_SFT_C.hh" //square ,0.5 mm single caldding fiber
+#include "r_SFT_D.hh" //round , double cladding fiber r=0.25 mm (or 0.15 mm)
 
-#include "G4SDManager.hh"
 #include "SFTSD.hh"
 #include "T0SD.hh"
+#include "TargetSD.hh"
 
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
@@ -72,10 +74,13 @@ DetectorConstructionSpec::ConstructPayload( void )
 
   G4VPhysicalVolume *physWorld =
     new G4PVPlacement( 0, G4ThreeVector(), "World", logWorld, 0, false, 0 );
-
+  
+//  MakeSpecMagnetandTarget( physWorld );
   MakeTrackers( physWorld );
   MakeCounters( physWorld );
 
+  const DCGeomMan & geomMan=DCGeomMan::GetInstance();
+  geomMan.CreateParamFile("aaa");
   return physWorld;
 }
 
@@ -86,6 +91,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
   const DCGeomMan & geomMan=DCGeomMan::GetInstance();
   ConfMan *confMan = ConfMan::GetConfManager();
   G4RotationMatrix RM;  
+  
 
   ////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////
@@ -397,8 +403,6 @@ MakeTrackers( G4VPhysicalVolume *pMother )
   }
   */
 
-
-
 }
 
 void DetectorConstructionSpec::
@@ -433,4 +437,237 @@ MakeCounters( G4VPhysicalVolume *pMother )
   SDMan->AddNewDetector( t0SD );
   s_T0->SetSensitiveDetector( t0SD );
   
+}
+
+
+void DetectorConstructionSpec::
+MakeSpecMagnetandTarget( G4VPhysicalVolume *pMother )
+{
+  /////////////////////FM Magnet
+  G4String nmPole="FMPole";
+  G4String nmYoke="FMYoke";
+  G4String nmCoil="FMCoil";
+  G4RotationMatrix *zeRot= new G4RotationMatrix();
+  zeRot->rotateY(0.*degree); 
+
+  G4Material *mMag, *mAir;
+  mMag= mList_->Fe;
+  mAir= mList_->HeGas;
+  G4int Id_=1;
+
+  //Box
+  G4Box* solid= new G4Box("FMM", 1500./2.*cm, 1500./2.*cm, 1500./2.*cm); 
+  G4LogicalVolume *DetLV_= new G4LogicalVolume(solid, mAir, "FMM LV");
+  DetLV_-> SetVisAttributes(G4VisAttributes::GetInvisible());
+
+  //Yoke
+  G4double dx_YokeTB=539.5*cm; 
+  G4double dy_YokeTB= 83.0*cm; 
+  G4double dz_YokeTB=212.0*cm; 
+
+  G4Box* solidYokeTB= new G4Box(nmYoke, dx_YokeTB/2., dy_YokeTB/2., dz_YokeTB/2.); 
+  G4LogicalVolume* LVYokeTB= new G4LogicalVolume(solidYokeTB, mMag, nmYoke);
+  G4VisAttributes *va= new G4VisAttributes( G4Color( 0.0, 0.5, 1.0 ) ); //Blue
+  LVYokeTB-> SetVisAttributes(va);
+  new G4PVPlacement
+    (zeRot, G4ThreeVector(-3.35*cm, 203.5*cm,0.*cm), LVYokeTB, nmYoke, DetLV_, false, Id_);
+  new G4PVPlacement
+    (zeRot, G4ThreeVector(-3.35*cm,-203.5*cm,0.*cm), LVYokeTB, nmYoke, DetLV_, false, Id_);
+  
+  G4Box* solidYokeRA= new G4Box(nmYoke, 84.4/2.*cm, 324./2.*cm, 212.0/2.*cm); 
+  G4Box* solidYokeRB= new G4Box(nmYoke, 50.*cm, 324./2.*cm, 12.33*cm);
+  G4RotationMatrix *rot0 = new G4RotationMatrix();
+  rot0-> rotateY(-21.*degree);
+  G4DisplacedSolid *solidYokeRC = new G4DisplacedSolid( nmYoke, solidYokeRB, rot0,
+							G4ThreeVector(84.4/2.*cm,0.*cm,106.*cm));
+  
+  G4Box* solidYokeRD= new G4Box(nmYoke, 50.*cm, 324./2.*cm, 14.73*cm);
+  G4RotationMatrix *rot1 = new G4RotationMatrix();
+  rot1-> rotateY(47.74*degree);
+  G4DisplacedSolid *solidYokeRE = new G4DisplacedSolid( nmYoke, solidYokeRD, rot1,
+							G4ThreeVector(84.4/2.*cm,0.*cm,-106.*cm));
+  G4SubtractionSolid* solidYokeR0=
+    new G4SubtractionSolid(nmYoke,solidYokeRA,solidYokeRC);
+  G4SubtractionSolid* solidYokeR1=
+    new G4SubtractionSolid(nmYoke,solidYokeR0,solidYokeRE);
+
+  G4LogicalVolume* LVYokeR= new G4LogicalVolume(solidYokeR1, mMag, nmYoke);
+  LVYokeR-> SetVisAttributes(va);
+  new G4PVPlacement(zeRot, G4ThreeVector(-237.2*cm,0.*cm,0.*cm), LVYokeR, nmYoke, DetLV_, false, Id_);
+  
+  G4Box* solidYokeLA= new G4Box(nmYoke, 91.1/2.*cm, 324./2.*cm, 212.0/2.*cm); 
+  G4Box* solidYokeLB= new G4Box(nmYoke, 50.*cm, 324./2.*cm, 14.05*cm);
+  G4RotationMatrix *rot2 = new G4RotationMatrix();
+  rot2-> rotateY(39.70*degree);
+  G4DisplacedSolid *solidYokeLC = new G4DisplacedSolid(nmYoke, solidYokeLB, rot2,
+						       G4ThreeVector(-84.4/2.*cm,0.*cm,106.*cm));
+
+  G4Box* solidYokeLD= new G4Box(nmYoke, 50.*cm, 324./2.*cm, 34.23*cm);
+  G4RotationMatrix *rot3 = new G4RotationMatrix();
+  rot3-> rotateY(-57.03*degree);
+  G4DisplacedSolid *solidYokeLE = new G4DisplacedSolid(nmYoke, solidYokeLD, rot3,
+						       G4ThreeVector(-84.4/2.*cm,0.*cm,-106.*cm));
+  G4SubtractionSolid* solidYokeL0=
+    new G4SubtractionSolid(nmYoke,solidYokeLA,solidYokeLC);
+  G4SubtractionSolid* solidYokeL1=
+    new G4SubtractionSolid(nmYoke,solidYokeL0,solidYokeLE);
+  G4LogicalVolume* LVYokeL= new G4LogicalVolume(solidYokeL1, mMag, nmYoke);
+  LVYokeL-> SetVisAttributes(va);
+  new G4PVPlacement(zeRot, G4ThreeVector(240.55*cm,0.*cm,0.*cm), LVYokeL, nmYoke, DetLV_, false, Id_);
+  
+  //Pole
+  G4Tubs *solidPole0 = new G4Tubs(nmPole,0.*cm,106.*cm,40./2.*cm,0,2.*3.14);
+  G4LogicalVolume* LVPole0= new G4LogicalVolume(solidPole0, mMag, nmPole);
+  LVPole0-> SetVisAttributes(va);
+  G4RotationMatrix *rot4 = new G4RotationMatrix();
+  rot4-> rotateX(-90.0*degree);
+  new G4PVPlacement(rot4, G4ThreeVector(0.*cm,142.*cm,0.*cm), LVPole0, nmPole, DetLV_, false, Id_);
+  new G4PVPlacement(rot4, G4ThreeVector(0.*cm,-142.*cm,0.*cm), LVPole0, nmPole, DetLV_, false, Id_);
+
+  //Pole 1m version
+  G4Tubs *solidPole1 = new G4Tubs(nmPole,0.*cm,88.*cm,72.0/2.*cm,0,2.*3.14);
+  G4LogicalVolume* LVPole1= new G4LogicalVolume(solidPole1, mMag, nmPole);
+  //va= new G4VisAttributes(G4Color(1.,0.5,0.));
+  LVPole1-> SetVisAttributes(va);
+  new G4PVPlacement(rot4, G4ThreeVector(0.*cm, 86.0*cm,0.*cm), LVPole1, nmPole, DetLV_, false, Id_);
+  new G4PVPlacement(rot4, G4ThreeVector(0.*cm,-86.0*cm,0.*cm), LVPole1, nmPole, DetLV_, false, Id_);
+  //   G4Tubs *solidPole1 = new G4Tubs(nmPole,0.*cm,88.*cm,30.6/2.*cm,0,2.*3.14);
+  //   G4LogicalVolume* LVPole1= new G4LogicalVolume(solidPole1, mMag, nmPole);
+  //   //va= new G4VisAttributes(G4Color(1.,0.5,0.));
+  //   LVPole1-> SetVisAttributes(va);
+  //   new G4PVPlacement(rot4, G4ThreeVector(0.*cm,106.7*cm,0.*cm), LVPole1, nmPole, DetLV_, false, Id_);
+  //   new G4PVPlacement(rot4, G4ThreeVector(0.*cm,-106.7*cm,0.*cm), LVPole1, nmPole, DetLV_, false, Id_);
+
+  G4Tubs *solidPole2 = new G4Tubs(nmPole,0.*cm,78.*cm,13.4/2.*cm,0,2.*3.14);
+  G4LogicalVolume* LVPole2= new G4LogicalVolume(solidPole2, mMag, nmPole);
+  LVPole2-> SetVisAttributes(va);
+  //   new G4PVPlacement(rot4, G4ThreeVector(0.*cm,84.7*cm,0.*cm), LVPole2, nmPole, DetLV_, false, Id_);
+  //   new G4PVPlacement(rot4, G4ThreeVector(0.*cm,-84.7*cm,0.*cm), LVPole2, nmPole, DetLV_, false, Id_);
+
+  G4Paraboloid *solidPole3 = 
+    new G4Paraboloid(nmPole,26./2.*cm,52.*cm,78.*cm);
+  G4LogicalVolume* LVPole3= new G4LogicalVolume(solidPole3, mMag, nmPole);
+  LVPole3-> SetVisAttributes(va);
+  G4RotationMatrix *rot5 = new G4RotationMatrix();
+  rot5-> rotateX(90.0*degree);
+  //   new G4PVPlacement(rot5, G4ThreeVector(0.*cm,65.*cm,0.*cm), LVPole3, nmPole, DetLV_, false, Id_);
+  //   new G4PVPlacement(rot4, G4ThreeVector(0.*cm,-65.*cm,0.*cm), LVPole3, nmPole, DetLV_, false, Id_);
+
+  G4Tubs *solidPole4 = new G4Tubs(nmPole,0.*cm,42.*cm,10.0/2.*cm,0,2.*3.14);
+  G4LogicalVolume* LVPole4= new G4LogicalVolume(solidPole4, mMag, nmPole);
+  LVPole4-> SetVisAttributes(va);
+  //   new G4PVPlacement(rot4, G4ThreeVector(0.*cm,47.0*cm,0.*cm), LVPole4, nmPole, DetLV_, false, Id_);
+  //   new G4PVPlacement(rot4, G4ThreeVector(0.*cm,-47.0*cm,0.*cm), LVPole4, nmPole, DetLV_, false, Id_);
+
+  G4Paraboloid *solidPole5 = 
+    new G4Paraboloid(nmPole,22./2.*cm,20.*cm,42.*cm);
+  G4LogicalVolume* LVPole5= new G4LogicalVolume(solidPole5, mMag, nmPole);
+  LVPole5-> SetVisAttributes(va);
+  //  new G4PVPlacement(rot5, G4ThreeVector(0.*cm,31.*cm,0.*cm), LVPole5, nmPole, DetLV_, false, Id_);
+  //   new G4PVPlacement(rot4, G4ThreeVector(0.*cm,-31.*cm,0.*cm), LVPole5, nmPole, DetLV_, false, Id_);
+
+  //Coil  
+  G4Tubs *solidCoil = new G4Tubs(nmCoil,106.*cm,129.5*cm,30./2.*cm,0,2.*3.14);
+  G4LogicalVolume* LVCoil= new G4LogicalVolume(solidCoil, mMag, nmCoil);
+  va= new G4VisAttributes(G4Color(1.,0.,0.));
+  LVCoil-> SetVisAttributes(va);
+  new G4PVPlacement(rot5, G4ThreeVector(0.*cm,147.*cm,0.*cm), LVCoil, nmCoil, DetLV_, false, Id_);
+  new G4PVPlacement(rot5, G4ThreeVector(0.*cm,-147.*cm,0.*cm), LVCoil, nmCoil, DetLV_, false, Id_);
+  
+  G4RotationMatrix rotMtx_; 
+  rotMtx_.rotateX( -90.*degree);
+  rotMtx_.rotateZ(  90.*degree);
+  G4ThreeVector Pos( 0.0*mm, 0.0*mm, 0.0*mm );
+  G4VPhysicalVolume *FMM = new G4PVPlacement( G4Transform3D(rotMtx_, Pos ), "FMM", DetLV_, pMother, true, Id_);
+
+  /////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////
+  const DCGeomMan & geomMan=DCGeomMan::GetInstance();
+  G4SDManager *SDMan = G4SDManager::GetSDMpointer();
+  G4RotationMatrix RM;  
+  RM.rotateX(  90.*degree );
+  RM.rotateY( 180.*degree );
+
+  //const DCGeomMan & geomMan=DCGeomMan::GetInstance();
+  ConfMan *confMan = ConfMan::GetConfManager();
+  G4double tgtSizeX, tgtSizeY, tgtSizeZ; 
+  G4int lnumTarg = geomMan.GetDetectorId("Target");
+  G4ThreeVector targPos = geomMan.GetGlobalPosition( lnumTarg )*mm;
+  G4double targAng2 = geomMan.GetRotAngle2( lnumTarg )*degree;
+  G4double size=0.0;
+  if( (size=confMan->GetTargetSizeX())>0.0 ) tgtSizeX=size;
+  if( (size=confMan->GetTargetSizeY())>0.0 ) tgtSizeY=size;
+  if( (size=confMan->GetTargetSizeZ())>0.0 ) tgtSizeZ=size;
+
+  //LH2 cell
+  G4Tubs *solidTGTBox =
+    new G4Tubs( "TargetB", 0.0*mm, (tgtSizeX+50.0+1.0)/2.*mm, (tgtSizeZ+50.0+1.0)/2.*mm, 0.0*degree, 360.0*degree );
+  G4Tubs *solidCFRP =
+    new G4Tubs( "TargetC", (tgtSizeX+50.0-2.0)/2.*mm, (tgtSizeX+50.0)/2.*mm, (tgtSizeZ+50.0)/2.*mm, 
+		0.0*degree, 360.0*degree );
+  G4Tubs *solidTGT =
+    new G4Tubs( "Target",  0.0*mm, tgtSizeX/2.*mm, tgtSizeZ/2.*mm, 0.0*degree, 360.0*degree );
+  G4Tubs *solidMaylar =
+    new G4Tubs( "TargetM", 0.0*mm, (tgtSizeX+50.0)/2.*mm, 0.3/2.*mm, 0.0*degree, 360.0*degree );
+  
+  G4LogicalVolume *logTGT, *logTGTC, *logTGTM, *logTGTB;
+  if( confMan->ExistTarget() ){
+    logTGT =
+      new G4LogicalVolume( solidTGT, mList_->LiqH2, "Target", 0, 0, 0 );
+    logTGTC =
+      new G4LogicalVolume( solidCFRP, mList_->C, "TargetC", 0, 0, 0 );
+    logTGTM =
+      new G4LogicalVolume( solidMaylar, mList_->PET, "TargetM", 0, 0, 0 );
+    logTGTB =
+      new G4LogicalVolume( solidTGT, mList_->Air, "TargetB", 0, 0, 0 );
+  }
+  else{
+    logTGT =
+      new G4LogicalVolume( solidTGT, mList_->Air, "Target", 0, 0, 0 );
+    logTGTC =
+      new G4LogicalVolume( solidCFRP, mList_->Air, "TargetC", 0, 0, 0 );
+    logTGTM =
+      new G4LogicalVolume( solidMaylar, mList_->Air, "TargetM", 0, 0, 0 );
+    logTGTB =
+      new G4LogicalVolume( solidTGT, mList_->Air, "TargetB", 0, 0, 0 );
+  }
+
+  G4RotationMatrix RMTgt;  
+  
+  G4ThreeVector TgtPos( 0., 0.,  (-1.)*targPos.x()*mm );
+  G4VPhysicalVolume *physTGTBox =
+    new G4PVPlacement( G4Transform3D( RMTgt, TgtPos ),
+		       logTGTB, "TargetBox", DetLV_, false, 0 );
+  G4VPhysicalVolume *physTGTC = 
+    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
+  		       "TargetC", logTGTC, physTGTBox, false, 0 );
+
+  new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, (620.0+0.3)/2.*mm ),
+  		     "TargetMu", logTGTM, physTGTC, false, 0 );
+  new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, (-1.)*(620.0+0.3)/2.*mm ),
+  		     "TargetMd", logTGTM, physTGTC, false, 0 );
+  new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
+		     "Target", logTGT, physTGTBox, false, 0 );
+
+  G4VisAttributes *TgtAttrib =
+    new G4VisAttributes( G4Colour::G4Colour( 0.0, 1.0, 1.0 ) );
+  G4VisAttributes *TgtCAttrib =
+    new G4VisAttributes( G4Colour::G4Colour( 0.0, 0.0, 0.0 ) );
+  G4VisAttributes *TgtMAttrib =
+    new G4VisAttributes( G4Colour::G4Colour( 1.0, 1.0, 1.0 ) );
+  
+  logTGT->SetVisAttributes(TgtAttrib);
+  logTGTC->SetVisAttributes(TgtCAttrib);
+  logTGTM->SetVisAttributes(TgtMAttrib);
+  logTGTB->SetVisAttributes(&G4VisAttributes::Invisible);
+
+  //////// Sensitive Detectors ////////
+  //G4SDManager *SDMan = G4SDManager::GetSDMpointer();
+  TargetSD *tgtSD = new TargetSD( "/spec/target" );
+  SDMan->AddNewDetector( tgtSD );
+  logTGT->SetSensitiveDetector( tgtSD );
+
+
+
 }

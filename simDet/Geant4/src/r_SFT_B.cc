@@ -135,6 +135,7 @@ r_SFT_B::r_SFT_B( const G4String & Cname,
                        Cname_+"Area", logArea, physBox, false, 0 );
  
   // Consitency should be checked.
+  // Here, the position located in the GEANT world and parameter file (param/*** ) should be same
   G4RotationMatrix InvMat=rotMat.inverse();
   G4ThreeVector lPos[12];
   for(G4int ilr = 0; ilr < rSFT_nLayer;ilr++){

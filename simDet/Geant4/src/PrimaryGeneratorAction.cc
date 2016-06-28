@@ -356,7 +356,7 @@ GPBeamUniformInUVUniformInXY( G4Event *anEvent )
   BP_->gun->SetParticleMomentum( p*gDir );
   BP_->gun->GeneratePrimaryVertex( anEvent );
 
-  ConfMan *confMan = ConfMan::GetConfManager(); 
+  //ConfMan *confMan = ConfMan::GetConfManager(); 
   //  G4cout << "ParticleGenerator: gun:" 
   //	 << BP_->gun->GetParticleDefinition()->GetParticleName() << G4endl;
 

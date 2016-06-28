@@ -32,6 +32,7 @@ private:
   virtual G4VPhysicalVolume *ConstructPayload( void );
   void MakeTrackers( G4VPhysicalVolume *pMother );
   void MakeCounters( G4VPhysicalVolume *pMother );
+  void MakeSpecMagnetandTarget( G4VPhysicalVolume *pMother );
   void MakeVDetector( G4VPhysicalVolume *pMother );
 
   void SetRealMaterials( void );

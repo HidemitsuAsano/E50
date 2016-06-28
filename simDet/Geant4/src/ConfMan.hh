@@ -11,6 +11,12 @@
 
 class DCGeomMan;
 
+inline int FGeomTargOff( int  flag ){ return (flag & ~0x08 ); }
+inline int FGeomLiqTargOff( int  flag ){ return (flag & ~0x10 ); }
+inline bool GetFGeomTarg( int flag ){ return (flag & 0x08); }
+inline bool GetFGeomLiqTarg( int flag ){ return (flag & 0x10); }
+
+
 inline int FPhysProEMOn( int flag ){ return (flag | 0x01); }
 inline int FPhysProDCYOn( int flag ){ return (flag | 0x02); }
 inline int FPhysProHDOn( int flag ){ return (flag | 0x04); }
@@ -52,6 +58,12 @@ public:
   DCGeomMan *GetDCGeomManager( void ) { return DCGeomManager_; }
   int GeomFlag( void ) const { return fGeom; }
   int DetectorType( void ) const { return fDetType_; }
+  double GetTargetSizeX( void ) const { return TargetSizeX_; }
+  double GetTargetSizeY( void ) const { return TargetSizeY_; }
+  double GetTargetSizeZ( void ) const { return TargetSizeZ_; }
+  double TgtLength( void ) const { return TargetSizeZ_; }
+  bool ExistTarget( void ) const { return GetFGeomTarg(fGeom); };
+  bool ExistLiqTarget( void ) const { return GetFGeomLiqTarg(fGeom); };
 
   // Physics Process
   int PhysFlag( void ) const { return fPhysProc; }
@@ -99,6 +111,7 @@ private:
   // Geometry
   std::string DCGeomFileName_;
   DCGeomMan *DCGeomManager_;
+  double  TargetSizeX_, TargetSizeY_, TargetSizeZ_;
   int fGeom;
   int fDetType_;
 
