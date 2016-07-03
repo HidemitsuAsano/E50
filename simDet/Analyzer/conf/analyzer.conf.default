@@ -5,7 +5,10 @@
 ####Analysis mode
 # Type0 tracker: 0
 # TypeA tracker: 1
-ANAMODE: 1
+# TypeB tracker: 2
+# TypeC tracker: 3
+ANAMODE: 3
+
 #
 ####Geometry File
 TRGEO:  param/param_DetGeom001_ana
