@@ -388,7 +388,7 @@ void AnalysisSpec::PrintHitsInformation( const G4Event *anEvent, std::ostream &o
 	  << std::setw(12) << aHit->GetYLocal()/mm
 	  << std::endl;
     }
-    //Type A
+    //Type A , B ,C
     if( aHit->GetEdep() > confMan->GetTrEdep() &&
 	confMan->DetectorType()>=1 ){
       ost.precision(5);

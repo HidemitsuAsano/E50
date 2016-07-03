@@ -43,7 +43,7 @@
 #include "r_SFT_A.hh" //square ,1mm signle cladding fiber
 #include "r_SFT_B.hh" //round  ,double cladding fiber, r=0.5 mm
                       //layer z position is adjuested in this code.
-#include "r_SFT_C.hh" //square ,0.5 mm single caldding fiber
+//#include "r_SFT_C.hh" //square ,0.5 mm single caldding fiber
 #include "r_SFT_D.hh" //round , double cladding fiber r=0.25 mm (or 0.15 mm)
 
 #include "SFTSD.hh"
@@ -80,7 +80,7 @@ DetectorConstructionSpec::ConstructPayload( void )
   MakeCounters( physWorld );
 
   const DCGeomMan & geomMan=DCGeomMan::GetInstance();
-  geomMan.CreateParamFile("aaa");
+  geomMan.CreateParamFile("param.file.new");
   return physWorld;
 }
 

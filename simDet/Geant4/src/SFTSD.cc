@@ -4,6 +4,10 @@
   2016/4  K.Shirotori
 */
 
+
+//comment added by H. Asano
+//This code propagate detector ID ,layer , segment number from file to output file 
+
 #include "SFTSD.hh"
 
 #include "G4HCofThisEvent.hh"
@@ -102,12 +106,12 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
   }
 
   G4int layerId=-1, segId=-1;
-  if( confMan->DetectorType()==0 ){
+  if( confMan->DetectorType()==0 ){//Type 0 , simple detector
     layerId= hitLayer;
     segId  = hitSegment;
-  }else if( confMan->DetectorType()>=1 ){
-    layerId= hitLayer/1000;
-    segId  = hitSegment-1000*layerId;
+  }else if( confMan->DetectorType()>=1 ){ //Type A, B,C ,realistic detector
+    layerId= hitLayer/1000-1;//layer 0 to 11
+    segId  = hitSegment-1000*(layerId+1)-1;//segment start from 0
   }  
   
   SFTHit *aHit = new SFTHit();
