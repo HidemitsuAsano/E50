@@ -123,6 +123,17 @@ struct Event{
 };
 static Event event;
 
+
+struct Cluster
+{
+
+
+
+};
+static Cluster cluster;
+
+
+
 bool EventBeamTracking::ProcessingBegin()
 {
  return true;
@@ -419,6 +430,7 @@ bool ConfMan:: InitializeHistograms()
   tree->Branch("sftlayer", &event.sftlayer);
   tree->Branch("sftposx", &event.sftposx);//hit position of raw hits
   tree->Branch("sftposy", &event.sftposy);//hit position of raw hits
+  tree->Branch("sftlayerc", &event.sftlayerc);
   tree->Branch("sftclssize", &event.sftclssize);//cluster size = number of hit segment
   tree->Branch("sftclssizelx", &event.sftclssizelx);//cluster size in local x coordinate
   tree->Branch("sftclssizelz", &event.sftclssizelz);//cluster size in local z coordiante
