@@ -10,7 +10,7 @@ DCGEO: param/param_DetGeom001
 #Type 0: 0
 #Type A: 1
 #Type B: 2
-DETTYPE: 1
+DETTYPE: 2
 #
 #####################################################
 ### Physicis Process (1->Yes, 0->No)
@@ -39,6 +39,8 @@ REACTION: 1
 #  5    Beam UniformInThetaPhi UniformInXY
 #  6    Beam UniformInThetaPhi GaussInXY
 #
+# number of particle per event
+NPART 1
 # ParticleID for Beam
 BPART:  1
 # 0 geantino 1 pi-  2 pi+ 3 K- 4 K+ 5 Mu- 6 Mu+
