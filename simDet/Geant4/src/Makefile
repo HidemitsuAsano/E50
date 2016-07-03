@@ -121,6 +121,8 @@ OBJS	= 	GetNumberFromKernelEntropyPool.o	\
                 r_SFT_C.o                               \
 		SFTHit.o				\
 		SFTSD.o 	               		\
+		TargetHit.o				\
+		TargetSD.o				\
 		T0Hit.o		         		\
 		T0SD.o	                   		\
 		PhysicsList.o				\
@@ -133,6 +135,7 @@ OBJS	= 	GetNumberFromKernelEntropyPool.o	\
 		Analysis.o				\
 		VisManager.o				\
 		PidUtil.o				\
+		LiqTarget.o
 
 OBJS_SPEC =	MainSpec.o				\
 		DetectorConstructionSpec.o		\
