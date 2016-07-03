@@ -10,7 +10,8 @@ DCGEO: param/param_DetGeom001
 #Type 0: 0
 #Type A: 1
 #Type B: 2
-DETTYPE: 2
+#Type C: 3
+DETTYPE: 3
 #
 #####################################################
 ### Physicis Process (1->Yes, 0->No)
