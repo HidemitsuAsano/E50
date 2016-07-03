@@ -69,7 +69,7 @@ double TrGeomRecord::WirePos (double wire) const
     return dd_*(wire - w0_)+offset_; 
   }else if( (confMan->AnaMode()) > 1 ){//Type B, C detector. 1 layer has 2 sublayer
     //return dd_*((int)((wire-1)/2.0+1) - w0_)+offset_*((int)(wire-1)%2);
-    double pos = dd_*((int)((wire-1)/2.0+1) - w0_)+offset_*((int)(wire-1)%2);
+    double pos = dd_*((int)((wire)/2.0+1) - w0_)+offset_*((int)wire%2);
     /*
     std::cout << "wire " << wire << std::endl;
     std::cout << "dd_ " << dd_ << std::endl;

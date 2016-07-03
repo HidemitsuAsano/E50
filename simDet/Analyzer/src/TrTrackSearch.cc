@@ -56,8 +56,8 @@ int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
   //CandCont.resize(NumOfLayers);
   
   //this way make too many candidates if there are multiple tracks (e.g. 2**12 layers) 
-  int nCombi[NumOfLayers+1];
-  for( int ilr=0; ilr<=NumOfLayers; ++ilr ){ 
+  int nCombi[NumOfLayers];
+  for( int ilr=0; ilr<NumOfLayers; ++ilr ){ 
     nCombi[ilr]=(ClusterCont[ilr]).size();
 
     // If #Cluster>MaxNumerOfCluster,  error return
@@ -65,7 +65,7 @@ int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
       std::cout << __FILE__ <<" : " << __LINE__ << " : "<< "MaxNumbeOfClusters exceed!! " << std::endl;
       std::cout << "layer: " << ilr << " MaxNumbefOfCluster : "  << MaxNumberOfClusters << " # of clusteres reconstructed : "<< 
     nCombi[ilr] << std::endl;
-      for( int jlr=0; jlr<=NumOfLayers; ++jlr )
+      for( int jlr=0; jlr<NumOfLayers; ++jlr )
         for_each( ClusterCont[jlr].begin(), ClusterCont[jlr].end(), DeleteObject() );
       return 0;
     } 
@@ -99,7 +99,7 @@ int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
   if(Verbosity>0){
     std::cout << __FILE__ << "   " << __LINE__ << " ===> " << nnCombi << " combinations will be checked.." 
       << std::endl;
-    for(int ilr=1;ilr<NumOfLayers;ilr++){ 
+    for(int ilr=0;ilr<NumOfLayers;ilr++){ 
       std::cout << "layer " << ilr << "  " <<  nCombi[ilr] << std::endl;
     }
   }

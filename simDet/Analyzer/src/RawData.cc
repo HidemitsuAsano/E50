@@ -256,8 +256,9 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 #if check1
       std::cout << "type1_1 =" << type << std::endl;
 #endif
-
-    AddTrRHit(SFTRawHitContainer[0], 0, 0, 0., 0., 0.);
+    
+    //dummy , when layer number starts from 1 in the previous code
+    //AddTrRHit(SFTRawHitContainer[0], 0, 0, 0., 0., 0.);
     
     ////////////////////////////////////////////////////////////////////////////////
     ////Full tracking
@@ -273,7 +274,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	  
 	//Tracker
 	if( type==FullTrackTF ){ 
-	  int lnum=0, wire=1;
+	  int lnum=-1, wire=-1;
 	  double x=0, y=0, dl=0;
 
 
@@ -303,7 +304,11 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	      //SFT only stores layer number and segment id
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
 		AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
-	      }
+	      //std::cout << "lnum " << lnum << "wire " << wire << std::endl;
+        }else{
+          std::cerr << __FILE__ << "  " << __LINE__ 
+          << " invalid SFT data format !! " << std::endl;
+        }
 	    }	    
 
 #if check1
@@ -372,6 +377,9 @@ const HodoRHitContainer& RawData::GetT0RHC() const
 
 const TrRHitContainer & RawData::GetSFTRawHitContainer( int layer ) const
 {
-  if( layer<0 || layer>PlMaxSFT ) layer=0;
+  if( layer<0 || layer>PlMaxSFT ){
+    std::cerr << __FILE__ << "  " << __LINE__ << " invalid layer number !! " << layer << std::endl;
+    layer=-1;
+  }
   return SFTRawHitContainer[layer];
 }

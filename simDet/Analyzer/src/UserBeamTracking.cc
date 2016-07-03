@@ -201,7 +201,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
 
   //SFT
   {
-    for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+    for( int layer=0; layer<NumOfLayersSFT; ++layer ){
       const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nh=cont.size();
       //std::cout << "N raw hit " << nh << std::endl;
@@ -231,7 +231,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     //
     TrAna->TrackSearchSFTT();//making index
     
-    for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+    for( int layer=0; layer<NumOfLayersSFT; ++layer ){
       const TrHitClusterContainer cluscont = TrAna->GetSFTTrHitClusterContainer(layer);
       int nclus = cluscont.size();
       event.sftnclus = nclus;

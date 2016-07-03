@@ -15,39 +15,39 @@
 class TrGeomRecord
 {
 public:
-  TrGeomRecord( int id, const char *name,
+  TrGeomRecord( int layer, const char *name,
                 double x, double y, double z, double ta,
                 double ra1, double ra2, double length, double resol,
 		double w0, double dd, double ofs )
-    : id_(id), name_(name), pos_(x,y,z), tiltAngle_(ta),
+    : layer_(layer), name_(name), pos_(x,y,z), tiltAngle_(ta),
       rotAngle1_(ra1), rotAngle2_(ra2),
       length_(length), resol_(resol), w0_(w0), dd_(dd), offset_(ofs)
   { calcVectors(); }
     //perhaps, "length_" is confusing. This is just local z position defined in the parameter file
-  TrGeomRecord( int id, const std::string &name,
+  TrGeomRecord( int layer, const std::string &name,
                 double x, double y, double z, double ta,
                 double ra1, double ra2, double length, double resol,
 		double w0, double dd, double ofs )
-    : id_(id), name_(name), pos_(x,y,z), tiltAngle_(ta),
+    : layer_(layer), name_(name), pos_(x,y,z), tiltAngle_(ta),
       rotAngle1_(ra1), rotAngle2_(ra2),
       length_(length), resol_(resol), w0_(w0), dd_(dd), offset_(ofs)
   { calcVectors(); }
   
 
-  TrGeomRecord( int id, const char *name,
+  TrGeomRecord( int layer, const char *name,
                 const ThreeVector pos, double ta,
                 double ra1, double ra2, double length, double resol,
 		double w0, double dd, double ofs )
-    : id_(id), name_(name), pos_(pos),  tiltAngle_(ta),
+    : layer_(layer), name_(name), pos_(pos),  tiltAngle_(ta),
       rotAngle1_(ra1), rotAngle2_(ra2),
       length_(length), resol_(resol), w0_(w0), dd_(dd), offset_(ofs)
   { calcVectors(); }
 
-  TrGeomRecord( int id, const std::string &name,
+  TrGeomRecord( int layer, const std::string &name,
                 const ThreeVector pos, double ta,
                 double ra1, double ra2, double length, double resol,
 		double w0, double dd, double ofs )
-    : id_(id), name_(name), pos_(pos),  tiltAngle_(ta),
+    : layer_(layer), name_(name), pos_(pos),  tiltAngle_(ta),
       rotAngle1_(ra1), rotAngle2_(ra2),
       length_(length), resol_(resol), w0_(w0), dd_(dd), offset_(ofs)
   { calcVectors(); }
@@ -92,7 +92,7 @@ private:
   void calcVectors( void );
 
 private:
-  int id_;
+  int layer_;
   std::string name_;
   ThreeVector pos_;
   double tiltAngle_, rotAngle1_, rotAngle2_;
@@ -117,7 +117,7 @@ struct TrGeomRecordComp
 {
   bool operator()( const TrGeomRecord * const p1,
 		   const TrGeomRecord * const p2 ) const
-  { return p1->id_ < p2->id_; }
+  { return p1->layer_ < p2->layer_; }
 };
 
 #endif

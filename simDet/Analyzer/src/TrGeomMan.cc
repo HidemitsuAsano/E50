@@ -203,7 +203,7 @@ bool TrGeomMan::Initialize( void )
   static const std::string funcname = "[TrGeomMan::Initialize]";
   char str[MaxChar];
   char cname[MaxChar];
-  int id;
+  int layer;
   double xs, ys, zs, ta, ra1, ra2, l, res, w0, dd, ofs;
 
   FILE *fp;
@@ -217,21 +217,21 @@ bool TrGeomMan::Initialize( void )
   while( fgets( str, MaxChar, fp ) != 0 ){
     if( str[0]!='#' ){
       if( sscanf( str, "%d %s %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
-		  &id, cname, &xs, &ys, &zs, &ta, &ra1, &ra2, &l, &res,
+		  &layer, cname, &xs, &ys, &zs, &ta, &ra1, &ra2, &l, &res,
 		  &w0, &dd, &ofs )
 	  == 13 ){
 	TrGeomRecord *pRec = 
-	  new TrGeomRecord( id, cname, xs, ys, zs, 
+	  new TrGeomRecord( layer, cname, xs, ys, zs, 
 			    ta, ra1, ra2, l, res,
 			    w0, dd, ofs );
 
-	TrGeomRecord *pOld = geomRecord_[id];
-	geomRecord_[id] = pRec;
+	TrGeomRecord *pOld = geomRecord_[layer];
+	geomRecord_[layer] = pRec;
 
 	if( pOld ){
-	  std::cerr << funcname << ": duplicated id number. "
+	  std::cerr << funcname << ": duplicated layer number. "
 		    << " following record is deleted." << std::endl;
-	  std::cerr << "Id=" << pOld->id_ << " " << pOld->pos_
+	  std::cerr << "Id=" << pOld->layer_ << " " << pOld->pos_
 		    << " ) ... " << std::endl;
 	  delete pOld;
 	}
@@ -397,7 +397,7 @@ int TrGeomMan::GetDetectorId( const std::string &detName ) const
 
   for(; itr!=end; ++itr ){
     if (itr->second->name_ == detName)
-      return itr->second->id_;
+      return itr->second->layer_;
   }
 
   std::cerr << funcName << " : No such detector " << detName << std::endl;

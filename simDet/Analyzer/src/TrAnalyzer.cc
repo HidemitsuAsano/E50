@@ -99,7 +99,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 
   //Type A , B , C
   if( confMan->AnaMode()>=1 ){
-    for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+    for( int layer=0; layer<NumOfLayersSFT; ++layer ){
       const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nhit=cont.size();
       //std::cout<< nh << std::endl;
@@ -160,13 +160,13 @@ bool TrAnalyzer::SortTrHits()
     }
   }*/
   //sort row hits here by segment id
-  for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+  for( int layer=0; layer<NumOfLayersSFT; ++layer ){
     std::sort(SFTTrHitContainer_[layer].begin(),SFTTrHitContainer_[layer].end(),TrHit::compareTrHitPredicate);//
   }
   
   /*
   //test
-  for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+  for( int layer=0; layer<NumOfLayersSFT; ++layer ){
     int nhit = SFTTrHitContainer_[layer].size();
     std::cout << "layer : size" << layer << " : " << nhit << std::endl;
     for(int ihit = 0;ihit<nhit; ihit++){
@@ -194,7 +194,7 @@ bool TrAnalyzer::SortTrHits()
 //MakeHitCluster is implemented in TrTrackSearch.cc as a non-member function
 int TrAnalyzer::SFTClustering( void )
 {
-  for( int ilr=0; ilr<=NumOfLayersSFT; ++ilr ){
+  for( int ilr=0; ilr<NumOfLayersSFT; ++ilr ){
     MakeHitCluster(SFTTrHitContainer_[ilr],SFTTrHitClusterContainer_[ilr]);
   }
 
@@ -364,7 +364,7 @@ bool TrAnalyzer::TrackSearchSFTT( void )
 
 void TrAnalyzer::clearTrHits( void )
 {
-  for( int l=0; l<=NumOfLayersSFT; ++l ){
+  for( int l=0; l<NumOfLayersSFT; ++l ){
     for_each( SFTTrHitContainer_[l].begin(),  SFTTrHitContainer_[l].end(),  DeleteObject() );
     SFTTrHitContainer_[l].clear();
   }
@@ -372,7 +372,7 @@ void TrAnalyzer::clearTrHits( void )
 
 void TrAnalyzer::clearTrHitClusters( void )
 {
-  for( int l=0; l<=NumOfLayersSFT; ++l ){
+  for( int l=0; l<NumOfLayersSFT; ++l ){
     for_each( SFTTrHitClusterContainer_[l].begin(),  SFTTrHitClusterContainer_[l].end(),  DeleteObject() );
     SFTTrHitClusterContainer_[l].clear();
   }

@@ -6,8 +6,8 @@
 #define DetectorID_h 1
 
 //DC Number of Plane
-const int PlMinSFT =  1;
-const int PlMaxSFT = 12;
+const int PlMinSFT =  0;
+const int PlMaxSFT = 11;
 
 const int NumOfLayersSFT = PlMaxSFT - PlMinSFT  + 1;
 
