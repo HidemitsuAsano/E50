@@ -17,7 +17,7 @@
 #include "TrHitCluster.hh"
 #include "TrLocalTrack.hh"
 #include "RawData.hh"
-#include "RawHit.hh"
+#include "SFTRawHit.hh"
 
 #include "TemplateLib.hh"
 #include "TrTrackSearch.hh"
@@ -46,9 +46,9 @@ TrAnalyzer::~TrAnalyzer()
 }
 
 
-bool TrAnalyzer::DecodeRawHits( RawData *rawData )
+bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
 {
-  const std::string funcname = "[TrAnalyzer::DecodeRawHits]";
+  const std::string funcname = "[TrAnalyzer::DecodeSFTRawHits]";
 
   ConfMan *confMan=ConfMan::GetConfManager();
   if(!confMan){
@@ -76,12 +76,12 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
       first++;
     }
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
+      const TrRHitContainer &cont =rawData->GetSFTSFTRawHitContainer(layer);
       int nhit=cont.size();
       //std::cout<< nh << std::endl;
       
       for( int i=0; i<nhit; ++i ){
-	RawHit *rhit=cont[i];
+	SFTRawHit *rhit=cont[i];
 	
 	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
 	int nhitpos= rhit->GetSize();
@@ -109,12 +109,12 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
       first++;
     }
     for( int layer=0; layer<NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
+      const TrRHitContainer &cont =rawData->GetSFTSFTRawHitContainer(layer);
       int nhit=cont.size();
       //std::cout<< nh << std::endl;
       
       for( int i=0; i<nhit; ++i ){
-	RawHit *rhit=cont[i];
+	SFTRawHit *rhit=cont[i];
 	
   int rlayerID = rhit->LayerId();
   int rwireID  = rhit->WireId();

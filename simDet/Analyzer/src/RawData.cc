@@ -31,7 +31,7 @@
 #include "DetectorID.hh"
 #include "PrimInfo.hh"
 #include "HodoRawHit.hh"
-#include "RawHit.hh"
+#include "SFTRawHit.hh"
 #include "TemplateLib.hh"
 
 #include "ConfMan.hh"
@@ -46,7 +46,7 @@ const double Rad2Deg = 180./acos(-1.);
 RawData::RawData():
   PrimHC(0),
   T0RHC(0),
-  SFTRawHitContainer() //vector of data object class for a single track in SFT
+  SFTSFTRawHitContainer() //vector of data object class for a single track in SFT
 {}
 
 RawData::~RawData()
@@ -109,17 +109,17 @@ bool RawData::AddTrRHit( TrRHitContainer& cont,
 {
   static const std::string funcname = "[RawData::AddTrRHit]";
  
-  RawHit *p=0;
+  SFTRawHit *p=0;
   int nh=cont.size();
   for( int i=0; i<nh; ++i ){
-    RawHit *q=cont[i];
+    SFTRawHit *q=cont[i];
     if( q->LayerId()==Layer &&
 	q->WireId()==Wire ){
       p=q; break;
     }
   }
   if(!p){
-    p = new RawHit( Layer, Wire );
+    p = new SFTRawHit( Layer, Wire );
     if(p) cont.push_back(p);
   }
   if(p){
@@ -183,14 +183,14 @@ void RawData::clearAll()
   T0RHC.clear();
 
   for( int l=0; l<=PlMaxSFT; ++l){
-    for_each( SFTRawHitContainer[l].begin(),  SFTRawHitContainer[l].end(), DeleteObject());
-    SFTRawHitContainer[l].clear();
+    for_each( SFTSFTRawHitContainer[l].begin(),  SFTSFTRawHitContainer[l].end(), DeleteObject());
+    SFTSFTRawHitContainer[l].clear();
   }
 
   return;
 }
 
-bool RawData::DecodeRawHits( std::ifstream &In )
+bool RawData::DecodeSFTRawHits( std::ifstream &In )
 {
   clearAll();
   ConfMan *confMan = ConfMan::GetConfManager();
@@ -258,7 +258,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 #endif
     
     //dummy , when layer number starts from 1 in the previous code
-    //AddTrRHit(SFTRawHitContainer[0], 0, 0, 0., 0., 0.);
+    //AddTrRHit(SFTSFTRawHitContainer[0], 0, 0, 0., 0., 0.);
     
     ////////////////////////////////////////////////////////////////////////////////
     ////Full tracking
@@ -292,7 +292,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 		double angle = geomMan.GetTiltAngle( lnum );
 		double l = x*cos(angle*Deg2Rad) + y*sin(angle*Deg2Rad);
 		dl = l + CLHEP::RandGauss::shoot( 0.0, confMan->GetSFTResol() );
-		AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
+		AddTrRHit(SFTSFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
 	      }
 	    }	    
       
@@ -303,7 +303,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	      
 	      //SFT only stores layer number and segment id
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
-		AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
+		AddTrRHit(SFTSFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
 	      //std::cout << "lnum " << lnum << "wire " << wire << std::endl;
         }else{
           std::cerr << __FILE__ << "  " << __LINE__ 
@@ -375,11 +375,11 @@ const HodoRHitContainer& RawData::GetT0RHC() const
   return T0RHC;
 }
 
-const TrRHitContainer & RawData::GetSFTRawHitContainer( int layer ) const
+const TrRHitContainer & RawData::GetSFTSFTRawHitContainer( int layer ) const
 {
   if( layer<0 || layer>PlMaxSFT ){
     std::cerr << __FILE__ << "  " << __LINE__ << " invalid layer number !! " << layer << std::endl;
     layer=-1;
   }
-  return SFTRawHitContainer[layer];
+  return SFTSFTRawHitContainer[layer];
 }

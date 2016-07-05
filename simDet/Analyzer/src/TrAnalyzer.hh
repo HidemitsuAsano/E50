@@ -36,7 +36,7 @@ private:
   std::vector <TrLocalTrack *> TrackSFTTCol;//vector of SFT track class 
 
 public:
-  bool DecodeRawHits( RawData *rawData );
+  bool DecodeSFTRawHits( RawData *rawData );
   bool SortTrHits();
 
   inline const TrHitContainer & GetSFTTrHitContainer( int layer ) const;

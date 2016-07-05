@@ -33,7 +33,7 @@ protected:
   DoubleVec Mom_, Beta_;
 
 public:
-  HodoRawHit * GetRawHit( void ) { return raw_; }
+  HodoRawHit * GetSFTRawHit( void ) { return raw_; }
   bool calculate( void );
 
   bool status( void ) const { return Status_; } 

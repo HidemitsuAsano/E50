@@ -39,7 +39,7 @@ SRCS    = $(wildcard *.cc)
 
 OBJ =   ConfMan.o RawData.o \
 	GetNumberFromKernelEntropyPool.o \
-        PrimInfo.o HodoRawHit.o RawHit.o \
+        PrimInfo.o HodoRawHit.o SFTRawHit.o \
         TrGeomMan.o TrGeomRecord.o \
 	Kinematics.o MathTools.o \
 	HodoAnalyzer.o HodoHit.o HodoCluster.o\

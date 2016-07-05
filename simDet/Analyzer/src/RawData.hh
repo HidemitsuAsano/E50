@@ -17,11 +17,11 @@
 
 class PrimInfo;
 class HodoRawHit;
-class RawHit;
+class SFTRawHit;
 
 typedef std::vector<PrimInfo*>   PrimInfoContainer;
 typedef std::vector<HodoRawHit*> HodoRHitContainer;
-typedef std::vector<RawHit*>   TrRHitContainer;
+typedef std::vector<SFTRawHit*>   TrRHitContainer;
 
 class RawData
 {
@@ -31,14 +31,14 @@ private:
 
   HodoRHitContainer T0RHC;
 
-  TrRHitContainer SFTRawHitContainer[PlMaxSFT+1];//vector of data object class for a single track in each SFT layer, PlMaxSFT: max layer number of SFT (=12)
+  TrRHitContainer SFTSFTRawHitContainer[PlMaxSFT+1];//vector of data object class for a single track in each SFT layer, PlMaxSFT: max layer number of SFT (=12)
 
 public:
   RawData();
   ~RawData();
 
   void clearAll();
-  bool DecodeRawHits( std::ifstream & );
+  bool DecodeSFTRawHits( std::ifstream & );
 
 private:
   RawData(const RawData&);
@@ -71,7 +71,7 @@ public:
 
   const HodoRHitContainer& GetT0RHC() const;
 
-  const TrRHitContainer & GetSFTRawHitContainer( int layer ) const;
+  const TrRHitContainer & GetSFTSFTRawHitContainer( int layer ) const;
 
 };
 

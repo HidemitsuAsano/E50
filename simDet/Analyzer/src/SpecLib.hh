@@ -24,7 +24,7 @@
 // #include "BH2Cluster.hh"
 
 //Tr
-#include "RawHit.hh"
+#include "SFTRawHit.hh"
 #include "TrAnalyzer.hh"
 #include "TrHit.hh"
 #include "TrGeomMan.hh"

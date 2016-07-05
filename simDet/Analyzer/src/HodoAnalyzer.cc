@@ -38,7 +38,7 @@ void HodoAnalyzer::clearT0Hits()
   for_each(T0ClCont.begin(),T0ClCont.end(),DeleteObject());
 }
 
-bool HodoAnalyzer::DecodeRawHits( RawData *rawData )
+bool HodoAnalyzer::DecodeSFTRawHits( RawData *rawData )
 {
   DecodeT0Hits( rawData );
 

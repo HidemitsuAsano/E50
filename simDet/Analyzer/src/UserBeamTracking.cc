@@ -149,7 +149,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   const std::string funcname = "ProcessingNormal";
 
   rawData = new RawData;
-  if( !rawData->DecodeRawHits(In) ) return false;
+  if( !rawData->DecodeSFTRawHits(In) ) return false;
   //std::cout << "***" << std::endl;
 
   //**************************************************************************
@@ -219,12 +219,12 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   //SFT
   {
     for( int layer=0; layer<NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
+      const TrRHitContainer &cont =rawData->GetSFTSFTRawHitContainer(layer);
       int nh=cont.size();
       //std::cout << "N raw hit " << nh << std::endl;
       event.sftnhits = nh;
       for( int i=0; i<nh; ++i ){
-  	RawHit *hit=cont[i];
+  	SFTRawHit *hit=cont[i];
   	int nt = hit->GetSize();
 	event.sftlayer.push_back(hit->LayerId());
   	for( int j=0; j<nt; j++ ) {
@@ -240,7 +240,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
 
   //////////////////////////Tracking
   {  
-    TrAna->DecodeRawHits( rawData );
+    TrAna->DecodeSFTRawHits( rawData );
     TrAna->SortTrHits();//sort TrHits by segment ID
     //SFT
     //TODO check the TrHits are sorted or not
