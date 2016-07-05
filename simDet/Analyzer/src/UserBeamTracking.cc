@@ -224,7 +224,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
       //std::cout << "N raw hit " << nh << std::endl;
       event.sftnhits = nh;
       for( int i=0; i<nh; ++i ){
-  	TrRawHit *hit=cont[i];
+  	RawHit *hit=cont[i];
   	int nt = hit->GetSize();
 	event.sftlayer.push_back(hit->LayerId());
   	for( int j=0; j<nt; j++ ) {

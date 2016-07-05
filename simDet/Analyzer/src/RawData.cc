@@ -31,7 +31,7 @@
 #include "DetectorID.hh"
 #include "PrimInfo.hh"
 #include "HodoRawHit.hh"
-#include "TrRawHit.hh"
+#include "RawHit.hh"
 #include "TemplateLib.hh"
 
 #include "ConfMan.hh"
@@ -109,17 +109,17 @@ bool RawData::AddTrRHit( TrRHitContainer& cont,
 {
   static const std::string funcname = "[RawData::AddTrRHit]";
  
-  TrRawHit *p=0;
+  RawHit *p=0;
   int nh=cont.size();
   for( int i=0; i<nh; ++i ){
-    TrRawHit *q=cont[i];
+    RawHit *q=cont[i];
     if( q->LayerId()==Layer &&
 	q->WireId()==Wire ){
       p=q; break;
     }
   }
   if(!p){
-    p = new TrRawHit( Layer, Wire );
+    p = new RawHit( Layer, Wire );
     if(p) cont.push_back(p);
   }
   if(p){

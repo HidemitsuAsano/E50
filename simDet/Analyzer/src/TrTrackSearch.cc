@@ -416,7 +416,7 @@ TrLocalTrack *MakeTrack(const TrHitClusterContainer *CandCont,
     }
 #endif
 
-
+/*
     if(cluster){
      int clustersize=cluster->GetClusterSize();
       for(int j=0; j<mm; ++j ){
@@ -424,7 +424,7 @@ TrLocalTrack *MakeTrack(const TrHitClusterContainer *CandCont,
 	  if(hitp) tp->AddHit( hitp );
       }
     }
-
+*/
   }
   return tp;
 }

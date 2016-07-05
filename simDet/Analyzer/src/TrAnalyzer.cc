@@ -17,7 +17,7 @@
 #include "TrHitCluster.hh"
 #include "TrLocalTrack.hh"
 #include "RawData.hh"
-#include "TrRawHit.hh"
+#include "RawHit.hh"
 
 #include "TemplateLib.hh"
 #include "TrTrackSearch.hh"
@@ -81,7 +81,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
       //std::cout<< nh << std::endl;
       
       for( int i=0; i<nhit; ++i ){
-	TrRawHit *rhit=cont[i];
+	RawHit *rhit=cont[i];
 	
 	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
 	int nhitpos= rhit->GetSize();
@@ -114,7 +114,7 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
       //std::cout<< nh << std::endl;
       
       for( int i=0; i<nhit; ++i ){
-	TrRawHit *rhit=cont[i];
+	RawHit *rhit=cont[i];
 	
   int rlayerID = rhit->LayerId();
   int rwireID  = rhit->WireId();

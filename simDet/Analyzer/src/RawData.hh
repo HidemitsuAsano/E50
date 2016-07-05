@@ -17,11 +17,11 @@
 
 class PrimInfo;
 class HodoRawHit;
-class TrRawHit;
+class RawHit;
 
 typedef std::vector<PrimInfo*>   PrimInfoContainer;
 typedef std::vector<HodoRawHit*> HodoRHitContainer;
-typedef std::vector<TrRawHit*>   TrRHitContainer;
+typedef std::vector<RawHit*>   TrRHitContainer;
 
 class RawData
 {
