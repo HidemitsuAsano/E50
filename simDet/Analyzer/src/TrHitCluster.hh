@@ -45,7 +45,6 @@ public:
   float GetTiltAngle (void) { return tiltangle_ ; }
 //  float GetAdcSum( void ) const { return adcsum_; }
 //  void SetAdcSum(float adc )  { adcsum_=adc; }
-  
   /*
   TrLTrackHit *GetHit( int i ) const
   {

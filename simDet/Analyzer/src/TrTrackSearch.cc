@@ -39,7 +39,9 @@ int Verbosity=0;
 
 //LocalTrackSearch 
 //input : array of TrHitClusterContainer
-//output :  array of TrackCont
+//output :  vector of TrLocalTrack
+//NumOfLayers : number of sft layers 12
+//MinNumOfHits : numboer of required hits for locak tracking
 int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
 		      std::vector <TrLocalTrack *> &TrackCont, 
 		      int NumOfLayers, unsigned int MinNumOfHits )
@@ -96,13 +98,19 @@ int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
   int nnCombi=CombiIndex.size();
    
    
-  if(Verbosity>0){
+//  if(Verbosity>0){
     std::cout << __FILE__ << "   " << __LINE__ << " ===> " << nnCombi << " combinations will be checked.." 
       << std::endl;
     for(int ilr=0;ilr<NumOfLayers;ilr++){ 
       std::cout << "layer " << ilr << "  " <<  nCombi[ilr] << std::endl;
     }
-  }
+    for(int icom = 0 ;icom < nnCombi ; icom++){
+      int nlayer = CombiIndex[icom].size();
+      for(int ilr=0;ilr<nlayer;ilr++){
+        std::cout << CombiIndex[icom][ilr] << std::endl;
+      }
+    }
+//  }
 #if 0
   std::cout << " ===> " << nnCombi << " combinations will be checked.." 
 	    << std::endl;
@@ -341,17 +349,16 @@ TrLocalTrack *MakeTrack(const TrHitClusterContainer *CandCont,
     return 0;
   }    
 
-  //int n=CandCont.size();
-  const int nlayer = 12;//NumOfLayers;
-  for( int ilr=0; ilr<nlayer; ++ilr ){
-    int m=combination[ilr];
+  int n=CandCont->size();
+  for( int i=0; i<n; ++i ){
+    int m=combination[i];
     TrHitCluster *cluster=0;
-    if(m>=0) cluster=CandCont[ilr][m];
-#if 0
+    if(m>=0) cluster=CandCont[i][m];
+//#if 0
     std::cout << funcname << ":" << std::setw(3)
 	      << i << std::setw(3) << m  << " "
 	      << CandCont[i][m] << std::endl; 
-#endif
+//#endif
 
 #if 0
     /*****************************************************************/
@@ -409,17 +416,15 @@ TrLocalTrack *MakeTrack(const TrHitClusterContainer *CandCont,
     }
 #endif
 
-/*
-#if 1
+
     if(cluster){
-     int mm=cluster->NumberOfHits();
+     int clustersize=cluster->GetClusterSize();
       for(int j=0; j<mm; ++j ){
 	TrLTrackHit *hitp=cluster->GetHit(j);
 	  if(hitp) tp->AddHit( hitp );
       }
     }
-#endif
-*/
+
   }
   return tp;
 }

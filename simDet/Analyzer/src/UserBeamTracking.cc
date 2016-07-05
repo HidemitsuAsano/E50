@@ -293,13 +293,15 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
         cluster.sftposgyc = globaly;
         ctree->Fill();
         
-        std::cout << __FILE__ << "  " << __LINE__ << " event  " << event.nevents << std::endl;
-        std::cout << __FILE__ << "  " << __LINE__ << " cluster  " << iclus << std::endl;
-        std::cout << __FILE__ << "  " << __LINE__ << " layer  " << layer << std::endl;
-        std::cout << __FILE__ << "  " << __LINE__ << " lx  " << lx << std::endl;
-        std::cout << __FILE__ << "  " << __LINE__ << " lz  " << lz << std::endl;
-        std::cout << __FILE__ << "  " << __LINE__ << " globalx  " << globalx << std::endl;
-        std::cout << __FILE__ << "  " << __LINE__ << " globaly  " << globaly << std::endl;
+        if(Verbosity>3){
+          std::cout << __FILE__ << "  " << __LINE__ << " event  " << event.nevents << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " cluster  " << iclus << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " layer  " << layer << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " lx  " << lx << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " lz  " << lz << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " globalx  " << globalx << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " globaly  " << globaly << std::endl;
+        }
       }
     }
     

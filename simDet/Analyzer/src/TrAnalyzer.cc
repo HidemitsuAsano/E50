@@ -129,10 +129,10 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	
   double wpos = geomMan->calcWirePosition(rlayerID,rwireID);
   double angle = geomMan->GetTiltAngle(rlayerID);
-//#if check1
+#if check1
 	  std::cout<< __FILE__ << "  "  << __LINE__ << ": Layer  " << rhit->LayerId() << "  segment " << rhit->WireId() << 
     "  local x " << wpos << std::endl;
-//#endif
+#endif
   hit->SetWirePosition(wpos);
   hit->SetTiltAngle(angle);
   //std::cout << __FILE__ << " : " << __LINE__ << " layer: " << rlayerID << " segment " <<rwireID  <<  ": wpos "<< wpos << "angle " << angle << std::endl;
@@ -246,9 +246,9 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
       unsigned int vlinksize = vLinkSegment.size();
       bool isclusteringOK = false;
       
-         std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
-         " layer: " << layer << " segment " << segment << 
-         " local x pos " << lxpos << std::endl;
+   //      std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
+   //      " layer: " << layer << " segment " << segment << 
+   //      " local x pos " << lxpos << std::endl;
          //" clusterID: " << clusterID << std::endl;
          //std::cout << " size " << vlinksize << std::endl;
          
@@ -312,7 +312,8 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
         double tiltangle = geomMan->GetTiltAngle(layer);
         hitcluster->SetTiltAngle(tiltangle);
         Cont.push_back(hitcluster);
-        
+           
+           /*
            std::cout << __FILE__ << " : " << __LINE__ << " : " <<
            "ihit " << ihit << " nhit " << nhit << 
            " layer: " << layer <<
@@ -324,7 +325,7 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
            }
            std::cout << std::endl;
            std::cout << "local x position " << calclxpos << std::endl;
-         
+           */
 
         //when clustering is finished,
         //clear the link vector and push back the next cluster candidate
