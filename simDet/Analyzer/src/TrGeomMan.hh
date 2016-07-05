@@ -59,6 +59,9 @@ public:
 
   std::vector<int> GetDetectorIDList( void ) const;
   int GetDetectorId( const std::string &detName ) const;
+
+  int GetSFTID(int lnum) const;
+  int GetSFTLayer(int detectorID) const;
   
 private:
   static TrGeomMan *geomMan_;

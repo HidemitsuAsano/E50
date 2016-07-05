@@ -69,7 +69,12 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
   //SFT
 
   //Type 0
+  static int first=0; 
   if( confMan->AnaMode()==0 ){
+    if(first==0){
+      std::cout << __FILE__  << "  " << __LINE__ << " type 0 detector is chosen " << std::endl;
+      first++;
+    }
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
       const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nhit=cont.size();
@@ -99,6 +104,10 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 
   //Type A , B , C
   if( confMan->AnaMode()>=1 ){
+    if(first==0){
+      std::cout << __FILE__  << "  " << __LINE__ << " type A, B, C detector is chosen " << std::endl;
+      first++;
+    }
     for( int layer=0; layer<NumOfLayersSFT; ++layer ){
       const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nhit=cont.size();
@@ -115,14 +124,15 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	  hit->SetPos( rwireID ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
                             // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
 	  
-#if check1
-	  std::cout<< __FILE__ << "  "  << __LINE__ << ": " << << rhit->LayerId() << " " << rhit->WireId() << std::endl;
-#endif
 	}
 	//if(!hit) continue; 
 	
   double wpos = geomMan->calcWirePosition(rlayerID,rwireID);
   double angle = geomMan->GetTiltAngle(rlayerID);
+//#if check1
+	  std::cout<< __FILE__ << "  "  << __LINE__ << ": Layer  " << rhit->LayerId() << "  segment " << rhit->WireId() << 
+    "  local x " << wpos << std::endl;
+//#endif
   hit->SetWirePosition(wpos);
   hit->SetTiltAngle(angle);
   //std::cout << __FILE__ << " : " << __LINE__ << " layer: " << rlayerID << " segment " <<rwireID  <<  ": wpos "<< wpos << "angle " << angle << std::endl;
@@ -224,22 +234,9 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
     TrHit *hit=trhitcontainer[ihit];
     if( hit ){
       //int multiplicity = hit->GetPosSize();
-      /*
-         if( confMan->AnaMode()==0 ){
-         for (int im=0; im<multiplicity; im++) {
-      //if( !(hit->rangecheck(m)) ) continue; //checking the range of drift length
-
-      //double pos=hit->GetPos(im);	
-      //double wp=hit->GetWirePosition();//local-x position
-      //double dl=hit->GetDriftLength(m);
-
-      //Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,pos,im) ) );
-      }
-      }else if( confMan->AnaMode()>=1 ){//Type A, B,C detector */
-
       int layer = hit->GetLayer(); 
       int segment= hit->GetWire();
-      double lxpos=hit->GetWirePosition();//local-x position
+      double lxpos= hit->GetWirePosition();//local x position
       /*
          if(multiplicity>1){
       //   std::cout << __FILE__ << "  " << __LINE__ << " multiple hits on one segment!!: " << multiplicity << std::endl;
@@ -248,12 +245,13 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
 
       unsigned int vlinksize = vLinkSegment.size();
       bool isclusteringOK = false;
-      /*
+      
          std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
          " layer: " << layer << " segment " << segment << 
-         " clusterID: " << clusterID << std::endl;
-         std::cout << " size " << vlinksize << std::endl;
-         */
+         " local x pos " << lxpos << std::endl;
+         //" clusterID: " << clusterID << std::endl;
+         //std::cout << " size " << vlinksize << std::endl;
+         
       if(vlinksize == 0){
         vLinkSegment.push_back(segment);
         vLinkSegmentPos.push_back(lxpos);
@@ -314,7 +312,7 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
         double tiltangle = geomMan->GetTiltAngle(layer);
         hitcluster->SetTiltAngle(tiltangle);
         Cont.push_back(hitcluster);
-        /*
+        
            std::cout << __FILE__ << " : " << __LINE__ << " : " <<
            "ihit " << ihit << " nhit " << nhit << 
            " layer: " << layer <<
@@ -325,8 +323,8 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
            std::cout << vLinkSegment.at(icls) << "  " ;
            }
            std::cout << std::endl;
-           std::cout << "local -x " << calclxpos << std::endl;
-        */ 
+           std::cout << "local x position " << calclxpos << std::endl;
+         
 
         //when clustering is finished,
         //clear the link vector and push back the next cluster candidate

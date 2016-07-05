@@ -304,7 +304,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	      //SFT only stores layer number and segment id
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
 		AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
-	      //std::cout << "lnum " << lnum << "wire " << wire << std::endl;
+	      std::cout << "lnum " << lnum << "wire " << wire << std::endl;
         }else{
           std::cerr << __FILE__ << "  " << __LINE__ 
           << " invalid SFT data format !! " << std::endl;
