@@ -12,13 +12,13 @@
 #include <vector>
 
 class TrHit;
-class TrHitCluster;
+class SFTCluster;
 class TrLocalTrack;
 class RawData;
 
 //vector of hit/cluster object in each layer 
 typedef std::vector <TrHit *> TrHitContainer;
-typedef std::vector <TrHitCluster *> TrHitClusterContainer;//added by H.Asano
+typedef std::vector <SFTCluster *> SFTClusterContainer;//added by H.Asano
 
 class TrAnalyzer
 {
@@ -31,7 +31,7 @@ private:
   bool isTrHitsSorted_;
 private:
   TrHitContainer SFTTrHitContainer_[NumOfLayersSFT];
-  TrHitClusterContainer SFTTrHitClusterContainer_[NumOfLayersSFT];
+  SFTClusterContainer SFTClusterContainer_[NumOfLayersSFT];
 
   std::vector <TrLocalTrack *> TrackSFTTCol;//vector of SFT track class 
 
@@ -40,10 +40,10 @@ public:
   bool SortTrHits();
 
   inline const TrHitContainer & GetSFTTrHitContainer( int layer ) const;
-  inline const TrHitClusterContainer & GetSFTTrHitClusterContainer( int layer ) const;
+  inline const SFTClusterContainer & GetSFTClusterContainer( int layer ) const;
    
   int SFTClustering(void);
-  bool MakeHitCluster(const TrHitContainer &trhitcontainer,TrHitClusterContainer &Cont );
+  bool MakeHitCluster(const TrHitContainer &trhitcontainer,SFTClusterContainer &Cont );
   bool TrackSearchSFTT( void );
 
   int GetNtracksSFTT( void ) const  { return TrackSFTTCol.size(); }
@@ -57,7 +57,7 @@ public:
 
 private:
   void clearTrHits( void );
-  void clearTrHitClusters( void );
+  void clearSFTClusters( void );
   void clearTracksSFTT( void );
 
 public:
@@ -70,10 +70,10 @@ inline const TrHitContainer & TrAnalyzer::GetSFTTrHitContainer( int layer ) cons
   return SFTTrHitContainer_[layer];
 }
 
-inline const TrHitClusterContainer & TrAnalyzer::GetSFTTrHitClusterContainer( int layer ) const
+inline const SFTClusterContainer & TrAnalyzer::GetSFTClusterContainer( int layer ) const
 {
   if( layer<0 || layer>NumOfLayersSFT ) layer=-1;
-  return SFTTrHitClusterContainer_[layer];
+  return SFTClusterContainer_[layer];
 }
 
 inline TrLocalTrack * TrAnalyzer::GetTrackSFTT( unsigned int i ) const

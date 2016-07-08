@@ -18,7 +18,7 @@
 #include "DetectorID.hh"
 #include "RawData.hh"
 #include "TrHit.hh"
-#include "TrHitCluster.hh"
+#include "SFTCluster.hh"
 #include "TrAnalyzer.hh"
 #include "PrimInfo.hh"
 #include "SpecLib.hh"
@@ -219,7 +219,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   //SFT
   {
     for( int layer=0; layer<NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTSFTRawHitContainer(layer);
+      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nh=cont.size();
       //std::cout << "N raw hit " << nh << std::endl;
       event.sftnhits = nh;
@@ -249,14 +249,14 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     TrAna->TrackSearchSFTT();//making index
     
     for( int layer=0; layer<NumOfLayersSFT; ++layer ){
-      const TrHitClusterContainer cluscont = TrAna->GetSFTTrHitClusterContainer(layer);
+      const SFTClusterContainer cluscont = TrAna->GetSFTClusterContainer(layer);
       int nclus = cluscont.size();
       event.sftnclus = nclus;
       if(Verbosity>2){
         std::cout << __FILE__ << "  " << __LINE__ << " nclus " << nclus << std::endl;
       }
       for( int iclus=0; iclus<nclus;iclus++){
-        TrHitCluster *trhitclus = cluscont[iclus];
+        SFTCluster *trhitclus = cluscont[iclus];
         unsigned int clsID = trhitclus->GetClusterID();
         int clustersize = trhitclus->GetClusterSize();
         double clusterlxsize = trhitclus->GetClusterLxSize();
@@ -328,10 +328,10 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
       event.v0.push_back(vtgt); 
       
       for( int ih=0; ih<nh; ++ih ){
-        TrLTrackHit *hit=tp->GetHit(ih);
+        SFTCluster *hit=tp->GetHit(ih);
         int layerId=hit->GetLayer(); 
         event.layer.push_back(layerId);  
-        double pos=hit->GetLocalHitPos(), res=hit->GetResidual();
+        double pos=hit->GetLocalX(), res=hit->GetResidual();
         event.pos.push_back(pos);
         event.res.push_back(res);
       }

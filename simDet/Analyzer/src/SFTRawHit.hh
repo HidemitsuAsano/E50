@@ -15,22 +15,19 @@
 #include <vector>
 
 typedef std::vector <double> DoubleVec;
-typedef std::vector <bool> BoolVec;
-
-class TrLTrackHit;
 
 class SFTRawHit
 {
-private:
-  int LayerId_, WireId_;
-  DoubleVec  PosX_, PosY_, DL_;
 
 public:
-  SFTRawHit( int layer, int wire )
-    : LayerId_(layer), WireId_(wire), 
-      PosX_(0.0), PosY_(0.0), DL_(0.0)
-  {};
+  SFTRawHit( int layer, int wire );
   ~SFTRawHit() {};
+
+private:
+  int LayerId_, WireId_;
+  DoubleVec  PosX_, PosY_, DL_;//probably obsolete, these are only used in simple detector 
+  int HitID_;
+
 
 public:   
   void SetLayer( int layer ) { LayerId_=layer; }
@@ -38,6 +35,7 @@ public:
   void SetPosX( double posx ) { PosX_.push_back(posx); }
   void SetPosY( double posy ) { PosY_.push_back(posy); }
   void SetDL( double dl ) { DL_.push_back(dl); }
+  void SetHitID (int id) { HitID_ = id;};
 
   int LayerId( void ) const { return LayerId_; }
   int WireId( void ) const { return WireId_; }
@@ -45,6 +43,7 @@ public:
   double GetPosY( int nh ) const { return PosY_[nh]; }
   double GetDL( int nh ) const { return DL_[nh]; }
   int GetSize( void ) const { return DL_.size(); }
+  int GetHitID( void ) const { return HitID_; } 
 
 };
 #endif

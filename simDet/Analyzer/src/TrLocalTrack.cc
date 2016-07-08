@@ -6,7 +6,8 @@
 
 
 #include "TrLocalTrack.hh"
-#include "TrLTrackHit.hh"
+//#include "TrLTrackHit.hh"
+#include "SFTCluster.hh"
 #include "TrGeomMan.hh"
 #include "TrAnalyzer.hh"
 #include "DetectorID.hh"
@@ -40,7 +41,7 @@ TrLocalTrack::TrLocalTrack()
     chisqr_(0),
     gftstatus_(true)
 {
-  hitArray.reserve( ReservedNumOfHits );
+  sftclusterArray_.reserve( ReservedNumOfHits );
   Coefficients_x[0]=0;
   Coefficients_y[0]=0;
 }
@@ -62,19 +63,20 @@ bool TrLocalTrack::allocateBufferArea( void )
   return true;
 }
 
-TrLTrackHit *TrLocalTrack::GetHit( std::size_t nth ) const
+SFTCluster *TrLocalTrack::GetHit( std::size_t nth ) const
 {
-  if( nth<hitArray.size() )
-    return hitArray[nth];
+  if( nth<sftclusterArray_.size() )
+    return sftclusterArray_[nth];
   else
     return 0;
 }
 
-TrLTrackHit *TrLocalTrack::GetHitOfLayerNumber( int lnum ) const
+
+SFTCluster *TrLocalTrack::GetHitOfLayerNumber( int lnum ) const
 {
-  for( std::size_t i=0; i<hitArray.size(); ++i )
-    if( hitArray[i]->GetLayer()==lnum )
-      return hitArray[i];
+  for( std::size_t i=0; i<sftclusterArray_.size(); ++i )
+    if( sftclusterArray_[i]->GetLayer()==lnum )
+      return sftclusterArray_[i];
   return 0;
 }
 
@@ -85,7 +87,7 @@ bool TrLocalTrack::DoFit( void )
   const std::string funcname = "[TrLocalTrack::DoFit()]";
   const TrGeomMan & geomMan=TrGeomMan::GetInstance();
   
-  std::size_t n = hitArray.size();
+  std::size_t n = sftclusterArray_.size();
   
   if(n < TrLocalMinNHits ) return status_ = false;
   
@@ -94,7 +96,7 @@ bool TrLocalTrack::DoFit( void )
   ct.reserve(n); st.reserve(n);
   
   for( std::size_t i=0; i<n; ++i ){
-    TrLTrackHit *hitp = hitArray[i];
+    SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       int lnum = hitp->GetLayer();
       double ww = geomMan.GetResolution( lnum );
@@ -102,7 +104,7 @@ bool TrLocalTrack::DoFit( void )
       double aa = hitp->GetTiltAngle()*Deg2Rad;
 
       z.push_back( zz ); w.push_back( 1./(ww*ww) ); 
-      s.push_back( hitp->GetLocalHitPos() );
+      s.push_back( hitp->GetLocalX() );
       ct.push_back( cos(aa) ); st.push_back( sin(aa) );
 
 #if 0
@@ -288,7 +290,7 @@ bool TrLocalTrack::DoFit( void )
   */
   chisqr_=chisqr;
   for( std::size_t i=0; i<nn; ++i ){
-    TrLTrackHit *hitp = hitArray[i];
+    SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       int lnum = hitp->GetLayer();
       double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
@@ -298,7 +300,7 @@ bool TrLocalTrack::DoFit( void )
 	  std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
 	  }
       */
-      hitp->SetCalPosition( GetX(zz), GetY(zz) );
+      hitp->SetProjectedPosition( GetX(zz), GetY(zz) );
       
     }
   }
@@ -313,7 +315,7 @@ bool TrLocalTrack::DoFit2( void )
   const std::string funcname = "[TrLocalTrack::DoFit2()]";
   const TrGeomMan & geomMan=TrGeomMan::GetInstance();
   
-  std::size_t n = hitArray.size();
+  std::size_t n = sftclusterArray_.size();
   
   if(n < TrLocalMinNHits2 ) return status_ = false;
   
@@ -322,7 +324,7 @@ bool TrLocalTrack::DoFit2( void )
   ct.reserve(n); st.reserve(n);
   
   for( std::size_t i=0; i<n; ++i ){
-    TrLTrackHit *hitp = hitArray[i];
+    SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       int lnum = hitp->GetLayer();
       double ww = geomMan.GetResolution( lnum );
@@ -330,7 +332,7 @@ bool TrLocalTrack::DoFit2( void )
       double aa = hitp->GetTiltAngle()*Deg2Rad;
 
       z.push_back( zz ); w.push_back( 1./(ww*ww) ); 
-      s.push_back( hitp->GetLocalHitPos() );
+      s.push_back( hitp->GetLocalX() );
       ct.push_back( cos(aa) );
       st.push_back( sin(aa) );
 
@@ -651,7 +653,7 @@ bool TrLocalTrack::DoFit2( void )
   */
   chisqr_=chisqr;
   for( std::size_t i=0; i<nn; ++i ){
-    TrLTrackHit *hitp = hitArray[i];
+    SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       int lnum = hitp->GetLayer();
       double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
@@ -661,7 +663,7 @@ bool TrLocalTrack::DoFit2( void )
 	  std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
 	  }
       */
-      hitp->SetCalPosition( GetX(zz), GetY(zz) );
+      hitp->SetProjectedPosition( GetX(zz), GetY(zz) );
       
     }
   }
@@ -677,7 +679,7 @@ bool TrLocalTrack::DoFitVXU( void )
   const std::string funcname = "[TrLocalTrack::DoFitVXU()]";
   const TrGeomMan & geomMan=TrGeomMan::GetInstance();
 
-  std::size_t n = hitArray.size();
+  std::size_t n = sftclusterArray_.size();
 
   if(n < TrLocalMinNHitsVXU ) return status_ = false;
 
@@ -685,12 +687,12 @@ bool TrLocalTrack::DoFitVXU( void )
   double w[n+1],z[n+1],x[n+1];
 
   for( std::size_t i=0; i<n; ++i ){
-    TrLTrackHit *hitp = hitArray[i];
+    SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       int lnum = hitp->GetLayer();
       w[i] = geomMan.GetResolution( lnum );
       z[i] = geomMan.GetLocalZ( lnum );
-      x[i] = hitp->GetLocalHitPos();
+      x[i] = hitp->GetLocalX();
 
 #if 0
       std::cout << "" << std::endl;
@@ -735,18 +737,18 @@ bool TrLocalTrack::DoFitVXU( void )
   //std::cout << " "  << std::endl;
 
   for( std::size_t i=0; i<n; ++i ){
-    TrLTrackHit *hitp = hitArray[i];
+    SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
-      int lnum = hitp->GetLayer();
-      double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
+      //int lnum = hitp->GetLayer();
+      //double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
       /*  
 	  if(chisqr<2){
 	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
 	  std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
 	  }
       */
-      hitp->SetLocalCalPosVXU( a_*zz+b_ );
-      
+     // hitp->SetLocalCalPosVXU( a_*zz+b_ );
+     std::cout << __FILE__ << "  " << __LINE__ << "this function is not implemeted yet ..." << std::endl;
     }
   }
 
@@ -758,7 +760,7 @@ bool TrLocalTrack::DoFitVXU2( void )
   const std::string funcname = "[TrLocalTrack::DoFitVXU2()]";
   const TrGeomMan & geomMan=TrGeomMan::GetInstance();
   
-  std::size_t n = hitArray.size();
+  std::size_t n = sftclusterArray_.size();
   
   if(n < TrLocalMinNHitsVXU2 ) return status_ = false;
   
@@ -766,14 +768,14 @@ bool TrLocalTrack::DoFitVXU2( void )
   z.reserve(n); w.reserve(n); s.reserve(n);
   
   for( std::size_t i=0; i<n; ++i ){
-    TrLTrackHit *hitp = hitArray[i];
+    SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       int lnum = hitp->GetLayer();
       double ww = geomMan.GetResolution( lnum );
       double zz = geomMan.GetLocalZ( lnum );
 
       z.push_back( zz ); w.push_back( 1./(ww*ww) ); 
-      s.push_back( hitp->GetLocalHitPos() );
+      s.push_back( hitp->GetLocalX() );
 
 #if 0
       std::cout << std::setw(10) << "layer = " << lnum 
@@ -937,10 +939,10 @@ bool TrLocalTrack::DoFitVXU2( void )
   */
   chisqr_=chisqr;
   for( std::size_t i=0; i<nn; ++i ){
-    TrLTrackHit *hitp = hitArray[i];
+    SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
-      int lnum = hitp->GetLayer();
-      double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
+      //int lnum = hitp->GetLayer();
+      //double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
       /*  
 	  if(chisqr<2){
 	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
@@ -948,7 +950,8 @@ bool TrLocalTrack::DoFitVXU2( void )
 	  }
       */
       //hitp->SetCalPosition( GetX(zz), GetY(zz) );
-      hitp->SetLocalCalPosVXU( b_ + a_*zz +c_*zz*zz );
+      //hitp->SetLocalCalPosVXU( b_ + a_*zz +c_*zz*zz );
+      std::cout << __FILE__ << "  " << __LINE__ << "this function is not implemeted yet ..." << std::endl;
     }
   }
 
@@ -957,13 +960,14 @@ bool TrLocalTrack::DoFitVXU2( void )
   return status_=true;
 }
 
+/*
 bool TrLocalTrack::ReCalc( bool applyRecursively )
 {
   static const std::string funcname = "[TrLocalTrack::ReCalc]";
 
-  std::size_t n = hitArray.size();
+  std::size_t n = sftclusterArray_.size();
   for( std::size_t i=0; i<n; ++i ){
-    TrLTrackHit *hitp = hitArray[i];
+    TrLTrackHit *hitp = sftclusterArray_[i];
     if( hitp ) hitp->ReCalc( applyRecursively );
   }
   
@@ -972,5 +976,5 @@ bool TrLocalTrack::ReCalc( bool applyRecursively )
     std::cerr << funcname << ": Recalculation fails" << std::endl;
   }
   return ret;
-}
+}*/
 

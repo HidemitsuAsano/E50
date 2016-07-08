@@ -6,8 +6,8 @@
 
 #include "TrTrackSearch.hh"
 #include "TrParameters.hh"
-#include "TrLTrackHit.hh"
-#include "TrHitCluster.hh"
+//#include "TrLTrackHit.hh"
+#include "SFTCluster.hh"
 #include "TrLocalTrack.hh"
 #include "TemplateLib.hh"
 #include "DetectorID.hh"
@@ -38,11 +38,11 @@ int Verbosity=0;
 //////////////////////////////////////////////////
 
 //LocalTrackSearch 
-//input : array of TrHitClusterContainer
+//input : array of SFTClusterContainer
 //output :  vector of TrLocalTrack
 //NumOfLayers : number of sft layers 12
 //MinNumOfHits : numboer of required hits for locak tracking
-int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
+int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
 		      std::vector <TrLocalTrack *> &TrackCont, 
 		      int NumOfLayers, unsigned int MinNumOfHits )
 {
@@ -50,11 +50,11 @@ int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
   if(Verbosity>0){
     std::cout <<  __FILE__ << "  " << __LINE__ << "  " << funcname << std::endl;
   }
-  //vector of vector of TrHitCluster 
+  //vector of vector of SFTCluster 
   //1st row is layer 
   //2nd row is cluster in each layer
-  //std::vector < std::vector <TrHitCluster *> > CandCont;
-  //std::vector <TrHitCluster *>  CandCont[NumOfLayers];
+  //std::vector < std::vector <SFTCluster *> > CandCont;
+  //std::vector <SFTCluster *>  CandCont[NumOfLayers];
   //CandCont.resize(NumOfLayers);
   
   //this way make too many candidates if there are multiple tracks (e.g. 2**12 layers) 
@@ -90,6 +90,8 @@ int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
   if(Verbosity>0){
     std::cout << __FILE__ << "   " << __LINE__ << "  making intex ...." << nCombi[0] << std::endl;
   }
+
+  //make index make 2D vector (index of combination ,layer) . if the hit is associated to the track, the value of the component is -1 , if not 0
   std::vector < std::vector <int> > 
     CombiIndex = makeindex( NumOfLayers, 
 			    MinNumOfHits, 
@@ -134,14 +136,13 @@ int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
     }
   }
 
-  // Clear Flags
+  // Clear Assciated track pointer
   int nbefore=TrackCont.size();
   for( int i=0; i<nbefore; ++i ){
     TrLocalTrack *tp=TrackCont[i];
     int nhit=tp->GetNHit(); 
     for( int j=0; j<nhit; ++j ) {
-      //if(tp->GetHit(j)->showFlags()) 
-	tp->GetHit(j)->clearFlags();
+      tp->GetHit(j)->SetAssociatedLocalTrack(-1);//-1 is default value 
     }
   }
 
@@ -188,13 +189,12 @@ int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
   for( int i=0; i<int(TrackCont.size()); ++i ){
     TrLocalTrack *tp=TrackCont[i];
     int nhit=tp->GetNHit();
-    for( int j=0; j<nhit; ++j ) tp->GetHit(j)->setFlags();
-
+    for( int j=0; j<nhit; ++j ) tp->GetHit(j)->SetAssociatedLocalTrack(1);//temporality set 1
     for( int i2=TrackCont.size()-1; i2>i; --i2 ){
       TrLocalTrack *tp2=TrackCont[i2];
       int nhit2=tp2->GetNHit(), flag=0;
       for( int j=0; j<nhit2; ++j )
-	if( tp2->GetHit(j)->showFlags() ) ++flag;
+	if( tp2->GetHit(j)->GetAssociatedLocalTrack() ) ++flag;
       if(flag){
 	delete tp2;
 	TrackCont.erase(TrackCont.begin()+i2);
@@ -210,7 +210,7 @@ int LocalTrackSearch(const  TrHitClusterContainer *ClusterCont,
       for( int j=0; j<nhit; ++j ){
 	int lnum = tp->GetHit(j)->GetLayer();
 	double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
-	tp->GetHit(j)->SetCalPosition(tp->GetX(zz), tp->GetY(zz));
+	tp->GetHit(j)->SetProjectedPosition(tp->GetX(zz), tp->GetY(zz));
       }
     }
   }
@@ -333,11 +333,11 @@ makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 )
 }
 
 
-//input :1. pointer of the  TrHitClusterContainer (vector of cluster in each layer)
+//input :1. pointer of the  SFTClusterContainer (vector of cluster in each layer)
 //       2. the number of combination for the track fit
 //output: the pointer of the TrLocalTrack
-//TrLocalTrack *MakeTrack(  const std::vector < std::vector <TrHitCluster *> > &CandCont,
-TrLocalTrack *MakeTrack(const TrHitClusterContainer *CandCont,
+//TrLocalTrack *MakeTrack(  const std::vector < std::vector <SFTCluster *> > &CandCont,
+TrLocalTrack *MakeTrack(const SFTClusterContainer *CandCont,
 			  const int *combination )
 {
   static const std::string funcname = "[MakeTrack]";
@@ -349,15 +349,15 @@ TrLocalTrack *MakeTrack(const TrHitClusterContainer *CandCont,
     return 0;
   }    
 
-  int n=CandCont->size();
-  for( int i=0; i<n; ++i ){
-    int m=combination[i];
-    TrHitCluster *cluster=0;
-    if(m>=0) cluster=CandCont[i][m];
+  int nAssociateCluster=CandCont->size();
+  for( int iclus=0; iclus<nAssociateCluster; ++iclus ){
+    int m=combination[iclus];
+    SFTCluster *cluster=0;
+    if(m>=0) cluster=CandCont[iclus][m];
 //#if 0
     std::cout << funcname << ":" << std::setw(3)
-	      << i << std::setw(3) << m  << " "
-	      << CandCont[i][m] << std::endl; 
+	      << iclus << std::setw(3) << m  << " "
+	      << CandCont[iclus][m] << std::endl; 
 //#endif
 
 #if 0
@@ -416,16 +416,12 @@ TrLocalTrack *MakeTrack(const TrHitClusterContainer *CandCont,
     }
 #endif
 
-/*
+
     if(cluster){
-     int clustersize=cluster->GetClusterSize();
-      for(int j=0; j<mm; ++j ){
-	TrLTrackHit *hitp=cluster->GetHit(j);
-	  if(hitp) tp->AddHit( hitp );
-      }
+      tp->AddHit( cluster );
     }
-*/
   }
+
   return tp;
 }
 

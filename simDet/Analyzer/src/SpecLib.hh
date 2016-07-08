@@ -32,7 +32,7 @@
 // #include "TrTdcCalibMan.hh"
 // #include "TrDriftParamMan.hh"
 #include "TrLocalTrack.hh"
-#include "TrLTrackHit.hh"
+//#include "TrLTrackHit.hh"
 
 #include "Kinematics.hh"
 #include "ThreeVector.hh"

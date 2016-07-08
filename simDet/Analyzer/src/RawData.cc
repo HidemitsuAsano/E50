@@ -46,7 +46,7 @@ const double Rad2Deg = 180./acos(-1.);
 RawData::RawData():
   PrimHC(0),
   T0RHC(0),
-  SFTSFTRawHitContainer() //vector of data object class for a single track in SFT
+  SFTRawHitContainer() //vector of data object class for a single track in SFT
 {}
 
 RawData::~RawData()
@@ -103,6 +103,7 @@ bool RawData::AddPrimInfo( PrimInfoContainer& cont,
   }
 }
 
+
 bool RawData::AddTrRHit( TrRHitContainer& cont,
 			 int Layer, int Wire, 
 			 double PosX, double PosY, double DL )
@@ -126,6 +127,35 @@ bool RawData::AddTrRHit( TrRHitContainer& cont,
     p->SetPosX( PosX );
     p->SetPosY( PosY );
     p->SetDL( DL );
+    
+    return true;
+  }else{
+    std::cerr << funcname << ": new fail." << std::endl;
+    return false;
+  }
+}
+
+
+bool RawData::AddTrRHit( TrRHitContainer& cont,
+			 int Layer, int Wire, int hitID)
+{
+  static const std::string funcname = "[RawData::AddTrRHit]";
+ 
+  SFTRawHit *p=0;
+  int nh=cont.size();
+  for( int i=0; i<nh; ++i ){
+    SFTRawHit *q=cont[i];
+    if( q->LayerId()==Layer &&
+	q->WireId()==Wire ){
+      p=q; break;
+    }
+  }
+  if(!p){
+    p = new SFTRawHit( Layer, Wire );
+    if(p) cont.push_back(p);
+  }
+  if(p){
+    p->SetHitID( hitID );
     
     return true;
   }else{
@@ -183,13 +213,15 @@ void RawData::clearAll()
   T0RHC.clear();
 
   for( int l=0; l<=PlMaxSFT; ++l){
-    for_each( SFTSFTRawHitContainer[l].begin(),  SFTSFTRawHitContainer[l].end(), DeleteObject());
-    SFTSFTRawHitContainer[l].clear();
+    for_each( SFTRawHitContainer[l].begin(),  SFTRawHitContainer[l].end(), DeleteObject());
+    SFTRawHitContainer[l].clear();
   }
 
   return;
 }
 
+//Decode data from text file 
+//called event by event in EventBeamTracking::ProcessingNormal(std::ifstream &In)
 bool RawData::DecodeSFTRawHits( std::ifstream &In )
 {
   clearAll();
@@ -208,10 +240,10 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
   std::cout << "ev = " << evNo << std::endl;
 #endif
   
+  int rawhitID = 0;
   while( type!=EventEnd ){
     In >> type;
     if( evNo==0 && type==0 ) return false;
-
 #if check1
     std::cout << "type_0 = " << type << std::endl;
 #endif
@@ -258,7 +290,7 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
 #endif
     
     //dummy , when layer number starts from 1 in the previous code
-    //AddTrRHit(SFTSFTRawHitContainer[0], 0, 0, 0., 0., 0.);
+    //AddTrRHit(SFTRawHitContainer[0], 0, 0, 0., 0., 0.);
     
     ////////////////////////////////////////////////////////////////////////////////
     ////Full tracking
@@ -287,12 +319,12 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
 	      In >> x >> y;
 	      
 	      //SFT
-        //PlMinSFT = 1 , PLMaxSFT=12 , PlOffsSFT=0; defined in detectorID.hh
+        //PlMinSFT = 0 , PLMaxSFT=11 , PlOffsSFT=0; defined in detectorID.hh
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
 		double angle = geomMan.GetTiltAngle( lnum );
 		double l = x*cos(angle*Deg2Rad) + y*sin(angle*Deg2Rad);
 		dl = l + CLHEP::RandGauss::shoot( 0.0, confMan->GetSFTResol() );
-		AddTrRHit(SFTSFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
+		AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
 	      }
 	    }	    
       
@@ -303,8 +335,11 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
 	      
 	      //SFT only stores layer number and segment id
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
-		AddTrRHit(SFTSFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
-	      //std::cout << "lnum " << lnum << "wire " << wire << std::endl;
+		      AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, rawhitID);
+          //std::cout << "lnum " << lnum << "wire " << wire << std::endl;
+          //SFTRawHit *praw = new SFTRawHit(lnum,wire);
+          //praw->SetHitID(rawhitID++);
+          rawhitID++;
         }else{
           std::cerr << __FILE__ << "  " << __LINE__ 
           << " invalid SFT data format !! " << std::endl;
@@ -375,11 +410,11 @@ const HodoRHitContainer& RawData::GetT0RHC() const
   return T0RHC;
 }
 
-const TrRHitContainer & RawData::GetSFTSFTRawHitContainer( int layer ) const
+const TrRHitContainer & RawData::GetSFTRawHitContainer( int layer ) const
 {
   if( layer<0 || layer>PlMaxSFT ){
     std::cerr << __FILE__ << "  " << __LINE__ << " invalid layer number !! " << layer << std::endl;
     layer=-1;
   }
-  return SFTSFTRawHitContainer[layer];
+  return SFTRawHitContainer[layer];
 }
