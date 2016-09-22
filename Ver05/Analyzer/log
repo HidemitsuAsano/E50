@@ -1,0 +1,2036 @@
+#D recreate root file : test.root
+Now reading Field Map 
+ (-_-)p[Wait]q  (-_-)p[Wait]q  (-_-)p[Wait]q  
+[SpecFieldMap::Initialize]: Finish Initialization 
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.7056
+Edep  0
+Path  4108.72
+Mom   19.7689
+PosX  72.2347
+PosY  14.9483
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000876598
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.2803
+Edep  0
+Path  3681.46
+Mom   20.3533
+PosX  108.38
+PosY  -12.2471
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -9.80038e-05
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.1144
+Edep  0
+Path  3931.49
+Mom   19.9901
+PosX  89.4073
+PosY  -19.4292
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000712233
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.4625
+Edep  0
+Path  4035.86
+Mom   20.0088
+PosX  106.887
+PosY  -1.28986
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000738077
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.2125
+Edep  0
+Path  3960.9
+Mom   20.1826
+PosX  69.3853
+PosY  32.6132
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.00124939
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.7713
+Edep  0
+Path  3828.65
+Mom   19.9836
+PosX  88.2428
+PosY  -16.1253
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000885624
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.4736
+Edep  0
+Path  4039.18
+Mom   19.8495
+PosX  56.3641
+PosY  3.91064
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00164471
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.4237
+Edep  0
+Path  4024.23
+Mom   20.1954
+PosX  83.4275
+PosY  1.39381
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000394757
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.5326
+Edep  0
+Path  4056.88
+Mom   20.3586
+PosX  84.9567
+PosY  4.0937
+Pid   1
+Beta  0.999977
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00103337
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.358
+Edep  0
+Path  4004.54
+Mom   19.7487
+PosX  110.407
+PosY  -15.7935
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000868902
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.5166
+Edep  0
+Path  3752.28
+Mom   19.8468
+PosX  99.7815
+PosY  -10.9086
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00145509
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.8315
+Edep  0
+Path  3846.68
+Mom   20.0575
+PosX  116.978
+PosY  -12.6369
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000391607
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.5441
+Edep  0
+Path  4060.34
+Mom   20.2412
+PosX  54.3038
+PosY  -26.8267
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -2.48596e-06
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.3327
+Edep  0
+Path  3996.94
+Mom   20.1769
+PosX  80.7966
+PosY  -15.2901
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000181362
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.8123
+Edep  0
+Path  3840.92
+Mom   19.8867
+PosX  65.8671
+PosY  -11.7739
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -4.02224e-05
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.2975
+Edep  0
+Path  3686.6
+Mom   19.7693
+PosX  43.7447
+PosY  -61.7054
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00193897
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.1436
+Edep  0
+Path  3940.25
+Mom   19.974
+PosX  90.4555
+PosY  6.39317
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.00109606
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.2995
+Edep  0
+Path  3986.99
+Mom   20.1902
+PosX  90.8062
+PosY  -36.7886
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000833428
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.7665
+Edep  0
+Path  4127
+Mom   19.6774
+PosX  60.6448
+PosY  25.8352
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00306568
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.2878
+Edep  0
+Path  3983.5
+Mom   20.3429
+PosX  40.8325
+PosY  0.7551
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000654408
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.8202
+Edep  0
+Path  4143.07
+Mom   19.64
+PosX  75.8295
+PosY  24.0706
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000463822
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.4074
+Edep  0
+Path  3719.54
+Mom   20.1716
+PosX  85.3805
+PosY  20.6117
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.00106362
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  11.9378
+Edep  0
+Path  3578.77
+Mom   19.9826
+PosX  86.4904
+PosY  5.91437
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000408718
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.3661
+Edep  0
+Path  3707.18
+Mom   20.2636
+PosX  46.7702
+PosY  28.3773
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00228623
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.8015
+Edep  0
+Path  4137.47
+Mom   20.2958
+PosX  90.7131
+PosY  -5.4302
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000961342
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.5652
+Edep  0
+Path  3766.87
+Mom   19.9288
+PosX  122.162
+PosY  24.5283
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00235236
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.7296
+Edep  0
+Path  3816.13
+Mom   20.2227
+PosX  73.8475
+PosY  82.5174
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00182299
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.5103
+Edep  0
+Path  3750.41
+Mom   20.3874
+PosX  71.68
+PosY  -22.7675
+Pid   1
+Beta  0.999977
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000683975
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.8097
+Edep  0
+Path  4139.94
+Mom   20.0791
+PosX  132.473
+PosY  -11.0166
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.00263225
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.7355
+Edep  0
+Path  4117.71
+Mom   20.2687
+PosX  77.899
+PosY  -15.782
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000897914
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.7693
+Edep  0
+Path  3828.06
+Mom   20.3278
+PosX  81.0709
+PosY  -13.279
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 1.49998e-05
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.4051
+Edep  0
+Path  4018.64
+Mom   19.7379
+PosX  60.0108
+PosY  32.4283
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00139472
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.589
+Edep  0
+Path  3774
+Mom   20.0625
+PosX  64.6719
+PosY  34.3484
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000131725
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.3971
+Edep  0
+Path  3716.45
+Mom   19.607
+PosX  77.0317
+PosY  -30.9331
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000622624
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.5412
+Edep  0
+Path  4059.46
+Mom   19.6073
+PosX  74.1621
+PosY  17.8319
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000350523
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.3393
+Edep  0
+Path  3699.14
+Mom   20.2707
+PosX  56.8955
+PosY  46.6485
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00192782
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.5624
+Edep  0
+Path  3766.02
+Mom   19.6641
+PosX  82.6832
+PosY  3.20823
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.00179222
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.6466
+Edep  0
+Path  3791.26
+Mom   19.8636
+PosX  89.2474
+PosY  -3.64464
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000103171
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.4173
+Edep  0
+Path  3722.53
+Mom   20.2365
+PosX  93.109
+PosY  -4.1458
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 2.43164e-06
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.0358
+Edep  0
+Path  3907.95
+Mom   19.625
+PosX  71.8019
+PosY  20.6762
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000652299
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.1212
+Edep  0
+Path  3633.75
+Mom   19.7284
+PosX  82.9617
+PosY  7.31025
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 4.97286e-05
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.7547
+Edep  0
+Path  3823.68
+Mom   19.8753
+PosX  92.4461
+PosY  -26.1695
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000875045
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.9381
+Edep  0
+Path  3878.66
+Mom   20.0065
+PosX  115.374
+PosY  -48.1326
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000549374
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.3815
+Edep  0
+Path  3711.8
+Mom   19.9147
+PosX  85.648
+PosY  55.468
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00085659
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.7282
+Edep  0
+Path  4115.5
+Mom   19.6518
+PosX  113.845
+PosY  5.89704
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000304577
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.0431
+Edep  0
+Path  3610.33
+Mom   19.9278
+PosX  34.4958
+PosY  -20.2493
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -9.15596e-06
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.8941
+Edep  0
+Path  3865.44
+Mom   19.9189
+PosX  102.178
+PosY  -31.3559
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000784466
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.4531
+Edep  0
+Path  3733.24
+Mom   19.6417
+PosX  110.293
+PosY  16.9393
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00146228
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.5574
+Edep  0
+Path  3764.52
+Mom   20.0966
+PosX  58.2999
+PosY  -7.32281
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.0012209
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.0174
+Edep  0
+Path  3602.63
+Mom   20.0088
+PosX  93.4462
+PosY  -2.84251
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000607767
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.5576
+Edep  0
+Path  3764.58
+Mom   19.9989
+PosX  86.2466
+PosY  14.3208
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00112802
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.3114
+Edep  0
+Path  3690.77
+Mom   20.1885
+PosX  72.5185
+PosY  20.1955
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000289497
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.997
+Edep  0
+Path  3896.31
+Mom   19.9502
+PosX  105.091
+PosY  39.7166
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000850887
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.812
+Edep  0
+Path  4140.65
+Mom   20.2675
+PosX  89.2443
+PosY  27.2017
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00054691
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.3367
+Edep  0
+Path  3698.35
+Mom   20.2952
+PosX  73.6228
+PosY  37.6875
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000109405
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.6283
+Edep  0
+Path  3785.79
+Mom   19.6708
+PosX  129.475
+PosY  42.212
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.00143288
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.4586
+Edep  0
+Path  3734.9
+Mom   19.8569
+PosX  102.181
+PosY  53.3961
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 6.8589e-05
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.8147
+Edep  0
+Path  3841.66
+Mom   20.2908
+PosX  91.4521
+PosY  93.8992
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000154332
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.6607
+Edep  0
+Path  3795.5
+Mom   20.3165
+PosX  72.2852
+PosY  11.8581
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00112469
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.0166
+Edep  0
+Path  3602.4
+Mom   20.0121
+PosX  102.525
+PosY  -5.1971
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000467222
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.1172
+Edep  0
+Path  3632.56
+Mom   20.0651
+PosX  61.7972
+PosY  -20.1198
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.00128678
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.2005
+Edep  0
+Path  3957.31
+Mom   20.2394
+PosX  81.5494
+PosY  42.1559
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -3.22921e-05
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.4545
+Edep  0
+Path  3733.68
+Mom   20.1545
+PosX  92.7436
+PosY  -9.60891
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00120827
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.7793
+Edep  0
+Path  4130.84
+Mom   20.326
+PosX  91.7819
+PosY  17.2992
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 3.42713e-05
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.3801
+Edep  0
+Path  3711.38
+Mom   20.3181
+PosX  88.0107
+PosY  19.9513
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00104001
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.7599
+Edep  0
+Path  4125
+Mom   20.0422
+PosX  93.4226
+PosY  -22.1313
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000793026
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.8175
+Edep  0
+Path  3842.51
+Mom   20.1986
+PosX  86.0507
+PosY  9.38736
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000778606
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.1971
+Edep  0
+Path  3656.51
+Mom   20.1386
+PosX  64.8394
+PosY  -18.3094
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000840717
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.0109
+Edep  0
+Path  3600.68
+Mom   20.1715
+PosX  42.6545
+PosY  27.2595
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000425236
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.5133
+Edep  0
+Path  3751.31
+Mom   20.0212
+PosX  52.1824
+PosY  17.6871
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000398614
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  12.8956
+Edep  0
+Path  3865.9
+Mom   19.7694
+PosX  77.7218
+PosY  -5.50322
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= -0.000312463
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  11.9904
+Edep  0
+Path  3594.54
+Mom   19.6188
+PosX  69.7796
+PosY  -39.023
+Pid   1
+Beta  0.999975
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.000439293
+UserSpecTracking.cc line:340# of Scat Raw hit 1
+** Type: 2
+ntSFT= 1
+ntIT1= 1
+ntIT2R= 0
+ntIT2L= 0
+ntST1= 1
+ntST2= 1
+ntPreIn= 0
+ntPreOut= 0
+ntPreOut2= 0
+UserSpecTracking.cc line: 420 number of track found in scatter side 0
+Track type 0
+UserSpecTracking.cc line:175  ProcessingNormal 
+s_ScatRawHit.cc line:185found RICH hit
+DetID 89
+Layer 1
+Seg   1
+Time  13.0737
+Edep  0
+Path  3919.3
+Mom   19.9872
+PosX  113.092
+PosY  -36.4098
+Pid   1
+Beta  0.999976
+*************************************************
+UserSpecTracking.cc line 326 Beam: 0, pB= 0.00141417
+UserSpecTracking.cc line:340# of Scat Raw hit 1
