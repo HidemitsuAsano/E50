@@ -14,10 +14,10 @@
 
 #include "TrAnalyzer.hh"
 #include "TrHit.hh"
-#include "TrHitCluster.hh"
+#include "SFTCluster.hh"
 #include "TrLocalTrack.hh"
 #include "RawData.hh"
-#include "TrRawHit.hh"
+#include "SFTRawHit.hh"
 
 #include "TemplateLib.hh"
 #include "TrTrackSearch.hh"
@@ -41,14 +41,14 @@ TrAnalyzer::TrAnalyzer():isTrHitsSorted_(false)
 TrAnalyzer::~TrAnalyzer()
 {
   clearTracksSFTT();
-//  clearTrHitClusters();
+//  clearSFTClusters();
   clearTrHits();
 }
 
 
-bool TrAnalyzer::DecodeRawHits( RawData *rawData )
+bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
 {
-  const std::string funcname = "[TrAnalyzer::DecodeRawHits]";
+  const std::string funcname = "[TrAnalyzer::DecodeSFTRawHits]";
 
   ConfMan *confMan=ConfMan::GetConfManager();
   if(!confMan){
@@ -63,20 +63,25 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
   }
 
   clearTrHits();
-  clearTrHitClusters();
+  clearSFTClusters();
   clearTracksSFTT();
 
   //SFT
 
   //Type 0
+  static int first=0; 
   if( confMan->AnaMode()==0 ){
+    if(first==0){
+      std::cout << __FILE__  << "  " << __LINE__ << " type 0 detector is chosen " << std::endl;
+      first++;
+    }
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
       const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nhit=cont.size();
       //std::cout<< nh << std::endl;
       
       for( int i=0; i<nhit; ++i ){
-	TrRawHit *rhit=cont[i];
+	SFTRawHit *rhit=cont[i];
 	
 	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
 	int nhitpos= rhit->GetSize();
@@ -99,13 +104,17 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 
   //Type A , B , C
   if( confMan->AnaMode()>=1 ){
+    if(first==0){
+      std::cout << __FILE__  << "  " << __LINE__ << " type A, B, C detector is chosen " << std::endl;
+      first++;
+    }
     for( int layer=0; layer<NumOfLayersSFT; ++layer ){
       const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nhit=cont.size();
       //std::cout<< nh << std::endl;
       
       for( int i=0; i<nhit; ++i ){
-	TrRawHit *rhit=cont[i];
+	SFTRawHit *rhit=cont[i];
 	
   int rlayerID = rhit->LayerId();
   int rwireID  = rhit->WireId();
@@ -115,14 +124,15 @@ bool TrAnalyzer::DecodeRawHits( RawData *rawData )
 	  hit->SetPos( rwireID ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
                             // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
 	  
-#if check1
-	  std::cout<< __FILE__ << "  "  << __LINE__ << ": " << << rhit->LayerId() << " " << rhit->WireId() << std::endl;
-#endif
 	}
 	//if(!hit) continue; 
 	
   double wpos = geomMan->calcWirePosition(rlayerID,rwireID);
   double angle = geomMan->GetTiltAngle(rlayerID);
+#if check1
+	  std::cout<< __FILE__ << "  "  << __LINE__ << ": Layer  " << rhit->LayerId() << "  segment " << rhit->WireId() << 
+    "  local x " << wpos << std::endl;
+#endif
   hit->SetWirePosition(wpos);
   hit->SetTiltAngle(angle);
   //std::cout << __FILE__ << " : " << __LINE__ << " layer: " << rlayerID << " segment " <<rwireID  <<  ": wpos "<< wpos << "angle " << angle << std::endl;
@@ -190,12 +200,12 @@ bool TrAnalyzer::SortTrHits()
 ////////////////////////////////////////////
 //
 //input: SFTTrHitContainer_ (member variable (vector of TrHit) of TrAnalyzer )
-//output:SFTTrHitClusterContainer_ (member variable (vector of TrHitCluster) of TrAnalyzer)
+//output:SFTClusterContainer_ (member variable (vector of SFTCluster) of TrAnalyzer)
 //MakeHitCluster is implemented in TrTrackSearch.cc as a non-member function
 int TrAnalyzer::SFTClustering( void )
 {
   for( int ilr=0; ilr<NumOfLayersSFT; ++ilr ){
-    MakeHitCluster(SFTTrHitContainer_[ilr],SFTTrHitClusterContainer_[ilr]);
+    MakeHitCluster(SFTTrHitContainer_[ilr],SFTClusterContainer_[ilr]);
   }
 
   int nfoundcluster = 0;//TODO : not implemented yet
@@ -205,9 +215,9 @@ int TrAnalyzer::SFTClustering( void )
 
 //do clustering layer by layer
 //input: TrHitContainer  (object of associated hits in each layer)
-//output: the vector of TrHitCluster 
+//output: the vector of SFTCluster 
 bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
-     TrHitClusterContainer &Cont )
+     SFTClusterContainer &Cont )
 {  
   ConfMan *confMan=ConfMan::GetConfManager();
   TrGeomMan *geomMan=confMan->GetTrGeomManager();
@@ -224,22 +234,9 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
     TrHit *hit=trhitcontainer[ihit];
     if( hit ){
       //int multiplicity = hit->GetPosSize();
-      /*
-         if( confMan->AnaMode()==0 ){
-         for (int im=0; im<multiplicity; im++) {
-      //if( !(hit->rangecheck(m)) ) continue; //checking the range of drift length
-
-      //double pos=hit->GetPos(im);	
-      //double wp=hit->GetWirePosition();//local-x position
-      //double dl=hit->GetDriftLength(m);
-
-      //Cont.push_back( new TrHitCluster( new TrLTrackHit(hit,pos,im) ) );
-      }
-      }else if( confMan->AnaMode()>=1 ){//Type A, B,C detector */
-
       int layer = hit->GetLayer(); 
       int segment= hit->GetWire();
-      double lxpos=hit->GetWirePosition();//local-x position
+      double lxpos= hit->GetWirePosition();//local x position
       /*
          if(multiplicity>1){
       //   std::cout << __FILE__ << "  " << __LINE__ << " multiple hits on one segment!!: " << multiplicity << std::endl;
@@ -248,12 +245,13 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
 
       unsigned int vlinksize = vLinkSegment.size();
       bool isclusteringOK = false;
-      /*
-         std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
-         " layer: " << layer << " segment " << segment << 
-         " clusterID: " << clusterID << std::endl;
-         std::cout << " size " << vlinksize << std::endl;
-         */
+      
+   //      std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
+   //      " layer: " << layer << " segment " << segment << 
+   //      " local x pos " << lxpos << std::endl;
+         //" clusterID: " << clusterID << std::endl;
+         //std::cout << " size " << vlinksize << std::endl;
+         
       if(vlinksize == 0){
         vLinkSegment.push_back(segment);
         vLinkSegmentPos.push_back(lxpos);
@@ -293,7 +291,7 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
       if(isclusteringOK || (ihit == nhit-1 )){ // if it is last hit in the layer, finish clustering
         unsigned int currentvlinksize = vLinkSegment.size();
 
-        TrHitCluster *hitcluster = new TrHitCluster();
+        SFTCluster *hitcluster = new SFTCluster();
         hitcluster->SetClusterID(clusterID);
         hitcluster->SetClusterSize(currentvlinksize);
         hitcluster->SetClusterLzSize(vlinklzsize);
@@ -311,10 +309,12 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
         hitcluster->SetLocalX(calclxpos);
         double clslocalz = geomMan->GetLocalZ(layer);//get localz position from geometry file
         hitcluster->SetLocalZ(clslocalz);
-        double tiltangle = geomMan->GetTiltAngle(layer);
+        double tiltangle = geomMan->GetTiltAngle(layer);//degree 
         hitcluster->SetTiltAngle(tiltangle);
+        hitcluster->SetLayer(layer);
         Cont.push_back(hitcluster);
-        /*
+           
+           /*
            std::cout << __FILE__ << " : " << __LINE__ << " : " <<
            "ihit " << ihit << " nhit " << nhit << 
            " layer: " << layer <<
@@ -325,8 +325,8 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
            std::cout << vLinkSegment.at(icls) << "  " ;
            }
            std::cout << std::endl;
-           std::cout << "local -x " << calclxpos << std::endl;
-        */ 
+           std::cout << "local x position " << calclxpos << std::endl;
+           */
 
         //when clustering is finished,
         //clear the link vector and push back the next cluster candidate
@@ -353,7 +353,7 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
 bool TrAnalyzer::TrackSearchSFTT( void )
 {
 //  int ntrack =
-    LocalTrackSearch( (SFTTrHitClusterContainer_), TrackSFTTCol, 
+    LocalTrackSearch( (SFTClusterContainer_), TrackSFTTCol, 
 		      NumOfLayersSFT, MinNumOfHitsSFT );
 //  std::cout<< __FILE__ << "  " << __LINE__ << "ntrack= " << ntrack << std::endl;
   
@@ -370,11 +370,11 @@ void TrAnalyzer::clearTrHits( void )
   }
 }
 
-void TrAnalyzer::clearTrHitClusters( void )
+void TrAnalyzer::clearSFTClusters( void )
 {
   for( int l=0; l<NumOfLayersSFT; ++l ){
-    for_each( SFTTrHitClusterContainer_[l].begin(),  SFTTrHitClusterContainer_[l].end(),  DeleteObject() );
-    SFTTrHitClusterContainer_[l].clear();
+    for_each( SFTClusterContainer_[l].begin(),  SFTClusterContainer_[l].end(),  DeleteObject() );
+    SFTClusterContainer_[l].clear();
   }
 }
 

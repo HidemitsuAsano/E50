@@ -5,7 +5,7 @@
 */
 //added comments by H. Asano
 //TrHits object has the vector of hit positions and TrLTrackHit in one segment (layer /fiber or wire)
-
+//layer and wire information is stored in TrAnalyzer
 
 #include <cmath>
 #include <iostream>
@@ -20,7 +20,7 @@
 #include "TrGeomMan.hh"
 // #include "TrTdcCalibMan.hh"
 // #include "TrDriftParamMan.hh"
-#include "TrLTrackHit.hh"
+//#include "TrLTrackHit.hh"
 #include "TrParameters.hh"
 
 const double Deg2Rad = acos(-1)/180.;
@@ -29,18 +29,19 @@ const double Rad2Deg = 180./acos(-1);
 TrHit::TrHit()
   : layer_(-1), wire_(-1),wpos_(0),angle_(0)
 {
-  hitcounter_=0;
+  hitcounter_ = 0 ;
 }
 
 TrHit::TrHit( int layer, int wire )
   : layer_(layer), wire_(wire),wpos_(0),angle_(0)
 {
-  hitcounter_=0;
+  hitcounter_ = 0 ;
 }
+
 
 TrHit::~TrHit()
 {
-  clearRegisteredHits();
+ // clearRegisteredHits();
 }
 
 void TrHit::SetPos( double pos )
@@ -52,12 +53,14 @@ void TrHit::SetPos( double pos )
   hitID_.push_back(hitcounter_);
 }
 
+/*
 void TrHit::clearRegisteredHits( void )
 {
   int n=Cont_.size();
   for(int i=0; i<n; ++i)
     delete Cont_[i];
 }
+*/
 
 bool TrHit::CalcObservables( void )
 {

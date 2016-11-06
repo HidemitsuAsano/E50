@@ -19,7 +19,7 @@
 #include "RawData.hh"
 #include "PrimInfo.hh"
 #include "HodoRawHit.hh"
-#include "TrRawHit.hh"
+#include "SFTRawHit.hh"
 
  VEvent::VEvent()
  {
@@ -96,7 +96,7 @@ bool EventMonitor::ProcessingNormal( std::ifstream &In )
   const std::string funcname = "ProcessingNormal";
 
   rawData = new RawData;
-  if( !rawData->DecodeRawHits(In) ) return false;
+  if( !rawData->DecodeSFTRawHits(In) ) return false;
   //std::cout << "***" << std::endl;
 
   //**************************************************************************
@@ -142,7 +142,7 @@ bool EventMonitor::ProcessingNormal( std::ifstream &In )
       const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nh=cont.size();
       for( int i=0; i<nh; ++i ){
-  	TrRawHit *hit=cont[i];
+  	SFTRawHit *hit=cont[i];
   	int nt = hit->GetSize();
   	event.sftnhits = nt;
   	for( int j=0; j<nt; j++ ) {

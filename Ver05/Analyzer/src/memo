@@ -1,0 +1,35 @@
+***List of abbreviations (H.Asano) ***
+
+ST1 = Drift chamber (Tracker for Scattered particle)
+IT1 = Internal Drift chamber 
+BSFT = Scintilating Fiber Tracker for beam particle
+SSFT = Scintilating Fiber Tracker for scattered particle
+Hodo = HodoScope
+RHC = RawHitContainer
+ITOF = Internal TOF -> RPC or TOP ?
+PID1 & 2 = Thereshold type Aerogel cherenkov or TOP
+PID1 downstream
+PID2 upstream
+AFT = Assist Fiber Tracker (Fiber Wall)
+MF = Muon Filter
+VD = Virtual Detector
+
+***code explanation***
+
+PreIn Tracking = tracking which requires S_SFT and Internal TOF
+PreOut Tracking = tracking which requires DC1 and DC2
+
+actual implementation TrAnalyzer.cc
+
+
+
+There is no beam-RICH at this moment (Sep.20th, 2016)
+
+
+***memo***
+
+detector name is changed 
+BFT -> BSFT
+SFT -> SSFT
+
+

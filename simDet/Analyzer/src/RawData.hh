@@ -17,11 +17,11 @@
 
 class PrimInfo;
 class HodoRawHit;
-class TrRawHit;
+class SFTRawHit;
 
 typedef std::vector<PrimInfo*>   PrimInfoContainer;
 typedef std::vector<HodoRawHit*> HodoRHitContainer;
-typedef std::vector<TrRawHit*>   TrRHitContainer;
+typedef std::vector<SFTRawHit*>   TrRHitContainer;//used in simple detector simulation
 
 class RawData
 {
@@ -38,7 +38,7 @@ public:
   ~RawData();
 
   void clearAll();
-  bool DecodeRawHits( std::ifstream & );
+  bool DecodeSFTRawHits( std::ifstream & );
 
 private:
   RawData(const RawData&);
@@ -59,6 +59,9 @@ private:
 		  int Layer, int Wire, 
 		  double PosX, double PosY, double DL );
   
+  bool AddTrRHit( TrRHitContainer &cont, 
+		  int Layer, int Wire, int hitID );
+  
   bool AddHodoRHit( HodoRHitContainer& cont,
 		    int DetId, int Layer, int Seg,
 		    double Time, double Edep, 
@@ -72,7 +75,8 @@ public:
   const HodoRHitContainer& GetT0RHC() const;
 
   const TrRHitContainer & GetSFTRawHitContainer( int layer ) const;
-
+   
+  //const SFTRawHit & GetSFTRawHit(int layer) const;
 };
 
 #endif

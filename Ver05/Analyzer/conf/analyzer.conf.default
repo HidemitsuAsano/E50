@@ -1,0 +1,37 @@
+###
+# Conf.file
+###
+#
+####Analysis mode
+# Simple tracking: 0
+# Full tracking  : 1
+ANAMODE: 0
+####Geometry File
+TRGEO:  param/param_Geom001_ana
+#
+####Field Map files
+FLDMAP:   param/FMMap03_1.dat
+FLDNMR:   1.4
+FLDCALC:  1.0
+#
+####Parameters
+#Beam resolution: 0.1%
+BEAMRESOL: 0.0010
+#
+#Tracker position resolution: sigma [mm]
+BSFTRESOL: 0.250
+SSFTRESOL: 0.250
+AFTRESOL: 0.250
+IT1RESOL: 0.250
+IT2RESOL: 0.250
+ST1RESOL: 0.250
+ST2RESOL: 0.250
+#
+#Counter time resolution: sigma [ns]
+T0RESOL:    0.100
+TOFRESOL:   0.100
+ITOFRESOL1: 0.070
+ITOFRESOL2: 0.070
+PADRESOL:   0.070
+#
+# End of File

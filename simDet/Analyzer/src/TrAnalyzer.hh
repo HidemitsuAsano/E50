@@ -12,13 +12,13 @@
 #include <vector>
 
 class TrHit;
-class TrHitCluster;
+class SFTCluster;
 class TrLocalTrack;
 class RawData;
 
 //vector of hit/cluster object in each layer 
 typedef std::vector <TrHit *> TrHitContainer;
-typedef std::vector <TrHitCluster *> TrHitClusterContainer;//added by H.Asano
+typedef std::vector <SFTCluster *> SFTClusterContainer;//added by H.Asano
 
 class TrAnalyzer
 {
@@ -30,20 +30,20 @@ private:
   TrAnalyzer & operator = ( const TrAnalyzer & );
   bool isTrHitsSorted_;
 private:
-  TrHitContainer SFTTrHitContainer_[NumOfLayersSFT+1];
-  TrHitClusterContainer SFTTrHitClusterContainer_[NumOfLayersSFT+1];
+  TrHitContainer SFTTrHitContainer_[NumOfLayersSFT];
+  SFTClusterContainer SFTClusterContainer_[NumOfLayersSFT];
 
   std::vector <TrLocalTrack *> TrackSFTTCol;//vector of SFT track class 
 
 public:
-  bool DecodeRawHits( RawData *rawData );
+  bool DecodeSFTRawHits( RawData *rawData );
   bool SortTrHits();
 
   inline const TrHitContainer & GetSFTTrHitContainer( int layer ) const;
-  inline const TrHitClusterContainer & GetSFTTrHitClusterContainer( int layer ) const;
+  inline const SFTClusterContainer & GetSFTClusterContainer( int layer ) const;
    
   int SFTClustering(void);
-  bool MakeHitCluster(const TrHitContainer &trhitcontainer,TrHitClusterContainer &Cont );
+  bool MakeHitCluster(const TrHitContainer &trhitcontainer,SFTClusterContainer &Cont );
   bool TrackSearchSFTT( void );
 
   int GetNtracksSFTT( void ) const  { return TrackSFTTCol.size(); }
@@ -57,7 +57,7 @@ public:
 
 private:
   void clearTrHits( void );
-  void clearTrHitClusters( void );
+  void clearSFTClusters( void );
   void clearTracksSFTT( void );
 
 public:
@@ -66,14 +66,14 @@ public:
 
 inline const TrHitContainer & TrAnalyzer::GetSFTTrHitContainer( int layer ) const
 {
-  if( layer<0 || layer>NumOfLayersSFT ) layer=0;
+  if( layer<0 || layer>NumOfLayersSFT ) layer=-1;
   return SFTTrHitContainer_[layer];
 }
 
-inline const TrHitClusterContainer & TrAnalyzer::GetSFTTrHitClusterContainer( int layer ) const
+inline const SFTClusterContainer & TrAnalyzer::GetSFTClusterContainer( int layer ) const
 {
-  if( layer<0 || layer>NumOfLayersSFT ) layer=0;
-  return SFTTrHitClusterContainer_[layer];
+  if( layer<0 || layer>NumOfLayersSFT ) layer=-1;
+  return SFTClusterContainer_[layer];
 }
 
 inline TrLocalTrack * TrAnalyzer::GetTrackSFTT( unsigned int i ) const

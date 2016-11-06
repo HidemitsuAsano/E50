@@ -18,7 +18,7 @@
 #include "DetectorID.hh"
 #include "RawData.hh"
 #include "TrHit.hh"
-#include "TrHitCluster.hh"
+#include "SFTCluster.hh"
 #include "TrAnalyzer.hh"
 #include "PrimInfo.hh"
 #include "SpecLib.hh"
@@ -126,8 +126,13 @@ static Event event;
 
 struct Cluster
 {
+  unsigned int nevents;
 
-
+  int sftlayerc;
+  int sftclssize;
+  double sftclssizelx, sftclssizelz;//
+  double sftposlxc, sftposlzc;//
+  double sftposgxc,sftposgyc;//global position calculated from localx and tiltangle
 
 };
 static Cluster cluster;
@@ -144,13 +149,14 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   const std::string funcname = "ProcessingNormal";
 
   rawData = new RawData;
-  if( !rawData->DecodeRawHits(In) ) return false;
+  if( !rawData->DecodeSFTRawHits(In) ) return false;
   //std::cout << "***" << std::endl;
 
   //**************************************************************************
   //******************RawData
 
   TTree *tree = dynamic_cast<TTree *>(gFile->Get("tree"));
+  TTree *ctree = dynamic_cast<TTree *>(gFile->Get("ctree"));
   InitializeEvent();
 
   //PrimaryInfo
@@ -218,7 +224,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
       //std::cout << "N raw hit " << nh << std::endl;
       event.sftnhits = nh;
       for( int i=0; i<nh; ++i ){
-  	TrRawHit *hit=cont[i];
+  	SFTRawHit *hit=cont[i];
   	int nt = hit->GetSize();
 	event.sftlayer.push_back(hit->LayerId());
   	for( int j=0; j<nt; j++ ) {
@@ -234,7 +240,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
 
   //////////////////////////Tracking
   {  
-    TrAna->DecodeRawHits( rawData );
+    TrAna->DecodeSFTRawHits( rawData );
     TrAna->SortTrHits();//sort TrHits by segment ID
     //SFT
     //TODO check the TrHits are sorted or not
@@ -243,14 +249,14 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     TrAna->TrackSearchSFTT();//making index
     
     for( int layer=0; layer<NumOfLayersSFT; ++layer ){
-      const TrHitClusterContainer cluscont = TrAna->GetSFTTrHitClusterContainer(layer);
+      const SFTClusterContainer cluscont = TrAna->GetSFTClusterContainer(layer);
       int nclus = cluscont.size();
       event.sftnclus = nclus;
       if(Verbosity>2){
         std::cout << __FILE__ << "  " << __LINE__ << " nclus " << nclus << std::endl;
       }
       for( int iclus=0; iclus<nclus;iclus++){
-        TrHitCluster *trhitclus = cluscont[iclus];
+        SFTCluster *trhitclus = cluscont[iclus];
         unsigned int clsID = trhitclus->GetClusterID();
         int clustersize = trhitclus->GetClusterSize();
         double clusterlxsize = trhitclus->GetClusterLxSize();
@@ -266,6 +272,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
           std::cout << "lx " << lx << std::endl;
           std::cout << "lz " << lz << std::endl;
         }
+        cluster.nevents = event.nevents;
         //double adc = trhitclus->GetAdcSum();
         event.sftlayerc.push_back(layer);
         event.sftclssize.push_back(clustersize);
@@ -275,6 +282,26 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
         event.sftposlzc.push_back(lz);
         event.sftposgxc.push_back(globalx);
         event.sftposgyc.push_back(globaly);
+        
+        cluster.sftlayerc = layer;
+        cluster.sftclssize = clustersize;
+        cluster.sftclssizelx = clusterlxsize;
+        cluster.sftclssizelz = clusterlzsize;
+        cluster.sftposlxc = lx;
+        cluster.sftposlzc = lz;
+        cluster.sftposgxc = globalx;
+        cluster.sftposgyc = globaly;
+        ctree->Fill();
+        
+        if(Verbosity>3){
+          std::cout << __FILE__ << "  " << __LINE__ << " event  " << event.nevents << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " cluster  " << iclus << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " layer  " << layer << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " lx  " << lx << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " lz  " << lz << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " globalx  " << globalx << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " globaly  " << globaly << std::endl;
+        }
       }
     }
     
@@ -301,10 +328,10 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
       event.v0.push_back(vtgt); 
       
       for( int ih=0; ih<nh; ++ih ){
-        TrLTrackHit *hit=tp->GetHit(ih);
+        SFTCluster *hit=tp->GetHit(ih);
         int layerId=hit->GetLayer(); 
         event.layer.push_back(layerId);  
-        double pos=hit->GetLocalHitPos(), res=hit->GetResidual();
+        double pos=hit->GetLocalX(), res=hit->GetResidual();
         event.pos.push_back(pos);
         event.res.push_back(res);
       }
@@ -400,7 +427,19 @@ VEvent *ConfMan::EventAllocator()
 
 bool ConfMan:: InitializeHistograms()
 {  
-  HBTree("tree","tree of Spec");
+  HBTree("ctree","cluster wise tree");
+  TTree *ctree = dynamic_cast<TTree *>(gFile->Get("ctree"));
+  ctree->Branch("event", &cluster.nevents);
+  ctree->Branch("sftlayerc", &cluster.sftlayerc);
+  ctree->Branch("sftclssize", &cluster.sftclssize);//cluster size = number of hit segment
+  ctree->Branch("sftclssizelx", &cluster.sftclssizelx);//cluster size in local x coordinate
+  ctree->Branch("sftclssizelz", &cluster.sftclssizelz);//cluster size in local z coordiante
+  ctree->Branch("sftposlxc", &cluster.sftposlxc);//local hit position of cluster
+  ctree->Branch("sftposlzc", &cluster.sftposlzc);//local hit position of cluster
+  ctree->Branch("sftposgxc", &cluster.sftposgxc);//local hit position of cluster
+  ctree->Branch("sftposgyc", &cluster.sftposgyc);//local hit position of cluster
+  
+  HBTree("tree","event wise tree");
   TTree *tree = dynamic_cast<TTree *>(gFile->Get("tree"));
   
   tree->Branch("event", &event.nevents);

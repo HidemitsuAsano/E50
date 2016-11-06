@@ -58,6 +58,7 @@ int TrGeomRecord::WireNumber( double pos ) const
 //Modified by H. Asano
 //this function returns local position of center of fiber (or wire)
 //The calculation is different on Type A and on Type B and C detector
+//
 double TrGeomRecord::WirePos (double wire) const
 { 
   ConfMan *confMan=ConfMan::GetConfManager();

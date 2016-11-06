@@ -17,7 +17,7 @@ typedef std::vector <bool> BoolVec;
 typedef std::vector <int> IntVec;
 typedef std::vector <double> DoubleVec;
 
-class TrLTrackHit;
+//class TrLTrackHit;
 
 class TrHit
 {
@@ -53,7 +53,7 @@ private:
 //   double mwire_;
 //   double mwpos_;
 
-  mutable std::vector <TrLTrackHit *> Cont_;
+//  mutable std::vector <TrLTrackHit *> Cont_;
 
 public:
   bool CalcObservables( void );
@@ -104,8 +104,8 @@ public:
  			    int nhit ) 
   { dlRange_[nhit] = (status); }
 
-  void RegisterHits( TrLTrackHit *hit ) const
-  { Cont_.push_back(hit); }
+//  void RegisterHits( TrLTrackHit *hit ) const
+//  { Cont_.push_back(hit); }
 
   bool ReCalc( bool applyRecursively=false ) 
   { return CalcObservables(); }

@@ -11,7 +11,8 @@
 #include <functional>
 #include "ThreeVector.hh"
 
-class TrLTrackHit;
+//class TrLTrackHit;
+class SFTCluster;
 class TrAnalyzer;
 
 class TrLocalTrack
@@ -24,7 +25,7 @@ private:
   TrLocalTrack & operator = ( const TrLocalTrack & );
 
 private:
-  std::vector <TrLTrackHit *> hitArray;
+  std::vector <SFTCluster *> sftclusterArray_;
   /*
   double Av_;//not used
   double Ax_;//not used
@@ -34,12 +35,12 @@ private:
   double Chiu_;//not used
   */
 public:
-  void AddHit( TrLTrackHit *hitp ) { hitArray.push_back( hitp ); }
+  void AddHit( SFTCluster *hitp ) { sftclusterArray_.push_back( hitp ); }
   bool DoFit( void );//Liner func
   bool DoFit2( void );//Quadrotic func , not used so far
-  std::size_t GetNHit( void ) const { return hitArray.size(); }
-  TrLTrackHit * GetHit( std::size_t nth ) const;
-  TrLTrackHit * GetHitOfLayerNumber( int lnum ) const;
+  std::size_t GetNHit( void ) const { return sftclusterArray_.size(); }
+  SFTCluster *GetHit( std::size_t nth ) const;
+  SFTCluster *GetHitOfLayerNumber( int lnum ) const;
 
   // optional extension by Yone
   bool DoFitVXU( void );//Liner func
@@ -93,7 +94,7 @@ public:
   bool GoodForTracking( void ) const { return gftstatus_; }
   bool GoodForTracking( bool status )
   { bool ret=gftstatus_; gftstatus_=status; return ret; } 
-  bool ReCalc( bool ApplyRecursively=false );  
+  //bool ReCalc( bool ApplyRecursively=false );  
 
 private:
   bool status_;//status of fitting : fail or success

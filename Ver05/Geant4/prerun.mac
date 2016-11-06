@@ -1,0 +1,27 @@
+#
+# prerun.mac
+#
+#/vis/open OGLIX
+/vis/open OGLSX
+#/vis/open DAWNFILE
+#/vis/open VRML1FILE
+
+#
+/vis/viewer/reset
+#
+#/vis/viewer/set/style surface
+/vis/viewer/set/style wireframe
+#
+/vis/viewer/set/viewpointThetaPhi 90.001 90.00
+#/vis/viewer/set/viewpointThetaPhi 90.001 0.00
+#
+/vis/drawVolume 
+#/vis/viewer/set/autoRefresh
+#
+/vis/viewer/zoom 1.2
+/tracking/storeTrajectory 1
+#/vis/viewer/refresh
+#/vis/viewer/flush
+/vis/scene/endOfEventAction accumulate
+#
+#

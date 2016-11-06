@@ -24,7 +24,7 @@
 // #include "BH2Cluster.hh"
 
 //Tr
-#include "TrRawHit.hh"
+#include "SFTRawHit.hh"
 #include "TrAnalyzer.hh"
 #include "TrHit.hh"
 #include "TrGeomMan.hh"
@@ -32,7 +32,7 @@
 // #include "TrTdcCalibMan.hh"
 // #include "TrDriftParamMan.hh"
 #include "TrLocalTrack.hh"
-#include "TrLTrackHit.hh"
+//#include "TrLTrackHit.hh"
 
 #include "Kinematics.hh"
 #include "ThreeVector.hh"

@@ -31,7 +31,7 @@
 #include "DetectorID.hh"
 #include "PrimInfo.hh"
 #include "HodoRawHit.hh"
-#include "TrRawHit.hh"
+#include "SFTRawHit.hh"
 #include "TemplateLib.hh"
 
 #include "ConfMan.hh"
@@ -103,29 +103,59 @@ bool RawData::AddPrimInfo( PrimInfoContainer& cont,
   }
 }
 
+
 bool RawData::AddTrRHit( TrRHitContainer& cont,
 			 int Layer, int Wire, 
 			 double PosX, double PosY, double DL )
 {
   static const std::string funcname = "[RawData::AddTrRHit]";
  
-  TrRawHit *p=0;
+  SFTRawHit *p=0;
   int nh=cont.size();
   for( int i=0; i<nh; ++i ){
-    TrRawHit *q=cont[i];
+    SFTRawHit *q=cont[i];
     if( q->LayerId()==Layer &&
 	q->WireId()==Wire ){
       p=q; break;
     }
   }
   if(!p){
-    p = new TrRawHit( Layer, Wire );
+    p = new SFTRawHit( Layer, Wire );
     if(p) cont.push_back(p);
   }
   if(p){
     p->SetPosX( PosX );
     p->SetPosY( PosY );
     p->SetDL( DL );
+    
+    return true;
+  }else{
+    std::cerr << funcname << ": new fail." << std::endl;
+    return false;
+  }
+}
+
+
+bool RawData::AddTrRHit( TrRHitContainer& cont,
+			 int Layer, int Wire, int hitID)
+{
+  static const std::string funcname = "[RawData::AddTrRHit]";
+ 
+  SFTRawHit *p=0;
+  int nh=cont.size();
+  for( int i=0; i<nh; ++i ){
+    SFTRawHit *q=cont[i];
+    if( q->LayerId()==Layer &&
+	q->WireId()==Wire ){
+      p=q; break;
+    }
+  }
+  if(!p){
+    p = new SFTRawHit( Layer, Wire );
+    if(p) cont.push_back(p);
+  }
+  if(p){
+    p->SetHitID( hitID );
     
     return true;
   }else{
@@ -190,7 +220,9 @@ void RawData::clearAll()
   return;
 }
 
-bool RawData::DecodeRawHits( std::ifstream &In )
+//Decode data from text file 
+//called event by event in EventBeamTracking::ProcessingNormal(std::ifstream &In)
+bool RawData::DecodeSFTRawHits( std::ifstream &In )
 {
   clearAll();
   ConfMan *confMan = ConfMan::GetConfManager();
@@ -208,10 +240,10 @@ bool RawData::DecodeRawHits( std::ifstream &In )
   std::cout << "ev = " << evNo << std::endl;
 #endif
   
+  int rawhitID = 0;
   while( type!=EventEnd ){
     In >> type;
     if( evNo==0 && type==0 ) return false;
-
 #if check1
     std::cout << "type_0 = " << type << std::endl;
 #endif
@@ -287,7 +319,7 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	      In >> x >> y;
 	      
 	      //SFT
-        //PlMinSFT = 1 , PLMaxSFT=12 , PlOffsSFT=0; defined in detectorID.hh
+        //PlMinSFT = 0 , PLMaxSFT=11 , PlOffsSFT=0; defined in detectorID.hh
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
 		double angle = geomMan.GetTiltAngle( lnum );
 		double l = x*cos(angle*Deg2Rad) + y*sin(angle*Deg2Rad);
@@ -303,8 +335,11 @@ bool RawData::DecodeRawHits( std::ifstream &In )
 	      
 	      //SFT only stores layer number and segment id
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
-		AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
-	      //std::cout << "lnum " << lnum << "wire " << wire << std::endl;
+		      AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, rawhitID);
+          //std::cout << "lnum " << lnum << "wire " << wire << std::endl;
+          //SFTRawHit *praw = new SFTRawHit(lnum,wire);
+          //praw->SetHitID(rawhitID++);
+          rawhitID++;
         }else{
           std::cerr << __FILE__ << "  " << __LINE__ 
           << " invalid SFT data format !! " << std::endl;

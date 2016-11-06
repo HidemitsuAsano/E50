@@ -6,6 +6,7 @@
 
 #include "TrGeomMan.hh"
 #include "TrGeomRecord.hh"
+#include "DetectorID.hh"
 
 #include <string>
 #include <stdexcept>
@@ -36,7 +37,8 @@ TrGeomMan & TrGeomMan::GetInstance( void )
 double TrGeomMan::GetLocalZ( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::GetLocalZ(int)]"; 
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->length_;
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -48,7 +50,8 @@ double TrGeomMan::GetLocalZ( int lnum ) const
 double TrGeomMan::GetResolution( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::GetResolution(int)]"; 
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->resol_;
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -60,7 +63,8 @@ double TrGeomMan::GetResolution( int lnum ) const
 double TrGeomMan::GetTiltAngle( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::GetTiltAngle(int)]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->tiltAngle_;
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -72,7 +76,8 @@ double TrGeomMan::GetTiltAngle( int lnum ) const
 double TrGeomMan::GetRotAngle1( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::GetRotAngle1(int)]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->rotAngle1_;
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -84,7 +89,8 @@ double TrGeomMan::GetRotAngle1( int lnum ) const
 double TrGeomMan::GetRotAngle2( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::GetRotAngle2(int)]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->rotAngle2_;
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -96,7 +102,8 @@ double TrGeomMan::GetRotAngle2( int lnum ) const
 double TrGeomMan::GetOffset(int lnum) const 
 {
   static const std::string funcname = "[TrGeomMan::GetOffset(int)]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->offset_;
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -108,7 +115,8 @@ double TrGeomMan::GetOffset(int lnum) const
 const ThreeVector & TrGeomMan::GetGlobalPosition( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::GetGlobalPosition(int)]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->pos_;
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -120,7 +128,8 @@ const ThreeVector & TrGeomMan::GetGlobalPosition( int lnum ) const
 ThreeVector TrGeomMan::NormalVector( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::NormalVector(int)]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->NormalVector();
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -132,7 +141,8 @@ ThreeVector TrGeomMan::NormalVector( int lnum ) const
 ThreeVector TrGeomMan::UnitVector( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::UnitVector(int)]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->UnitVector();
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -144,7 +154,8 @@ ThreeVector TrGeomMan::UnitVector( int lnum ) const
 const TrGeomRecord * TrGeomMan::GetRecord( int lnum ) const
 {
   static const std::string funcname = "[TrGeomMan::GetRecord(int)]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo;
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -160,7 +171,8 @@ const TrGeomRecord * TrGeomMan::GetRecord( int lnum ) const
 double TrGeomMan::calcWirePosition( int lnum, double wire ) const
 {
   static const std::string funcname = "[TrGeomMan::calcWirePosition()]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ){
     return pGeo->WirePos(wire);
   }
@@ -175,7 +187,8 @@ double TrGeomMan::calcWirePosition( int lnum, double wire ) const
 int TrGeomMan::calcWireNumber( int lnum, double pos ) const
 {
   static const std::string funcname = "[TrGeomMan::calcWireNumber()]";
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ){
     return pGeo->WireNumber(pos);
   }
@@ -203,7 +216,7 @@ bool TrGeomMan::Initialize( void )
   static const std::string funcname = "[TrGeomMan::Initialize]";
   char str[MaxChar];
   char cname[MaxChar];
-  int layer;
+  int id;
   double xs, ys, zs, ta, ra1, ra2, l, res, w0, dd, ofs;
 
   FILE *fp;
@@ -217,21 +230,21 @@ bool TrGeomMan::Initialize( void )
   while( fgets( str, MaxChar, fp ) != 0 ){
     if( str[0]!='#' ){
       if( sscanf( str, "%d %s %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
-		  &layer, cname, &xs, &ys, &zs, &ta, &ra1, &ra2, &l, &res,
+		  &id, cname, &xs, &ys, &zs, &ta, &ra1, &ra2, &l, &res,
 		  &w0, &dd, &ofs )
 	  == 13 ){
 	TrGeomRecord *pRec = 
-	  new TrGeomRecord( layer, cname, xs, ys, zs, 
+	  new TrGeomRecord( id, cname, xs, ys, zs, 
 			    ta, ra1, ra2, l, res,
 			    w0, dd, ofs );
 
-	TrGeomRecord *pOld = geomRecord_[layer];
-	geomRecord_[layer] = pRec;
+	TrGeomRecord *pOld = geomRecord_[id];
+	geomRecord_[id] = pRec;
 
 	if( pOld ){
-	  std::cerr << funcname << ": duplicated layer number. "
+	  std::cerr << funcname << ": duplicated id number. "
 		    << " following record is deleted." << std::endl;
-	  std::cerr << "Id=" << pOld->layer_ << " " << pOld->pos_
+	  std::cerr << "Id=" << pOld->id_ << " " << pOld->pos_
 		    << " ) ... " << std::endl;
 	  delete pOld;
 	}
@@ -269,7 +282,8 @@ ThreeVector TrGeomMan::Local2GlobalPos( int lnum,
   static const std::string funcname = 
     "[TrGeomMan::Local2GlobalPos(ThreeVecor &)]";
 
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( !pGeo ) 
     throw std::out_of_range(funcname+": No record" );
 
@@ -289,7 +303,8 @@ ThreeVector TrGeomMan::Global2LocalPos( int lnum,
   static const std::string funcname = 
     "[TrGeomMan::Global2LocalPos(ThreeVecor &)]";
 
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( !pGeo ){
     std::cerr << funcname << ": No record. Layer#=" 
 	      << lnum << std::endl;
@@ -318,7 +333,8 @@ ThreeVector TrGeomMan::Local2GlobalDir( int lnum,
   static const std::string funcname = 
     "[TrGeomMan::Local2GlobalDir(ThreeVecor &)]";
 
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( !pGeo ){
     std::cerr << funcname << ": No record. Layer#=" 
 	      << lnum << std::endl;
@@ -341,7 +357,8 @@ ThreeVector TrGeomMan::Global2LocalDir( int lnum,
   static const std::string funcname = 
     "[TrGeomMan::Global2LocalDir(ThreeVecor &)]";
 
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( !pGeo ){
     std::cerr << funcname << ": No record. Layer#=" 
 	      << lnum << std::endl;
@@ -358,7 +375,9 @@ ThreeVector TrGeomMan::Global2LocalDir( int lnum,
 void TrGeomMan::SetResolution( int lnum,  double res ) const
 {
   static const std::string funcname = "[TrGeomMan::SetResolution(int, double)]"; 
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) {
     pGeo->resol_=res;
     return;
@@ -373,7 +392,9 @@ void TrGeomMan::SetResolution( int lnum,  double res ) const
 void TrGeomMan::SetVertex( int lnum,  ThreeVector vertex ) const
 {
   static const std::string funcname = "[TrGeomMan::SetVertex]"; 
-  TrGeomRecord *pGeo = geomRecord_[lnum];
+  
+  int id = GetSFTID(lnum);
+  TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) {
     pGeo->pos_.setX(vertex.x());
     pGeo->pos_.setY(vertex.y());
@@ -397,9 +418,36 @@ int TrGeomMan::GetDetectorId( const std::string &detName ) const
 
   for(; itr!=end; ++itr ){
     if (itr->second->name_ == detName)
-      return itr->second->layer_;
+      return itr->second->id_;
   }
 
   std::cerr << funcName << " : No such detector " << detName << std::endl;
   exit(-1);
 }
+
+int TrGeomMan::GetSFTID(int lnum) const
+{
+  //range check
+  if(lnum <PlMinSFT || lnum > PlMaxSFT){
+    std::cerr << __FILE__ << "  " << __LINE__ << " invalid SFT layer number! " << lnum  << std::endl;
+    return -1;
+  }
+  int sftID = lnum + 1;
+
+  return sftID;
+}
+
+int TrGeomMan::GetSFTLayer(int detectorID) const
+{
+  //range check 
+
+  if(detectorID <=PlMinSFT || detectorID > PlMaxSFT+1){
+    std::cerr << __FILE__ << "  " << __LINE__ << " invalid SFT detector ID! " << detectorID << std::endl;
+    return -1;
+  }
+  int layer = detectorID - 1; 
+
+  return layer;
+}
+
+

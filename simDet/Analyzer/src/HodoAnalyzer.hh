@@ -34,7 +34,7 @@ private:
   HodoClusterContainer T0ClCont;
 
 public:
-  bool DecodeRawHits(RawData* rawData);
+  bool DecodeSFTRawHits(RawData* rawData);
 
   bool DecodeT0Hits(RawData* rawData);  
 
