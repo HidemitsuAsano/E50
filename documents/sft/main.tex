@@ -1,0 +1,75 @@
+\title{E50 Tracker Simulation}
+\author{
+  Hidemitsu Asano \\
+    Research Center for Nucler Physics, Osaka University\\
+    10-1 Mihogaoka, Ibaraki, Osaka, 567-0047, Japan
+}
+\date{\today}
+
+\documentclass[12pt]{article}
+\usepackage{ascmac}
+\newdimen\tbaselineshift
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note details the simulation study of Beam Scintilating Fiber Tracker (BSFT) for E50 using GEANT4. The simulation code is developed only for BSFT standalone to study the effect of discretization effect of each fiber, clustering and so on.
+\end{abstract}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\paragraph{Outline}
+
+\section{setup}
+
+\subsection{code location}
+geant 4 code 
+\begin{screen}
+git clone
+\end{screen}
+
+\section{position resolution}
+
+
+\section{Vertex resolution}
+In this section, we derive the vertex resolution calculated by hit positions of 2 layers. 
+Let $(z_i,\sigma_i)$ be the z-position and position resolution of detector $i (i=1,2)$.
+
+
+When the detector $i$ has hits at the position $x_i$, the vertex position $X_0$ is calculated as follows:
+\[
+X_0 = \frac{x_2z_1 - x_1z_2}{z_1 - z_2}.
+\]
+
+At first we fix the hit position on detector 1, the uncertainty of the position on detector 2 is propagated to the uncertainty of the vertex position as follows:
+
+\[
+\sigma(X_0)_1 = \frac{\sigma_2z_1}{z_1 - z_2}.
+\]
+
+Next we fix the hit position on detector 2, the uncertainty of the vertex position is derived as follows:
+
+\[
+\sigma(X_0)_2 = \frac{\sigma_1z_2}{z_1 - z_2}.
+\]
+
+Then, the total uncertainty of the vertex position is given by 
+\[
+\sigma(X_0) = \sqrt{\sigma(X_0)_1^2+\sigma(X_0)_2^2} = \frac{\sqrt{\sigma_1^2z_2^2+\sigma_2^2z_1^2}} {z_1 - z_2} 
+\]
+
+\section{angle resolution}
+
+
+\section{Conclusions}\label{conclusions}
+We worked hard, and achieved very little.
+
+%\bibliographystyle{abbrv}
+%\bibliography{main}
+
+\end{document}
