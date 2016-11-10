@@ -116,7 +116,7 @@ void AnalysisSpec::EndOfEvent( const G4Event *anEvent )
   std::vector <G4ThreeVector> BeamPCont, BeamXCont;
   G4ThreeVector primPos;
   if( fActive_ && pInfo_ ){
-    G4double x=pInfo_->x/mm, y=pInfo_->y/mm, z=pInfo_->z/mm; 
+    G4double x=pInfo_->x/mm, y=pInfo_->y/mm, z=pInfo_->z/mm; // primary vertex info
     G4double m1=pInfo_->m1/GeV, m2=pInfo_->m2/GeV;
     G4double p1=pInfo_->p1/GeV, p2=pInfo_->p2/GeV;
     G4double p1cm=pInfo_->p1cm/GeV, p2cm=pInfo_->p2cm/GeV;

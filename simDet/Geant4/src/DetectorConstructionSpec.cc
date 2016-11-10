@@ -2,7 +2,7 @@
   DetectorConstructionSpec.hh
 
   2016/4  K.Shirotori
-  2016/4  update H. Asano
+  2016/5  update H. Asano
 */
 
 #include "DetectorConstructionSpec.hh"
@@ -40,11 +40,11 @@
 #include "s_T0Wall.hh"
 
 #include "r_DetectorSize.hh"
-#include "r_SFT_A.hh" //square ,1mm signle cladding fiber
+#include "r_SFT_A.hh" //square ,1mm single cladding fiber. probably, not used anymore 
 #include "r_SFT_B.hh" //round  ,double cladding fiber, r=0.5 mm
-                      //layer z position is adjuested in this code.
-//#include "r_SFT_C.hh" //square ,0.5 mm single caldding fiber
-#include "r_SFT_D.hh" //round , double cladding fiber r=0.25 mm (or 0.15 mm)
+                      //layer z position is defined in this code.
+//#include "r_SFT_C.hh" //square ,0.5 mm single caldding fiber. probably, not used anymore
+//#include "r_SFT_D.hh" //round , double cladding fiber r=0.25 mm (or 0.15 mm)
 
 #include "SFTSD.hh"
 #include "T0SD.hh"
@@ -78,7 +78,8 @@ DetectorConstructionSpec::ConstructPayload( void )
 //  MakeSpecMagnetandTarget( physWorld );
   MakeTrackers( physWorld );
   MakeCounters( physWorld );
-
+  
+  //output geometry file which is used for the current GEANT4 simulation
   const DCGeomMan & geomMan=DCGeomMan::GetInstance();
   geomMan.CreateParamFile("param.file.new");
   return physWorld;
@@ -90,9 +91,8 @@ MakeTrackers( G4VPhysicalVolume *pMother )
 {
   const DCGeomMan & geomMan=DCGeomMan::GetInstance();
   ConfMan *confMan = ConfMan::GetConfManager();
-  G4RotationMatrix RM;  
+  G4RotationMatrix RotationMatrix;  
   
-
   ////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////
 
@@ -100,12 +100,13 @@ MakeTrackers( G4VPhysicalVolume *pMother )
   if( confMan->DetectorType()==0 ) DetType=0;//simple detector
   else if( confMan->DetectorType()==1 ) DetType=1;//square fiber 1mm
   else if( confMan->DetectorType()==2 ) DetType=2;//round fiber 1mm
-  else if( confMan->DetectorType()==3 ) DetType=3;//round fiber 1mm M-line configulation    //square fiber 0.5mm (obsolete)
-  else { G4cout << "invalid Detector type ! (DetType = 0, 1, 2) " << G4endl; return;}
+  else if( confMan->DetectorType()==3 ) DetType=3;//round fiber 1mm,  M-line configulation    
+  else { G4cout << "invalid Detector type ! (DetType = 0, 1, 2, 3) " << G4endl; return;}
   G4cout << "   "  << G4endl;
-  G4cout << "DetType " << confMan->DetectorType() << G4endl;
+  G4cout << __FILE__ << "  " << __LINE__<< "  DetType " << confMan->DetectorType() << G4endl;
   G4cout << "   "  << G4endl;
-  //Type 0
+  
+  //Type 0 simple detector
   if( DetType==0 ){
     ///////////////////// SFT(x,u,v,x,u,v, u,v,x,u,v,x)
     G4int id1=geomMan.GetDetectorId("SFT-x-1");
@@ -136,7 +137,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     G4ThreeVector OfsLSFT( 0.0, 0.0, 0.0 );
     
     s_SFT *s_SF1 =
-      new s_SFT( "SFT", pMother, RM, 
+      new s_SFT( "SFT", pMother, RotationMatrix, 
 		 gPos1,  gPos2,  gPos3, 
 		 gPos4,  gPos5,  gPos6,
 		 gPos7,  gPos8,  gPos9, 
@@ -204,7 +205,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     G4ThreeVector OfsLSFT( 0.0, 0.0, 0.0 );
 
     r_SFT_A *r_SF1 =
-      new r_SFT_A( "SFT", pMother, RM, 
+      new r_SFT_A( "SFT", pMother, RotationMatrix, 
 		   gPos1,  gPos2,  gPos3, 
 		   gPos4,  gPos5,  gPos6,
 		   gPos7,  gPos8,  gPos9, 
@@ -287,22 +288,22 @@ MakeTrackers( G4VPhysicalVolume *pMother )
       LzLayer[10] = 135.0*mm;//v
       LzLayer[11] =  165.0*mm;//x
     }else if(DetType==3){//x,u,v layers are close to each other
-      LzLayer[0]= -165.0*mm;//x
+      LzLayer[0]= -166.0*mm;//x
       LzLayer[1]= -164.0*mm;//u
-      LzLayer[2]= -163.0*mm;//v
-      LzLayer[3]= -46.0*mm;//x
+      LzLayer[2]= -162.0*mm;//v
+      LzLayer[3]= -47.0*mm;//x
       LzLayer[4]= -45.0*mm;//u
-      LzLayer[5]= -44.0*mm;//v
-      LzLayer[6]=  44.0*mm;//u
+      LzLayer[5]= -43.0*mm;//v
+      LzLayer[6]=  43.0*mm;//u
       LzLayer[7]=  45.0*mm;//v
-      LzLayer[8]=  46.0*mm;//x
-      LzLayer[9]= 163.0*mm;//u
+      LzLayer[8]=  47.0*mm;//x
+      LzLayer[9]= 162.0*mm;//u
       LzLayer[10] = 164.0*mm;//v
-      LzLayer[11] =  165.0*mm;//x
+      LzLayer[11] =  166.0*mm;//x
     }
 
     r_SFT_B *r_SF1 =
-      new r_SFT_B( "SFT", pMother, RM, 
+      new r_SFT_B( "SFT", pMother, RotationMatrix, 
 		   gPos, 
 		   OfsLSFT, 
 		   detid,
@@ -367,7 +368,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     G4ThreeVector OfsLSFT( 0.0, 0.0, 0.0 );
 
     r_SFT_C *r_SF1 =
-      new r_SFT_C( "SFT", pMother, RM, 
+      new r_SFT_C( "SFT", pMother, RotationMatrix, 
 		   gPos, 
 		   OfsLSFT, 
 		   detid,  
@@ -410,7 +411,7 @@ MakeCounters( G4VPhysicalVolume *pMother )
 {
   const DCGeomMan & geomMan=DCGeomMan::GetInstance();
   ConfMan *confMan = ConfMan::GetConfManager();
-  G4RotationMatrix RM;  
+  G4RotationMatrix RotationMatrix;  
 
   ///////////////////////////////////////// 
   ////////////////////////////////T0
@@ -421,7 +422,7 @@ MakeCounters( G4VPhysicalVolume *pMother )
   G4ThreeVector OfsLT0( 0.0, 0.0, 0.0 );
   
   s_T0Wall *s_T0 =
-    new s_T0Wall( "T0", pMother, RM, gPosT0, OfsLT0, 
+    new s_T0Wall( "T0", pMother, RotationMatrix, gPosT0, OfsLT0, 
 		  mList_->Scin, 
 		  mList_->Air );
   
@@ -585,9 +586,9 @@ MakeSpecMagnetandTarget( G4VPhysicalVolume *pMother )
   /////////////////////////////////////////////////////////////////////////
   const DCGeomMan & geomMan=DCGeomMan::GetInstance();
   G4SDManager *SDMan = G4SDManager::GetSDMpointer();
-  G4RotationMatrix RM;  
-  RM.rotateX(  90.*degree );
-  RM.rotateY( 180.*degree );
+  G4RotationMatrix RotationMatrix;  
+  RotationMatrix.rotateX(  90.*degree );
+  RotationMatrix.rotateY( 180.*degree );
 
   //const DCGeomMan & geomMan=DCGeomMan::GetInstance();
   ConfMan *confMan = ConfMan::GetConfManager();
@@ -633,11 +634,11 @@ MakeSpecMagnetandTarget( G4VPhysicalVolume *pMother )
       new G4LogicalVolume( solidTGT, mList_->Air, "TargetB", 0, 0, 0 );
   }
 
-  G4RotationMatrix RMTgt;  
+  G4RotationMatrix RotationMatrixTgt;  
   
   G4ThreeVector TgtPos( 0., 0.,  (-1.)*targPos.x()*mm );
   G4VPhysicalVolume *physTGTBox =
-    new G4PVPlacement( G4Transform3D( RMTgt, TgtPos ),
+    new G4PVPlacement( G4Transform3D( RotationMatrixTgt, TgtPos ),
 		       logTGTB, "TargetBox", DetLV_, false, 0 );
   G4VPhysicalVolume *physTGTC = 
     new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
