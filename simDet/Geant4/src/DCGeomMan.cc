@@ -240,13 +240,34 @@ bool DCGeomMan::Initialize( void )
   return true;
 }
 
-void DCGeomMan::PrintParameter()
+void DCGeomMan::PrintParameter() const
 {
   std::cout << "parameter file " << filename_ << std::endl;
 
+  std::cout <<"#"  << std::endl;
+  std::cout <<
+"# Id Name       X[mm]    Y[mm]    Z[mm] TA[deg] RA1[deg] RA2[deg]   L[mm]  Res[mm]  W0   dXdW    Ofs " << std::endl;
+  std::cout <<"#" << std::endl;
+  const std::vector <int> IDlist = GetDetectorIDList();
+  size_t nDetector = IDlist.size();
+  for(size_t iDet = 0; iDet < nDetector ; iDet++){
+    DCGeomRecord *pgeom = geomRecord_[IDlist[iDet]];
+    std::cout << std::setw(5) << std::right << IDlist[iDet] << " " << 
+    std::setw(12) << std::left << pgeom->name_ << 
+    std::setw(6) << std::right << std::fixed << std::setprecision(2) << (pgeom->pos_).x() << "   " << 
+    std::setw(6) << std::right << std::fixed <<(pgeom->pos_).y() << "   " << 
+    std::setw(6) << std::right << std::fixed <<(pgeom->pos_).z() << "   " << 
+    std::setw(6) << std::right << std::fixed <<pgeom->tiltAngle_    << "   " << 
+    std::setw(6) << std::right << std::fixed <<pgeom->rotAngle1_    << "   " << 
+    std::setw(6) << std::right << std::fixed <<pgeom->rotAngle2_    << "   " << 
+    std::setw(6) << std::right << std::fixed <<pgeom->length_    << "   " << 
+    std::setw(8) << std::right << std::fixed << std::setprecision(5) << pgeom->resol_    << "   " << 
+    std::setw(6) << std::right << std::fixed << std::setprecision(2) << pgeom->w0_    << "   " << 
+    std::setw(6) << std::right << std::fixed <<pgeom->dd_    << "   " << 
+    std::setw(6) << std::right << std::fixed <<pgeom->ofs_   << std::endl;
+  }
 
-
-
+  std::cout << std::endl;
 
   return;
 }

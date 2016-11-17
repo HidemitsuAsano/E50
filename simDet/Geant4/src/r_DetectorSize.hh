@@ -12,10 +12,9 @@
 static const G4int    rSFT_nLayer = 12;
 //////Tracker size
 //SFT_A 1mm square fiber Single Cladding
-static const G4double rSFT_LaysizeX   =    1.0*mm;
-static const G4double rSFT_LaysizeY   =  200.0*mm;
-static const G4double rSFT_LaysizeZ   =    1.0*mm;
-static const G4double rSFT_TiltAngle  =   30.0*degree;
+static const G4double rSFT_Square_LaysizeX   =    1.0*mm;
+static const G4double rSFT_Square_LaysizeY   =  200.0*mm;
+static const G4double rSFT_Square_LaysizeZ   =    1.0*mm;
 static const G4double rSFT_SegSpacing =    1.0*mm;
 static const G4int    rSFT_SegNum     =   10;
 static const G4double rSFT_FramesizeX =  200.0*mm;
@@ -25,18 +24,17 @@ static const G4double rSFT_FrameThick =   30.0*mm;
 static const G4double rSFT_livefraction = 0.96;//fraction of senstive area of fiber
 
 //SFT_B round fiber Multi Cladding r=1mm
-static const G4double rSFT_B_Radius     =    0.5*mm;
-static const G4double rSFT_B_Length     =  200.0*mm;
-static const G4double rSFT_B_TiltAngle  =   30.0*degree;
-static const G4double rSFT_B_SegSpacing =    1.0*mm;
-static const G4int    rSFT_B_SegNum     =   10;
-static const G4double rSFT_B_FramesizeX =  200.0*mm;
-static const G4double rSFT_B_BoxThick   =   30.0*mm;
-static const G4double rSFT_B_FrameThick =   30.0*mm;
+static const G4double rSFT_Round_Radius     =    0.5*mm;
+static const G4double rSFT_Round_Length     =  200.0*mm;
+static const G4double rSFT_Round_SegSpacing =    1.0*mm;
+static const G4int    rSFT_Round_SegNum     =   10;
+static const G4double rSFT_Round_FramesizeX =  200.0*mm;
+static const G4double rSFT_Round_BoxThick   =   30.0*mm;
+static const G4double rSFT_Round_FrameThick =   30.0*mm;
 
-static const G4double rSFT_B_Corefraction = 0.94;//fraction of senstive area of fiber
-static const G4double rSFT_B_InnerCladding = 0.03;//fraction of inner cladding of fiber
-static const G4double rSFT_B_OuterCladding = 0.03;//fraction of outer cladding of fiber
+static const G4double rSFT_Round_Corefraction = 0.94;//fraction of senstive area of fiber
+static const G4double rSFT_Round_InnerCladding = 0.03;//fraction of inner cladding of fiber
+static const G4double rSFT_Round_OuterCladding = 0.03;//fraction of outer cladding of fiber
 
 //SFT_C 0.5mm square fiber Single Cladding
 //static const G4double rSFT_C_LaysizeX   =    0.2*mm;

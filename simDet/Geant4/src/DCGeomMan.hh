@@ -31,7 +31,7 @@ public:
   { filename_=filename; bool ret = Initialize(); return ret; }
   bool Initialize( const std::string &filename )
   { filename_=filename; bool ret = Initialize(); return ret; }
-  void PrintParameter(void);//TODO: not implemented yet
+  void PrintParameter(void) const;
   void CreateParamFile(const char *filename) const;
 
 

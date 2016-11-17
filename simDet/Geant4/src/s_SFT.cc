@@ -5,6 +5,7 @@
   -> Just plate + Frame
 
   2016/4  K.Shirotori
+  2016/11  Updated by H.Asano
 */
 
 
@@ -12,18 +13,24 @@
 #include "s_DetectorSize.hh"
 #include <cmath>
 
-const G4double LzLayer1=-165.0;
-const G4double LzLayer2=-135.0;
-const G4double LzLayer3=-105.0;
-const G4double LzLayer4= -75.0;
-const G4double LzLayer5= -45.0;
-const G4double LzLayer6= -15.0;
-const G4double LzLayer7=  15.0;
-const G4double LzLayer8=  45.0;
-const G4double LzLayer9=  75.0;
-const G4double LzLayer10=105.0;
-const G4double LzLayer11=135.0;
-const G4double LzLayer12=165.0;
+
+static const G4int sSFT_nLayer = 12;
+
+const G4double LzLayer[sSFT_nLayer]={
+-165.0*mm,
+-135.0*mm,
+-105.0*mm,
+ -75.0*mm,
+ -45.0*mm,
+ -15.0*mm,
+  15.0*mm,
+  45.0*mm,
+  75.0*mm,
+ 105.0*mm,
+ 135.0*mm,
+ 165.0*mm
+};
+
 
 const G4double MaxDispl= 0.01; /* 10um */
 
@@ -43,30 +50,16 @@ const G4double Rad2Deg = 180./acos(-1.);
 s_SFT::s_SFT( const G4String & Cname,
 	      G4VPhysicalVolume *pMother,
 	      const G4RotationMatrix &rotMat,
-	      const G4ThreeVector &gPos1, 
-	      const G4ThreeVector &gPos2,
-	      const G4ThreeVector &gPos3, 
-	      const G4ThreeVector &gPos4,
-	      const G4ThreeVector &gPos5,
-	      const G4ThreeVector &gPos6,
-	      const G4ThreeVector &gPos7,
-	      const G4ThreeVector &gPos8,
-	      const G4ThreeVector &gPos9,
-	      const G4ThreeVector &gPos10,
-	      const G4ThreeVector &gPos11,
-	      const G4ThreeVector &gPos12,
+	      const G4ThreeVector *gPos, 
 	      const G4ThreeVector &OffsetLocal,
-	      G4int id1, G4int id2, G4int id3, 
-	      G4int id4, G4int id5, G4int id6,
-	      G4int id7, G4int id8, G4int id9,
-	      G4int id10, G4int id11, G4int id12,
+	      const G4int *detid, 
 	      G4Material *matScin, 
 	      G4Material *matFrame,
 	      G4Material *matArea,
 	      G4Material *matBox )
   : Cname_(Cname)
 {
-  G4ThreeVector gPosCent=(gPos6+gPos7)/2.;
+  G4ThreeVector gPosCent=(gPos[5]+gPos[6])/2.;
   G4ThreeVector gOffset=rotMat*OffsetLocal;
   G4ThreeVector DCgPos=gPosCent+gOffset;
   
@@ -130,128 +123,30 @@ s_SFT::s_SFT( const G4String & Cname,
  
   // Consitency should be checked.
   G4RotationMatrix InvMat=rotMat.inverse();
-  G4ThreeVector lPos1=InvMat*(gPos1-gPosCent);
-  G4ThreeVector lPos2=InvMat*(gPos2-gPosCent);
-  G4ThreeVector lPos3=InvMat*(gPos3-gPosCent);
-  G4ThreeVector lPos4=InvMat*(gPos4-gPosCent);
-  G4ThreeVector lPos5=InvMat*(gPos5-gPosCent);
-  G4ThreeVector lPos6=InvMat*(gPos6-gPosCent);
-  G4ThreeVector lPos7=InvMat*(gPos7-gPosCent);
-  G4ThreeVector lPos8=InvMat*(gPos8-gPosCent);
-  G4ThreeVector lPos9=InvMat*(gPos9-gPosCent);
-  G4ThreeVector lPos10=InvMat*(gPos10-gPosCent);
-  G4ThreeVector lPos11=InvMat*(gPos11-gPosCent);
-  G4ThreeVector lPos12=InvMat*(gPos12-gPosCent);
+  G4ThreeVector lPos[12];
+  for(G4int ilr = 0; ilr < sSFT_nLayer;ilr++){
+    lPos[ilr] = InvMat*(gPos[ilr]-gPosCent);
+    if( fabs(lPos[ilr].z()-LzLayer[ilr])>MaxDispl){
+      G4cout << Cname_ << "Layer" << ilr+1 << ": Geometry Error!:" 
+        << "(0,0," << LzLayer[ilr] << ") --> " << lPos[ilr] << G4endl;
+      G4Exception("Geometry Error");
+    }
+  }
   
-  if( fabs(lPos1.z()-LzLayer1)>MaxDispl ){
-    G4cout << Cname_ << "Layer1: Geometry Error!:" 
-	   << "(0,0," << LzLayer1 << ") --> " << lPos1 << G4endl;
-    G4Exception("Geometry Error");
+  //x u v x u v u v x u v x 
+  //Here
+  //x: 0 
+  //u: 1
+  //v: 2
+  const G4int layer_conf[sSFT_nLayer]={0, 1, 2, 0, 1, 2, 1, 2, 0, 1, 2, 0}; 
+  G4LogicalVolume *logLayer[3]={logLayerX,logLayerU,logLayerV};
+
+  G4VPhysicalVolume *physLayer[sSFT_nLayer];
+  for(int ilr=0;ilr<sSFT_nLayer;ilr++){
+    physLayer[ilr] = new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer[ilr]*mm ),
+        Cname_+"Layer1", logLayer[layer_conf[ilr]], physArea, false, detid[ilr] );
   }
-  if( fabs(lPos2.z()-LzLayer2)>MaxDispl ){
-    G4cout << Cname_ << "Layer2: Geometry Error!:" 
-	   << "(0,0," << LzLayer2 << ") --> " << lPos2 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos3.z()-LzLayer3)>MaxDispl ){
-    G4cout << Cname_ << "Layer3: Geometry Error!:" 
-	   << "(0,0," << LzLayer3 << ") --> " << lPos3 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos4.z()-LzLayer4)>MaxDispl ){
-    G4cout << Cname_ << "Layer4: Geometry Error!:" 
-	   << "(0,0," << LzLayer4 << ") --> " << lPos4 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos5.z()-LzLayer5)>MaxDispl ){
-    G4cout << Cname_ << "Layer5: Geometry Error!:" 
-	   << "(0,0," << LzLayer5 << ") --> " << lPos5 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos6.z()-LzLayer6)>MaxDispl ){
-    G4cout << Cname_ << "Layer6: Geometry Error!:" 
-	   << "(0,0," << LzLayer6 << ") --> " << lPos6 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos7.z()-LzLayer7)>MaxDispl ){
-    G4cout << Cname_ << "Layer7: Geometry Error!:" 
-	   << "(0,0," << LzLayer7 << ") --> " << lPos7 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos8.z()-LzLayer8)>MaxDispl ){
-    G4cout << Cname_ << "Layer8: Geometry Error!:" 
-	   << "(0,0," << LzLayer8 << ") --> " << lPos8 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos9.z()-LzLayer9)>MaxDispl ){
-    G4cout << Cname_ << "Layer9: Geometry Error!:" 
-	   << "(0,0," << LzLayer9 << ") --> " << lPos9 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos10.z()-LzLayer10)>MaxDispl ){
-    G4cout << Cname_ << "Layer10: Geometry Error!:" 
-	   << "(0,0," << LzLayer10 << ") --> " << lPos10 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos11.z()-LzLayer11)>MaxDispl ){
-    G4cout << Cname_ << "Layer11: Geometry Error!:" 
-	   << "(0,0," << LzLayer11 << ") --> " << lPos11 << G4endl;
-    G4Exception("Geometry Error");
-  }
-  if( fabs(lPos12.z()-LzLayer12)>MaxDispl ){
-    G4cout << Cname_ << "Layer12: Geometry Error!:" 
-	   << "(0,0," << LzLayer12 << ") --> " << lPos12 << G4endl;
-    G4Exception("Geometry Error");
-  }
-    
-  // Layer1
-  G4VPhysicalVolume *physLayer1 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer1*mm ),
-		       Cname_+"Layer1", logLayerX, physArea, false, id1 );
-  // Layer2
-  G4VPhysicalVolume *physLayer2 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer2*mm ),
-		       Cname_+"Layer2", logLayerU, physArea, false, id2 );
-  // Layer3
-  G4VPhysicalVolume *physLayer3 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer3*mm ),
-		       Cname_+"Layer3", logLayerV, physArea, false, id3 );
-  // Layer4
-  G4VPhysicalVolume *physLayer4 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer4*mm ),
-		       Cname_+"Layer4", logLayerX, physArea, false, id4 );
-  // Layer5
-  G4VPhysicalVolume *physLayer5 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer5*mm ),
-		       Cname_+"Layer5", logLayerU, physArea, false, id5 );
-  // Layer6
-  G4VPhysicalVolume *physLayer6 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer6*mm ),
-		       Cname_+"Layer6", logLayerV, physArea, false, id6 );
-  // Layer7
-  G4VPhysicalVolume *physLayer7 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer7*mm ),
-		       Cname_+"Layer7", logLayerU, physArea, false, id7 );
-  // Layer8
-  G4VPhysicalVolume *physLayer8 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer8*mm ),
-		       Cname_+"Layer8", logLayerV, physArea, false, id8 );
-  // Layer9
-  G4VPhysicalVolume *physLayer9 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer9*mm ),
-		       Cname_+"Layer9", logLayerX, physArea, false, id9 );
-  // Layer10
-  G4VPhysicalVolume *physLayer10 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer10*mm ),
-		       Cname_+"Layer10", logLayerU, physArea, false, id10 );
-  // Layer11
-  G4VPhysicalVolume *physLayer11 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer11*mm ),
-		       Cname_+"Layer11", logLayerV, physArea, false, id11 );
-  // Layer12
-  G4VPhysicalVolume *physLayer12 =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, -LzLayer12*mm ),
-		       Cname_+"Layer12", logLayerX, physArea, false, id12 );
+
 }
 
 void s_SFT::SetVisAttributes( const G4VisAttributes *attLayer,

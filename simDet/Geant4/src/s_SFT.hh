@@ -5,6 +5,9 @@
   -> Just plate + Frame
 
   2015/12  K.Shirotori
+  
+  
+  2016/5  updated by H.Asano
 */
 
 #ifndef s_SFT_h
@@ -26,23 +29,9 @@ public:
   s_SFT( const G4String & Cname,
 	 G4VPhysicalVolume *pMother, 
 	 const G4RotationMatrix & rotMat, 
-	 const G4ThreeVector & gPos1, 
-	 const G4ThreeVector & gPos2,
-	 const G4ThreeVector & gPos3, 
-	 const G4ThreeVector & gPos4, 
-	 const G4ThreeVector & gPos5, 
-	 const G4ThreeVector & gPos6, 
-	 const G4ThreeVector & gPos7, 
-	 const G4ThreeVector & gPos8, 
-	 const G4ThreeVector & gPos9, 
-	 const G4ThreeVector & gPos10, 
-	 const G4ThreeVector & gPos11, 
-	 const G4ThreeVector & gPos12, 
+	 const G4ThreeVector *gPos, 
 	 const G4ThreeVector & OffsetLocal,
-	 G4int id1,  G4int id2,  G4int id3, 
-	 G4int id4,  G4int id5,  G4int id6,
-	 G4int id7,  G4int id8,  G4int id9,
-	 G4int id10, G4int id11, G4int id12,
+	 const G4int *detid, 
 	 G4Material *matScin, 
 	 G4Material *matFrame, 
 	 G4Material *matArea, 

@@ -6,7 +6,7 @@
 
 
 //comment added by H. Asano
-//This code propagate detector ID ,layer , segment number from file to output file 
+//This code propagate detector ID ,layer , segment number from GEANT4 to output file 
 
 #include "SFTSD.hh"
 
@@ -20,8 +20,8 @@
 
 #include "ConfMan.hh"
 
-const G4double DEThreshold = 0.001*keV;
-const double PositionSeparationThreshold = 0.1*mm;
+// const G4double DEThreshold = 0.001*keV; , not used 
+// const double PositionSeparationThreshold = 0.1*mm; not used
 const double TimeSeparationThreshold     = 5.0*ns;
 
 SFTSD::SFTSD( G4String name )
@@ -109,9 +109,9 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
   if( confMan->DetectorType()==0 ){//Type 0 , simple detector
     layerId= hitLayer;
     segId  = hitSegment;
-  }else if( confMan->DetectorType()>=1 ){ //Type A, B,C ,realistic detector
-    layerId= hitLayer/1000-1;//layer 0 to 11
-    segId  = hitSegment-1000*(layerId+1)-1;//segment start from 0
+  }else if( confMan->DetectorType()>=1 ){ //realistic detector, round or square fiber
+    layerId= hitLayer/1000;//layer 0 to 11
+    segId  = hitSegment-1000*(layerId+1);//segment start from 0
   }  
   
   SFTHit *aHit = new SFTHit();

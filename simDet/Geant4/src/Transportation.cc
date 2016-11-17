@@ -1,5 +1,6 @@
 /*
   Transportation.cc
+  This process transports particles through the detector geometry.
 */
 
 #include "Transportation.hh"
