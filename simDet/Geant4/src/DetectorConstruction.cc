@@ -33,7 +33,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
 {
   mList_ = DefineMaterials();
 
-  ConfMan *confMan = ConfMan::GetConfManager();
+  //ConfMan *confMan = ConfMan::GetConfManager();
 
   G4VPhysicalVolume *world = ConstructPayload();
 

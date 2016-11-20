@@ -45,6 +45,7 @@ private:
   G4double path_;
   G4double beta_;
   G4double mass_;
+  G4int Verbosity;
 
 public:
   void SetPass( void ) { pass_=1; }
@@ -85,6 +86,7 @@ public:
   G4double GetPathLength( void ) const { return path_; }
   G4double GetBeta( void ) const { return beta_; }
   G4double GetMass( void ) const { return mass_; }
+
 };
 
 typedef G4THitsCollection<T0Hit> T0HitsCollection;

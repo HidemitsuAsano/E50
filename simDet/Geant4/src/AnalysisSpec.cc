@@ -405,7 +405,7 @@ void AnalysisSpec::PrintHitsInformation( const G4Event *anEvent, std::ostream &o
   for( G4int i=0; i<nhT0; i++ ){
     T0Hit *aHit = (*T0HC)[i];
     if( aHit->GetEdep() > confMan->GetCoEdep() ){
-      ost << geomMan.GetDetectorId("T0U")
+      ost << geomMan.GetDetectorId("T0")
 	  << std::setw(3) << nhT0 << std::endl;
       ost.precision(5);
       ost << std::setw(12) << aHit->GetLayerID()

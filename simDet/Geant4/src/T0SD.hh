@@ -30,6 +30,7 @@ public:
 
 private:
   T0HitsCollection *T0Collection;
+  G4int Verbosity_;
 };
 
 #endif

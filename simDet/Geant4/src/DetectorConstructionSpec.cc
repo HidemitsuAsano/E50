@@ -142,8 +142,8 @@ MakeTrackers( G4VPhysicalVolume *pMother )
     
     G4VisAttributes *FiberLayerAttrib =
       new G4VisAttributes( G4Colour::G4Colour( 0.0, 1.0, 1.0 ) );//Cyan
-    G4VisAttributes *FiberFrameAttrib =
-      new G4VisAttributes( G4Colour::G4Colour( 0.3, 0.3, 0.3 ) );//Blac
+//    G4VisAttributes *FiberFrameAttrib =
+//      new G4VisAttributes( G4Colour::G4Colour( 0.3, 0.3, 0.3 ) );//Blac
     
     // s_SF1->SetVisAttributes( FiberLayerAttrib, 
     // 			     FiberFrameAttrib, 
@@ -298,8 +298,8 @@ MakeTrackers( G4VPhysicalVolume *pMother )
       new G4VisAttributes( G4Colour::G4Colour( 1.0, 0.0, 0.0 ) );//Red
     G4VisAttributes *FiberOuterCradAttrib =
       new G4VisAttributes( G4Colour::G4Colour( 1.0, 1.0, 0.0 ) );//yellow
-    G4VisAttributes *FiberFrameAttrib =
-      new G4VisAttributes( G4Colour::G4Colour( 0.3, 0.3, 0.3 ) );//Blac
+//    G4VisAttributes *FiberFrameAttrib =
+//      new G4VisAttributes( G4Colour::G4Colour( 0.3, 0.3, 0.3 ) );//Blac
     
     // r_SF1->SetVisAttributes( FiberLayerAttrib, 
     // 			     FiberFrameAttrib, 
@@ -387,14 +387,14 @@ void DetectorConstructionSpec::
 MakeCounters( G4VPhysicalVolume *pMother )
 {
   const DCGeomMan & geomMan=DCGeomMan::GetInstance();
-  ConfMan *confMan = ConfMan::GetConfManager();
+  //ConfMan *confMan = ConfMan::GetConfManager();
   G4RotationMatrix RotationMatrix;  
 
   ///////////////////////////////////////// 
   ////////////////////////////////T0: Time Zero counter
   ///////////////////////////////////////// 
     
-  G4int idt0=geomMan.GetDetectorId("T0U");
+  G4int idt0=geomMan.GetDetectorId("T0");
   G4ThreeVector gPosT0=geomMan.GetGlobalPosition(idt0);
   G4ThreeVector OfsLT0( 0.0, 0.0, 0.0 );
   

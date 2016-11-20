@@ -2,6 +2,8 @@
   T0SD.cc
 
   2012/5  K.Shirotori
+
+  2016/11 H.Asano update
 */
 
 #include "T0SD.hh"
@@ -20,7 +22,9 @@ const double PositionSeparationThreshold = 2.0*cm;
 const double TimeSeparationThreshold     = 5.0*ns;
 
 T0SD::T0SD( G4String name )
-  : G4VSensitiveDetector(name)
+  : G4VSensitiveDetector(name),
+ T0Collection(NULL),
+ Verbosity_(1)
 {
   collectionName.insert( G4String( "T0Collection" ) );
 }
@@ -54,10 +58,13 @@ G4bool T0SD::ProcessHits( G4Step *aStep,
     aStep->GetPreStepPoint()->GetTouchable();
   G4VPhysicalVolume *vol=theTouchable->GetVolume();
   G4String hitName = vol->GetName();
-  G4int hitLayer=0;
+  G4int hitLayer=-1;
   if( hitName=="T0Seg" ) hitLayer=1;
-  else if ( hitName=="T0USeg" ) hitLayer=1;
-  else if ( hitName=="T0DSeg" ) hitLayer=2;
+  //else if ( hitName=="T0USeg" ) hitLayer=1;
+  //else if ( hitName=="T0DSeg" ) hitLayer=2;
+  if(Verbosity_>0){
+    std::cout << __FILE__ << "  L" << __LINE__ << " hitname " << hitName << std::endl;
+  }
   G4int hitSegment = vol->GetCopyNo();
 
   G4int nHits = T0Collection->entries();
