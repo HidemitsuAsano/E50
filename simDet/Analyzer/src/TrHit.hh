@@ -23,7 +23,7 @@ class TrHit
 {
 public:
   TrHit();
-  TrHit( int layer, int wire ); 
+  TrHit( int layer, int ch ); 
 
   ~TrHit();
 
@@ -33,7 +33,7 @@ private:
 
 private:
   int layer_;
-  int wire_;//here wire means one segment of scintillating fiber 
+  int ch_;//here ch means one segment of scintillating fiber 
   DoubleVec pos_;//vector of hit position in the layer local coordinate
   DoubleVec dt_, dl_;//drift time , drift length
   IntVec hitID_;//vector of hit ID 
@@ -50,7 +50,7 @@ private:
 
 //   int clsize_;
 //   bool mwpcflag_;
-//   double mwire_;
+//   double mch_;
 //   double mwpos_;
 
 //  mutable std::vector <TrLTrackHit *> Cont_;
@@ -59,7 +59,7 @@ public:
   bool CalcObservables( void );
 
   void SetLayer( int layer ) { layer_=layer; }
-  void SetWire( int wire ) { wire_=wire; }  
+  void SetCh( int ch ) { ch_=ch; }  
   void SetPos( double pos );
 
   void SetTdcVal( int tdc );
@@ -71,12 +71,12 @@ public:
 
 //   void SetClusterSize( int size ) { clsize_=size; }
 //   void SetMWPCFlag( bool flag ) { mwpcflag_=flag; }
-//   void SetMeanWire( double mwire ) { mwire_=mwire; }
-//   void SetMeanWirePosition( double mwpos ) { mwpos_=mwpos; }
-  void SetWirePosition( double wpos ) { wpos_ = wpos; }
+//   void SetMeanCh( double mch ) { mch_=mch; }
+//   void SetMeanChPosition( double mwpos ) { mwpos_=mwpos; }
+  void SetChPosition( double wpos ) { wpos_ = wpos; }
 
   int GetLayer( void ) const { return layer_; }
-  int GetWire( void )  const { return wire_;}
+  int GetCh( void )  const { return ch_;}
 
   int GetPosSize( void ) const { return pos_.size(); }
   int GetIDSize( void ) const { return hitID_.size(); }
@@ -90,11 +90,11 @@ public:
 //   double GetTrailingTime( int nhit=0 ) const { return trailingTime_[nhit]; }
 
   double GetTiltAngle( void ) const { return angle_; }
-  double GetWirePosition( void ) const { return wpos_; }
+  double GetChPosition( void ) const { return wpos_; }
 
 //   int GetClusterSize( void ) const { return clsize_; }
-//   double GetMeamWire( void ) const { return mwire_; }
-//   double GetMeamWirePosition( void ) const { return mwpos_; }
+//   double GetMeamCh( void ) const { return mch_; }
+//   double GetMeamChPosition( void ) const { return mwpos_; }
 
   void setFlags( int nhit=0 ) { belongTrack_[nhit]=true; }
   void clearFlags( int nhit=0 ) { belongTrack_[nhit]=false; }
@@ -113,13 +113,13 @@ public:
 //   { return CalcMWPCObservables(); }
 //
   
-  static bool compareTrHitPredicate(TrHit *lhs, TrHit *rhs) { return (lhs->wire_ < rhs->wire_); }
+  static bool compareTrHitPredicate(TrHit *lhs, TrHit *rhs) { return (lhs->ch_ < rhs->ch_); }
   /*
   struct compareTrHitFunctor : public std::binary_function<TrHit, TrHit, bool>
     {
       bool operator()( TrHit lhs, TrHit rhs)
       {
-        return (lhs.wire_ < rhs.wire_);
+        return (lhs.ch_ < rhs.ch_);
       }
     };
    */

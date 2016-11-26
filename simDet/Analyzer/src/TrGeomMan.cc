@@ -165,16 +165,16 @@ const TrGeomRecord * TrGeomMan::GetRecord( int lnum ) const
 }
  
 
-//calculate wire local x position from geant geometry. 
-//TrGeomRecord::WirePos(int wire) is modified from original code.
-//here, "wire" means the fiber ID
-double TrGeomMan::calcWirePosition( int lnum, double wire ) const
+//calculate ch ( = fiber) local x position from geant geometry. 
+//TrGeomRecord::ChPos(int ch) is modified from original code.
+//here, "ch" means the fiber ID
+double TrGeomMan::calcChPosition( int lnum, double ch ) const
 {
   static const std::string funcname = "[TrGeomMan::calcWirePosition()]";
   int id = GetSFTID(lnum);
   TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ){
-    return pGeo->WirePos(wire);
+    return pGeo->WirePos(ch);
   }
   else{
     std::cerr << funcname << ": No record. Layer#=" 

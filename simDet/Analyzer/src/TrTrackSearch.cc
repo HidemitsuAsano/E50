@@ -38,7 +38,7 @@ int Verbosity=0;
 //////////////////////////////////////////////////
 
 //LocalTrackSearch 
-//input : array of SFTClusterContainer
+//input : array of SFTClusterContainer , its index is layer number
 //output :  vector of TrLocalTrack
 //NumOfLayers : number of sft layers 12
 //MinNumOfHits : numboer of required hits for locak tracking
@@ -58,15 +58,15 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
   //CandCont.resize(NumOfLayers);
   
   //this way make too many candidates if there are multiple tracks (e.g. 2**12 layers) 
-  int nCombi[NumOfLayers];
+  int nCluster[NumOfLayers];
   for( int ilr=0; ilr<NumOfLayers; ++ilr ){ 
-    nCombi[ilr]=(ClusterCont[ilr]).size();
+    nCluster[ilr]=(ClusterCont[ilr]).size();
 
     // If #Cluster>MaxNumerOfCluster,  error return
-    if(nCombi[ilr]>MaxNumberOfClusters){
+    if(nCluster[ilr]>MaxNumberOfClusters){
       std::cout << __FILE__ <<" : " << __LINE__ << " : "<< "MaxNumbeOfClusters exceed!! " << std::endl;
-      std::cout << "layer: " << ilr << " MaxNumbefOfCluster : "  << MaxNumberOfClusters << " # of clusteres reconstructed : "<< 
-    nCombi[ilr] << std::endl;
+      std::cout << "layer: " << ilr << " MaxNumbefOfCluster : "  << MaxNumberOfClusters << " # of clusteres reconstructed : "
+      << nCluster[ilr] << std::endl;
       for( int jlr=0; jlr<NumOfLayers; ++jlr )
         for_each( ClusterCont[jlr].begin(), ClusterCont[jlr].end(), DeleteObject() );
       return 0;
@@ -75,7 +75,7 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
 
 #if 0
   std::cout << funcname << ": #Hits of each group" << std::endl;
-  for( int i=0; i<NumOfLayers; ++i ) std::cout << std::setw(4) << nCombi[i];
+  for( int i=0; i<NumOfLayers; ++i ) std::cout << std::setw(4) << nCluster[i];
   std::cout << std::endl;
   for( int i=0; i<NumOfLayers; ++i ){
     int n=ClusterCont[i].size();
@@ -88,39 +88,52 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
   }
 #endif
   if(Verbosity>0){
-    std::cout << __FILE__ << "   " << __LINE__ << "  making intex ...." << nCombi[0] << std::endl;
+    std::cout << __FILE__ << "   " << __LINE__ << "  making intex ...." << nCluster[0] << std::endl;
   }
 
-  //make index make 2D vector (index of combination ,layer) . if the hit is associated to the track, the value of the component is -1 , if not 0
+  //make index of 2D vector (index of combination ,layer) . if the hit is associated to the track, the value of the component is -1 , if not 0
   std::vector < std::vector <int> > 
     CombiIndex = makeindex( NumOfLayers, 
 			    MinNumOfHits, 
 			    NumOfLayers, 
-			    &(nCombi[0]) );
+			    &(nCluster[0]) );
   int nnCombi=CombiIndex.size();
    
-   
-//  if(Verbosity>0){
-    std::cout << __FILE__ << "   " << __LINE__ << " ===> " << nnCombi << " combinations will be checked.." 
-      << std::endl;
-    for(int ilr=0;ilr<NumOfLayers;ilr++){ 
-      std::cout << "layer " << ilr << "  " <<  nCombi[ilr] << std::endl;
+/*
+  std::cout << __FILE__ << "   " << __LINE__ << " ===> " << nnCombi << " combinations will be checked.." 
+    << std::endl;
+  for(int ilr=0;ilr<NumOfLayers;ilr++){ 
+    std::cout << "layer " << ilr << "  " <<  nCluster[ilr] << std::endl;
+  }
+  for(int icom = 0 ;icom < nnCombi ; icom++){
+    int nlayer = CombiIndex[icom].size();
+    for(int ilr=0;ilr<nlayer;ilr++){
+      std::cout << CombiIndex[icom][ilr] << std::endl;
     }
-    for(int icom = 0 ;icom < nnCombi ; icom++){
-      int nlayer = CombiIndex[icom].size();
-      for(int ilr=0;ilr<nlayer;ilr++){
-        std::cout << CombiIndex[icom][ilr] << std::endl;
-      }
-    }
-//  }
+  }
+ */
+
 #if 0
   std::cout << " ===> " << nnCombi << " combinations will be checked.." 
 	    << std::endl;
 #endif
+
   if( nnCombi>MaxCombi )  return 0;
   for( int i=0; i<nnCombi; ++i ){
     TrLocalTrack *track = MakeTrack( ClusterCont, &((CombiIndex[i])[0]) );
     if( !track ){std::cout << __FILE__ << "  " << __LINE__ << " no track " << std::endl; continue;}
+    //int nhit = track->GetNHit();
+    //std::cout << __FILE__ << "  " << __LINE__ << "  " << nhit << std::endl;
+    //for(int ihit = 0 ; ihit< nhit; ihit++){
+    //  SFTCluster *clsp = track->GetHit(ihit);
+      //std::cout << "ihit " << ihit << "layer " << clsp->GetLayer() << std::endl;
+    //}
+
+    //for(int ilr=0;ilr<12;ilr++){
+    //  std::cout << "layer: " << ilr << " Nhit " << track->GetHitOfLayerNumber(ilr) << std::endl;
+    //}
+
+
     if( track->GetNHit()>=MinNumOfHits && 
 	track->DoFit() &&
 	track->GetChiSquare()<MaxChisquare ){
@@ -128,10 +141,10 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
       //double chisqr = track->GetChiSquare();
     }
     else{
-      //std::cout << "No tracks available" << std::endl;
-      //std::cout << "Nhit " << track->GetNHit() << std::endl;
-      //std::cout << "Fit? " << track->DoFit()  << std::endl;
-      //std::cout << "chi2 " << track->GetChiSquare() << std::endl;
+      std::cout << "No tracks available" << std::endl;
+      std::cout << "Nhit " << track->GetNHit() << std::endl;
+      std::cout << "Fit? " << track->DoFit()  << std::endl;
+      std::cout << "chi2 " << track->GetChiSquare() << std::endl;
       delete track;
     }
   }
@@ -348,16 +361,23 @@ TrLocalTrack *MakeTrack(const SFTClusterContainer *CandCont,
     std::cerr << funcname << ": new fail" << std::endl;
     return 0;
   }    
+  
+  
+  int nAssociatecluster[NumOfLayersSFT];
+  for(int ilr=0;ilr<NumOfLayersSFT;ilr++){
+    nAssociatecluster[ilr] = CandCont[ilr].size();
+  }
+  //int nAssociateCluster=CandCont->size();
+  //std::cout << __FILE__ << "line " << __LINE__ << " number of associated cluster 0  " << nAssociateCluster[0] << std::endl;
+  for( int ilr=0; ilr<NumOfLayersSFT; ++ilr ){
+    int m=combination[ilr];
+    SFTCluster *cluster=NULL;
+    if(m>=0) cluster=CandCont[ilr][m];
 
-  int nAssociateCluster=CandCont->size();
-  for( int iclus=0; iclus<nAssociateCluster; ++iclus ){
-    int m=combination[iclus];
-    SFTCluster *cluster=0;
-    if(m>=0) cluster=CandCont[iclus][m];
-//#if 0
-    std::cout << funcname << ":" << std::setw(3)
-	      << iclus << std::setw(3) << m  << " "
-	      << CandCont[iclus][m] << std::endl; 
+///if 0
+//    std::cout << funcname << ":" << std::setw(3)
+//	      << iclus << std::setw(3) << m  << " " << std::endl;
+	//      << CandCont[iclus][m] << std::endl; 
 //#endif
 
 #if 0
@@ -420,7 +440,7 @@ TrLocalTrack *MakeTrack(const SFTClusterContainer *CandCont,
     if(cluster){
       tp->AddHit( cluster );
     }
-  }
+  }//iclus
 
   return tp;
 }

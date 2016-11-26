@@ -9,7 +9,8 @@
 //
 //1. decodes text files generated from GEANT4 simulation
 //2. store Primary, T0 and SFT data into vectors
-//The SFT data is stored in TrRawhit class which is 
+//The SFT data is stored in the vector of SFTRawHit class. 
+//SFTRawHit is data storage object for SFT.
 
 #include "RawData.hh"
 #include "GetNumberFromKernelEntropyPool.hh"
@@ -46,7 +47,7 @@ const double Rad2Deg = 180./acos(-1.);
 RawData::RawData():
   PrimHC(0),
   T0RHC(0),
-  SFTRawHitContainer() //vector of data object class for a single track in SFT
+  SFTRawHitContainerArray() //vector of data object class for a single track in SFT
 {}
 
 RawData::~RawData()
@@ -104,23 +105,23 @@ bool RawData::AddPrimInfo( PrimInfoContainer& cont,
 }
 
 
-bool RawData::AddTrRHit( TrRHitContainer& cont,
-			 int Layer, int Wire, 
+bool RawData::AddRawHit( SFTRawHitContainer& cont,
+			 int Layer, int Ch, 
 			 double PosX, double PosY, double DL )
 {
-  static const std::string funcname = "[RawData::AddTrRHit]";
+  static const std::string funcname = "[RawData::AddRawHit]";
  
   SFTRawHit *p=0;
   int nh=cont.size();
   for( int i=0; i<nh; ++i ){
     SFTRawHit *q=cont[i];
     if( q->LayerId()==Layer &&
-	q->WireId()==Wire ){
+	q->ChId()==Ch ){
       p=q; break;
     }
   }
   if(!p){
-    p = new SFTRawHit( Layer, Wire );
+    p = new SFTRawHit( Layer, Ch );
     if(p) cont.push_back(p);
   }
   if(p){
@@ -136,22 +137,22 @@ bool RawData::AddTrRHit( TrRHitContainer& cont,
 }
 
 
-bool RawData::AddTrRHit( TrRHitContainer& cont,
-			 int Layer, int Wire, int hitID)
+bool RawData::AddRawHit( SFTRawHitContainer& cont,
+			 int Layer, int Ch, int hitID)
 {
-  static const std::string funcname = "[RawData::AddTrRHit]";
+  static const std::string funcname = "[RawData::AddRawHit]";
  
   SFTRawHit *p=0;
   int nh=cont.size();
   for( int i=0; i<nh; ++i ){
     SFTRawHit *q=cont[i];
     if( q->LayerId()==Layer &&
-	q->WireId()==Wire ){
+	q->ChId()==Ch ){
       p=q; break;
     }
   }
   if(!p){
-    p = new SFTRawHit( Layer, Wire );
+    p = new SFTRawHit( Layer, Ch );
     if(p) cont.push_back(p);
   }
   if(p){
@@ -213,8 +214,8 @@ void RawData::clearAll()
   T0RHC.clear();
 
   for( int l=0; l<=PlMaxSFT; ++l){
-    for_each( SFTRawHitContainer[l].begin(),  SFTRawHitContainer[l].end(), DeleteObject());
-    SFTRawHitContainer[l].clear();
+    for_each( SFTRawHitContainerArray[l].begin(),  SFTRawHitContainerArray[l].end(), DeleteObject());
+    SFTRawHitContainerArray[l].clear();
   }
 
   return;
@@ -290,7 +291,7 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
 #endif
     
     //dummy , when layer number starts from 1 in the previous code
-    //AddTrRHit(SFTRawHitContainer[0], 0, 0, 0., 0., 0.);
+    //AddTrRHit(SFTRawHitContainerArray[0], 0, 0, 0., 0., 0.);
     
     ////////////////////////////////////////////////////////////////////////////////
     ////Full tracking
@@ -306,7 +307,7 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
 	  
 	//Tracker
 	if( type==FullTrackTF ){ 
-	  int lnum=-1, wire=-1;
+	  int lnum=-1, ch=-1;
 	  double x=0, y=0, dl=0;
 
 
@@ -324,20 +325,20 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
 		double angle = geomMan.GetTiltAngle( lnum );
 		double l = x*cos(angle*Deg2Rad) + y*sin(angle*Deg2Rad);
 		dl = l + CLHEP::RandGauss::shoot( 0.0, confMan->GetSFTResol() );
-		AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, x, y, dl);
+		AddRawHit(SFTRawHitContainerArray[lnum-PlOffsSFT], lnum, ch, x, y, dl);
 	      }
 	    }	    
       
-      //Type A, B ,C realistic detector
+      //Type 1 ,2, 3 realistic detector
 	    if( confMan->AnaMode()>=1 ){
-	      In >> wire;
+	      In >> ch;
 	      x=0.0; y=0.0; dl=0.0;//
 	      
 	      //SFT only stores layer number and segment id
 	      if( lnum>=PlMinSFT+PlOffsSFT && lnum<=PlMaxSFT+PlOffsSFT ){
-		      AddTrRHit(SFTRawHitContainer[lnum-PlOffsSFT], lnum, wire, rawhitID);
-          //std::cout << "lnum " << lnum << "wire " << wire << std::endl;
-          //SFTRawHit *praw = new SFTRawHit(lnum,wire);
+		      AddRawHit(SFTRawHitContainerArray[lnum-PlOffsSFT], lnum, ch, rawhitID);
+          //std::cout << "lnum " << lnum << "ch " << ch << std::endl;
+          //SFTRawHit *praw = new SFTRawHit(lnum,ch);
           //praw->SetHitID(rawhitID++);
           rawhitID++;
         }else{
@@ -347,7 +348,7 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
 	    }	    
 
 #if check1
-	    std::cout << lnum <<" " << wire << " " << x << " " << y << std::endl;
+	    std::cout << lnum <<" " << ch << " " << x << " " << y << std::endl;
 #endif
 	  }
 	}
@@ -410,11 +411,11 @@ const HodoRHitContainer& RawData::GetT0RHC() const
   return T0RHC;
 }
 
-const TrRHitContainer & RawData::GetSFTRawHitContainer( int layer ) const
+const SFTRawHitContainer & RawData::GetSFTRawHitContainer( int layer ) const
 {
   if( layer<0 || layer>PlMaxSFT ){
     std::cerr << __FILE__ << "  " << __LINE__ << " invalid layer number !! " << layer << std::endl;
     layer=-1;
   }
-  return SFTRawHitContainer[layer];
+  return SFTRawHitContainerArray[layer];
 }

@@ -85,7 +85,7 @@ SFTCluster *TrLocalTrack::GetHitOfLayerNumber( int lnum ) const
 bool TrLocalTrack::DoFit( void )
 {
   const std::string funcname = "[TrLocalTrack::DoFit()]";
-  const TrGeomMan & geomMan=TrGeomMan::GetInstance();
+  //const TrGeomMan & geomMan=TrGeomMan::GetInstance();
   
   std::size_t n = sftclusterArray_.size();
   
@@ -98,10 +98,30 @@ bool TrLocalTrack::DoFit( void )
   for( std::size_t i=0; i<n; ++i ){
     SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
-      int lnum = hitp->GetLayer();
-      double ww = geomMan.GetResolution( lnum );
-      double zz = geomMan.GetLocalZ( lnum );
+      //double ww = geomMan.GetResolution( lnum );
+      double ww = hitp->GetClusterLxSize()/sqrt(12.0);
+      double zz = hitp->GetLocalZ();
+      
+      //std::cout << __FILE__ << " line " << __LINE__ << 
+      //" resolution " << ww << " localz  " << zz << std::endl;
+
+      //double zz = geomMan.GetLocalZ( lnum );
       double aa = hitp->GetTiltAngle()*Deg2Rad;
+      
+      
+      int lnum = hitp->GetLayer();
+      //if(lnum == 0) ww = 999999.9;//x
+      //if(lnum == 1) ww = 999999.9;//u
+      //if(lnum == 2) ww = 999999.9;//v
+      //if(lnum == 3) ww = 999999.9;//x
+      //if(lnum == 4) ww = 999999.9;//u
+      //if(lnum == 5) ww = 999999.9;//v
+      if(lnum == 6) ww = 999999.9;//u
+      if(lnum == 7) ww = 999999.9;//v
+      if(lnum == 8) ww = 999999.9;//x
+      if(lnum == 9) ww = 999999.9;//u
+      if(lnum == 10) ww = 999999.9;//v
+      if(lnum == 11) ww = 999999.9;//x
 
       z.push_back( zz ); w.push_back( 1./(ww*ww) ); 
       s.push_back( hitp->GetLocalX() );

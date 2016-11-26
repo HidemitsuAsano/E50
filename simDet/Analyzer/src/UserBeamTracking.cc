@@ -118,6 +118,7 @@ struct Event{
   std::vector<int>    layer;
   std::vector<double> chisqr;
   std::vector<double> x0, y0;
+  std::vector<double> x0diff,y0diff;
   std::vector<double> u0, v0;
   std::vector<double> pos, res;
 };
@@ -229,8 +230,8 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
 	event.sftlayer.push_back(hit->LayerId());
   	for( int j=0; j<nt; j++ ) {
   	  event.sftlayer.push_back(hit->LayerId());
-  	  event.sftposx.push_back(hit->GetPosX(j));
-  	  event.sftposy.push_back(hit->GetPosY(j));
+  	  event.sftposx.push_back(hit->GetPosX(j));//only stored if type 0 detector is selected
+  	  event.sftposy.push_back(hit->GetPosY(j));//only stored if type 0 detector is selectedn
   	  event.sftdl.push_back(hit->GetDL(j));
   	}
       }
@@ -324,6 +325,8 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
       event.chisqr.push_back(chisqr);
       event.x0.push_back(xtgt);
       event.y0.push_back(ytgt);
+      event.x0diff.push_back(xtgt - event.priposx  );
+      event.y0diff.push_back(ytgt - event.priposy  );
       event.u0.push_back(utgt);
       event.v0.push_back(vtgt); 
       
@@ -403,6 +406,8 @@ void EventBeamTracking::InitializeEvent( void )
   event.chisqr.clear();
   event.x0.clear();
   event.y0.clear();
+  event.x0diff.clear();
+  event.y0diff.clear();
   event.u0.clear();
   event.v0.clear();
   event.pos.clear();
@@ -499,6 +504,8 @@ bool ConfMan:: InitializeHistograms()
   tree->Branch("chisqr", &event.chisqr);
   tree->Branch("x0", &event.x0);
   tree->Branch("y0", &event.y0);
+  tree->Branch("x0diff", &event.x0diff);
+  tree->Branch("y0diff", &event.y0diff);
   tree->Branch("u0", &event.u0);
   tree->Branch("v0", &event.v0);
   tree->Branch("pos", &event.pos);

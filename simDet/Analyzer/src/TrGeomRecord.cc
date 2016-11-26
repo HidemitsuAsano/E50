@@ -44,7 +44,7 @@ void TrGeomRecord::calcVectors( void )
 }
 
 
-//TODO : modify for type B and C detector
+//TODO : modify for type 2 and 3 detector
 int TrGeomRecord::WireNumber( double pos ) const
 {
   double dw=((pos-offset_)/dd_)+w0_;
@@ -57,7 +57,7 @@ int TrGeomRecord::WireNumber( double pos ) const
 
 //Modified by H. Asano
 //this function returns local position of center of fiber (or wire)
-//The calculation is different on Type A and on Type B and C detector
+//The calculation is different between type 1,2 and 3 detector
 //
 double TrGeomRecord::WirePos (double wire) const
 { 

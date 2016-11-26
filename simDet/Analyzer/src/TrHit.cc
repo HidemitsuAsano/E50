@@ -4,8 +4,8 @@
   2012/5  K.Shirotori
 */
 //added comments by H. Asano
-//TrHits object has the vector of hit positions and TrLTrackHit in one segment (layer /fiber or wire)
-//layer and wire information is stored in TrAnalyzer
+//TrHits object has the vector of hit positions and TrLTrackHit in one segment (layer /fiber or ch)
+//layer and ch information is stored when TrAnalyzer is called
 
 #include <cmath>
 #include <iostream>
@@ -27,13 +27,13 @@ const double Deg2Rad = acos(-1)/180.;
 const double Rad2Deg = 180./acos(-1);
 
 TrHit::TrHit()
-  : layer_(-1), wire_(-1),wpos_(0),angle_(0)
+  : layer_(-1), ch_(-1),wpos_(0),angle_(0)
 {
   hitcounter_ = 0 ;
 }
 
-TrHit::TrHit( int layer, int wire )
-  : layer_(layer), wire_(wire),wpos_(0),angle_(0)
+TrHit::TrHit( int layer, int ch )
+  : layer_(layer), ch_(ch),wpos_(0),angle_(0)
 {
   hitcounter_ = 0 ;
 }
@@ -82,29 +82,29 @@ bool TrHit::CalcObservables( void )
 //   TrDriftParamMan *driftMan=confMan->GetTrDriftParamManager();
 //   if(!driftMan) return false;
 
-  wpos_=geomMan->calcWirePosition(layer_,wire_);
+  wpos_=geomMan->calcChPosition(layer_,ch_);
   angle_=geomMan->GetTiltAngle(layer_);
 
-  std::cout << __FILE__ << " : " << __LINE__ << " layer: " << layer_ << " segment " <<wire_  <<  ": wpos_ "<< wpos_ << "angle " << angle_ << std::endl;
+  std::cout << __FILE__ << " : " << __LINE__ << " layer: " << layer_ << " segment " <<ch_  <<  ": wpos_ "<< wpos_ << "angle " << angle_ << std::endl;
   
   bool Status = true;
   int nhitpos  = pos_.size();//nhitpos : number of hits 
   for (int i=0; i<nhitpos; i++) {
     //     double ctime;
-    //     if(!calibMan->GetTime( layer_, wire_, tdc_[i], ctime ))
+    //     if(!calibMan->GetTime( layer_, ch_, tdc_[i], ctime ))
     //       return false;
     
 //     double dtime, dlength;
-//     bool status=driftMan->calcDrift( layer_, wire_, ctime, dtime, dlength );
+//     bool status=driftMan->calcDrift( layer_, ch_, ctime, dtime, dlength );
     
 //     if (status == false) Status = status;
     
 //     dt_.push_back(dtime);
     
-    //Type 0 detector
+    //Type 0, simple detector
     if( confMan->AnaMode()==0 ){
       dl_.push_back(pos_[i]);
-    }//Type A, B, C detector
+    }//Type 1-3, realistic detector
     else if( confMan->AnaMode()>=1 ){
       dl_.push_back(0.0);
     }

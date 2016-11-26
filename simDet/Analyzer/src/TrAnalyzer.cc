@@ -68,7 +68,7 @@ bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
 
   //SFT
 
-  //Type 0
+  //Type 0 simple detector
   static int first=0; 
   if( confMan->AnaMode()==0 ){
     if(first==0){
@@ -76,14 +76,14 @@ bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
       first++;
     }
     for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
+      const SFTRawHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nhit=cont.size();
       //std::cout<< nh << std::endl;
       
       for( int i=0; i<nhit; ++i ){
 	SFTRawHit *rhit=cont[i];
 	
-	TrHit *hit=new TrHit( rhit->LayerId(), rhit->WireId() );
+	TrHit *hit=new TrHit( rhit->LayerId(), rhit->ChId() );
 	int nhitpos= rhit->GetSize();
 	for( int j=0; j<nhitpos; ++j ){
 	  hit->SetPos( rhit->GetDL(j) );
@@ -102,14 +102,14 @@ bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
     }
   }//if Type 0
 
-  //Type A , B , C
+  //Type 1,2,3 realistic detector
   if( confMan->AnaMode()>=1 ){
     if(first==0){
-      std::cout << __FILE__  << "  " << __LINE__ << " type A, B, C detector is chosen " << std::endl;
+      std::cout << __FILE__  << "  " << __LINE__ << " realistic detector is chosen " << std::endl;
       first++;
     }
     for( int layer=0; layer<NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
+      const SFTRawHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nhit=cont.size();
       //std::cout<< nh << std::endl;
       
@@ -117,25 +117,25 @@ bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
 	SFTRawHit *rhit=cont[i];
 	
   int rlayerID = rhit->LayerId();
-  int rwireID  = rhit->WireId();
-	TrHit *hit=new TrHit(rlayerID ,rwireID);
+  int rchID  = rhit->ChId();
+	TrHit *hit=new TrHit(rlayerID ,rchID);
 	int nhitpos= rhit->GetSize();
   for( int j=0; j<nhitpos; ++j ){
-	  hit->SetPos( rwireID ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
+	  hit->SetPos( rchID ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
                             // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
 	  
 	}
 	//if(!hit) continue; 
 	
-  double wpos = geomMan->calcWirePosition(rlayerID,rwireID);
+  double wpos = geomMan->calcChPosition(rlayerID,rchID);
   double angle = geomMan->GetTiltAngle(rlayerID);
 #if check1
-	  std::cout<< __FILE__ << "  "  << __LINE__ << ": Layer  " << rhit->LayerId() << "  segment " << rhit->WireId() << 
+	  std::cout<< __FILE__ << "  "  << __LINE__ << ": Layer  " << rhit->LayerId() << "  segment " << rhit->ChId() << 
     "  local x " << wpos << std::endl;
 #endif
-  hit->SetWirePosition(wpos);
+  hit->SetChPosition(wpos);
   hit->SetTiltAngle(angle);
-  //std::cout << __FILE__ << " : " << __LINE__ << " layer: " << rlayerID << " segment " <<rwireID  <<  ": wpos "<< wpos << "angle " << angle << std::endl;
+  //std::cout << __FILE__ << " : " << __LINE__ << " layer: " << rlayerID << " segment " <<rchID  <<  ": wpos "<< wpos << "angle " << angle << std::endl;
 //	if(hit->CalcObservables()){//hit position for each hit (before clustering) is calculated in this function, calling TrGeomRecord
   SFTTrHitContainer_[layer].push_back(hit);
 //	}else{
@@ -144,7 +144,7 @@ bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
   //  delete hit; //why ??? (Asano)
       }//for nhit
     }//for ilayer
-  }//if Type A, B ,C
+  }//if Type 1,2,3
   
 
   return true;
@@ -165,8 +165,8 @@ bool TrAnalyzer::SortTrHits()
       TrHit *hit = SFTTrHitContainer_[layer][ihit];
       std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "layer " << layer << std::endl; 
       std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "layer stored " << hit->GetLayer() << std::endl; 
-      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "wire stored " << hit->GetWire() << std::endl; 
-      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "pos stored " << hit->GetWirePosition() << std::endl; 
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "ch stored " << hit->GetCh() << std::endl; 
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "pos stored " << hit->GetChPosition() << std::endl; 
     }
   }*/
   //sort row hits here by segment id
@@ -183,7 +183,7 @@ bool TrAnalyzer::SortTrHits()
       TrHit *hit = SFTTrHitContainer_[layer][ihit];
       std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "layer " << layer << std::endl; 
       std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "layer stored " << hit->GetLayer() << std::endl; 
-      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "wire stored " << hit->GetWire() << std::endl; 
+      std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "ch stored " << hit->GetCh() << std::endl; 
       std::cout << "file " << __FILE__ << " line:  " << __LINE__ << "  " << "pos stored " << hit->GetPos() << std::endl; 
     }
   }*/
@@ -235,8 +235,8 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
     if( hit ){
       //int multiplicity = hit->GetPosSize();
       int layer = hit->GetLayer(); 
-      int segment= hit->GetWire();
-      double lxpos= hit->GetWirePosition();//local x position
+      int segment= hit->GetCh();
+      double lxpos= hit->GetChPosition();//local x position
       /*
          if(multiplicity>1){
       //   std::cout << __FILE__ << "  " << __LINE__ << " multiple hits on one segment!!: " << multiplicity << std::endl;
@@ -298,7 +298,7 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
         float LocalxSize  = (float) vlinklxsize;
         float offset = geomMan->GetOffset(layer);
         if(vlinklzsize%2 == 0) LocalxSize += offset;//offset from parameter file
-        hitcluster->SetClusterLzSize(LocalxSize);
+        hitcluster->SetClusterLxSize(LocalxSize);
 
         double calclxpos=0.0;
         for(unsigned int jhit =0 ; jhit<currentvlinksize ;jhit++){
@@ -338,7 +338,7 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
         vLinkSegment.push_back(segment);
         vLinkSegmentPos.push_back(lxpos);
       }//ifclustering OK
-      // }//if Type A, B, C detector
+      // }//if Type 1,2,3 detector
     }//if TrHit
   }//for i hit
 
