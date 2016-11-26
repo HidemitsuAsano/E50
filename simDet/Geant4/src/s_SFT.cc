@@ -113,9 +113,9 @@ s_SFT::s_SFT( const G4String & Cname,
 						     DCgPos.z()*mm ) ),
 		       Cname_+"Box", logBox, pMother, false, 0 );
 
-  G4VPhysicalVolume *physFrame =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
-                       Cname_+"Frame", logFrame, physBox, false, 0 );
+//  G4VPhysicalVolume *physFrame =
+//    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
+//                       Cname_+"Frame", logFrame, physBox, false, 0 );
 
   G4VPhysicalVolume *physArea =
     new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),

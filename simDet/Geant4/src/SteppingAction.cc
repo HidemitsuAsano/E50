@@ -37,10 +37,10 @@ void SteppingAction::UserSteppingAction(const G4Step* theStep )
 
   G4Track * theTrack = theStep->GetTrack();
 
-  G4TouchableHistory* theTouchable
-    = (G4TouchableHistory*)(theStep->GetPreStepPoint()->GetTouchable());
+//  G4TouchableHistory* theTouchable
+//    = (G4TouchableHistory*)(theStep->GetPreStepPoint()->GetTouchable());
     
-  G4VPhysicalVolume* physVol = theTouchable->GetVolume(); 
+  //G4VPhysicalVolume* physVol = theTouchable->GetVolume(); 
 
   G4ThreeVector pos = theTrack->GetPosition();
   G4StepPoint *preStepPoint = theStep->GetPreStepPoint();

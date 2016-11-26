@@ -379,7 +379,7 @@ void AnalysisSpec::PrintHitsInformation( const G4Event *anEvent, std::ostream &o
   for( G4int i=0; i<nhSFT; i++ ){
     SFTHit *aHit = (*SFTHC)[i];
 
-    //Type 0
+    //Type 0, simple detector
     if( aHit->GetEdep() > confMan->GetTrEdep() &&
 	confMan->DetectorType()==0 ){
       ost.precision(5);
@@ -388,7 +388,7 @@ void AnalysisSpec::PrintHitsInformation( const G4Event *anEvent, std::ostream &o
 	  << std::setw(12) << aHit->GetYLocal()/mm
 	  << std::endl;
     }
-    //Type A , B ,C
+    //realistic detector
     if( aHit->GetEdep() > confMan->GetTrEdep() &&
 	confMan->DetectorType()>=1 ){
       ost.precision(5);

@@ -126,9 +126,9 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
 						     DCgPos.y()*mm,
 						     DCgPos.z()*mm ) ),
 		       Cname_+"Box", logBox, pMother, false, 0 );//name, logical volume, mother volume, no booliean operations its copy number
-  G4VPhysicalVolume *physFrame =
-    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
-                       Cname_+"Frame", logFrame, physBox, false, 0 );
+//  G4VPhysicalVolume *physFrame =
+//    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
+//                       Cname_+"Frame", logFrame, physBox, false, 0 );
 
   G4VPhysicalVolume *physArea =
     new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),

@@ -321,7 +321,7 @@ MakeTrackers( G4VPhysicalVolume *pMother )
   }
    
   /*
-  //Type C real SFT Square Fiber 0.5 mm Single Cladding
+  // real SFT Square Fiber 0.5 mm Single Cladding
   else if( DetType==3 ){
     ///////////////////// SFT(x,u,v,x,u,v, u,v,x,u,v,x)
     G4int detid[12];

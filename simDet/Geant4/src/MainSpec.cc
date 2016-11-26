@@ -108,7 +108,7 @@ int main( int argc, char **argv )
     anaMan->SetDataFile( dataname );
   }
 
-  ConfMan *confMan = ConfMan::GetConfManager();
+  //ConfMan *confMan = ConfMan::GetConfManager();
 
   //Primary generator
   PrimaryGeneratorAction *priGen =

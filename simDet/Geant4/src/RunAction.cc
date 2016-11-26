@@ -23,7 +23,7 @@ RunAction::~RunAction()
 void RunAction::BeginOfRunAction( const G4Run *aRun )
 {
   if( G4VVisManager::GetConcreteInstance() ){
-    G4UImanager *UI = G4UImanager::GetUIpointer();
+   // G4UImanager *UI = G4UImanager::GetUIpointer();
     //    UI->ApplyCommand( "/vis/scene/notifyHandlers" );
   }
   if( anaMan ) anaMan->BeginOfRun( aRun );
@@ -32,7 +32,7 @@ void RunAction::BeginOfRunAction( const G4Run *aRun )
 void RunAction::EndOfRunAction( const G4Run *aRun )
 {
   if( G4VVisManager::GetConcreteInstance() ){
-    G4UImanager *UI = G4UImanager::GetUIpointer();
+  //  G4UImanager *UI = G4UImanager::GetUIpointer();
     //    UI->ApplyCommand( "/vis/viewer/update" );
   }
 

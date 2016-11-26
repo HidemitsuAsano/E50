@@ -24,7 +24,7 @@ const double TimeSeparationThreshold     = 5.0*ns;
 T0SD::T0SD( G4String name )
   : G4VSensitiveDetector(name),
  T0Collection(NULL),
- Verbosity_(1)
+ Verbosity_(0)
 {
   collectionName.insert( G4String( "T0Collection" ) );
 }

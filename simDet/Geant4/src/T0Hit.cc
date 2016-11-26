@@ -14,8 +14,13 @@
 #include <iomanip>
 
 T0Hit::T0Hit()
-  : layerID_(0), segID_(0), time_(-100.0), edep_(0.0),
-    trackNo_(0), fSignal_(false)
+  : layerID_(-1), segID_(-1), time_(-100.0), edep_(0.0),
+    pos_(-9999.,-9999.,-9999.),
+    mom_(-9999.,-9999.,-9999.),
+    lmom_(-9999.,-9999.,-9999.),
+    trackNo_(-1), fSignal_(false),
+    path_(-9999.),beta_(-9999.),mass_(-9999.),
+    Verbosity(0)
 {}
 
 G4Allocator<T0Hit> T0HitAllocator;
