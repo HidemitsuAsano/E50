@@ -83,10 +83,10 @@ public:
   double dzdt( void ) const { return dzdt_; }
   double dzdu( void ) const { return dzdu_; }
 
-  double WirePos( double wire ) const;
+  double ChPos( double ch ) const;
 
-  //{ return dd_*(-wire + w0_)+offset_; }
-  int WireNumber( double pos ) const; 
+  //{ return dd_*(-ch + w0_)+offset_; }
+  int ChNumber( double pos ) const; 
 
 private:
   void calcVectors( void );

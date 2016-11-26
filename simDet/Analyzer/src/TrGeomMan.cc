@@ -170,11 +170,11 @@ const TrGeomRecord * TrGeomMan::GetRecord( int lnum ) const
 //here, "ch" means the fiber ID
 double TrGeomMan::calcChPosition( int lnum, double ch ) const
 {
-  static const std::string funcname = "[TrGeomMan::calcWirePosition()]";
+  static const std::string funcname = "[TrGeomMan::calcChPosition()]";
   int id = GetSFTID(lnum);
   TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ){
-    return pGeo->WirePos(ch);
+    return pGeo->ChPos(ch);
   }
   else{
     std::cerr << funcname << ": No record. Layer#=" 
@@ -184,13 +184,13 @@ double TrGeomMan::calcChPosition( int lnum, double ch ) const
 }
 
 
-int TrGeomMan::calcWireNumber( int lnum, double pos ) const
+int TrGeomMan::calcChNumber( int lnum, double pos ) const
 {
-  static const std::string funcname = "[TrGeomMan::calcWireNumber()]";
+  static const std::string funcname = "[TrGeomMan::calcChNumber()]";
   int id = GetSFTID(lnum);
   TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ){
-    return pGeo->WireNumber(pos);
+    return pGeo->ChNumber(pos);
   }
   else{
     std::cerr << funcname << ": No record. Layer#=" 

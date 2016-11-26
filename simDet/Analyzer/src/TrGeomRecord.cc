@@ -56,10 +56,10 @@ int TrGeomRecord::WireNumber( double pos ) const
 }
 
 //Modified by H. Asano
-//this function returns local position of center of fiber (or wire)
+//this function returns local position of center of fiber (or ch)
 //The calculation is different between type 1,2 and 3 detector
 //
-double TrGeomRecord::WirePos (double wire) const
+double TrGeomRecord::WirePos (double ch) const
 { 
   ConfMan *confMan=ConfMan::GetConfManager();
   if(!confMan) return false;
@@ -67,12 +67,12 @@ double TrGeomRecord::WirePos (double wire) const
   //offset_ is width/2.0 (mm) in type B and C detector
   //w0: offset for the first segment
   if( (confMan->AnaMode()) <= 1 ){
-    return dd_*(wire - w0_)+offset_; 
+    return dd_*(ch - w0_)+offset_; 
   }else if( (confMan->AnaMode()) > 1 ){//Type B, C detector. 1 layer has 2 sublayer
-    //return dd_*((int)((wire-1)/2.0+1) - w0_)+offset_*((int)(wire-1)%2);
-    double pos = dd_*((int)((wire)/2.0+1) - w0_)+offset_*((int)wire%2);
+    //return dd_*((int)((ch-1)/2.0+1) - w0_)+offset_*((int)(ch-1)%2);
+    double pos = dd_*((int)((ch)/2.0+1) - w0_)+offset_*((int)ch%2);
     /*
-    std::cout << "wire " << wire << std::endl;
+    std::cout << "ch " << ch << std::endl;
     std::cout << "dd_ " << dd_ << std::endl;
     std::cout << "w0_ " << w0_ << std::endl;
     std::cout << "offset " << offset_ << std::endl;
