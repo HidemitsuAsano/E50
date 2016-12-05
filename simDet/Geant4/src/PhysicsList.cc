@@ -301,7 +301,7 @@ void PhysicsList::SetCuts()
   // Retrive verbose level
   SetVerboseLevel(temp);
 
-  SetCutValue(defaultCutValue, "gamma");
+  SetCutValue(defaultCutValue, "gamma");//giving the range of produced particle. if range > cut value, the particle is produced in GEANT4.
   SetCutValue(defaultCutValue, "e-");
   SetCutValue(defaultCutValue, "e+");
 

@@ -1,7 +1,7 @@
 /*
   r_SFT_Round.cc
 
-  code for placement of Segmented SFT
+  code for placement of a layer of Segmented SFT
   -Multi Caldding round Fiber + Frame
   -Kuraray's Scintillation fiber SCSF-78M is implemented
   
@@ -171,39 +171,41 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
   layrot[2]->rotateZ( (1.0)*rSFT_TiltAngle);
   layrot[2]->rotateX( 90.*deg);
 
-    
-  for( G4int iseg=1; iseg<=rSFT_SegNum; ++iseg ){ 
+  
+  //numbering convention
+  //layer , segment (= a fiber) and sublayer number starts from 0 , not 1
+  for( G4int iseg=0; iseg<rSFT_SegNum; ++iseg ){ 
     G4double ofsScinX=-rSFT_SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
     for( G4int ilr=0; ilr<rSFT_nLayer;ilr++){
       G4int conf = layer_conf[ilr];
 
       //set name
       std::ostringstream os;
-      os << ilr+1;
+      os << ilr;
       G4String Lname = os.str();;//+"_"+1;
 
       //first sublayer
       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-          Cname_+"Layer"+Lname+"_1_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg-1 );
+          Cname_+"Layer"+Lname+"_0_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg );
 
       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-          Cname_+"Layer"+Lname+"_1_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg-1 );
+          Cname_+"Layer"+Lname+"_0_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg );
 
       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
-          Cname_+"Layer"+Lname+"_1_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg-1 );
+          Cname_+"Layer"+Lname+"_0_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg );
 
       //second sublayer
       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
-          Cname_+"Layer"+Lname+"_2_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg );
+          Cname_+"Layer"+Lname+"_1_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg+1 );
 
       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
-          Cname_+"Layer"+Lname+"_2_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg );
+          Cname_+"Layer"+Lname+"_1_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg+1 );
 
       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
-          Cname_+"Layer"+Lname+"_2_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg );
+          Cname_+"Layer"+Lname+"_1_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg+1 );
     }
-    
   }
+
 }
 
 void r_SFT_Round::SetVisAttributes( const G4VisAttributes *attLayer,

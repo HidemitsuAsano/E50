@@ -60,15 +60,17 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
   G4VPhysicalVolume *vol=theTouchable->GetVolume();
   G4String hitName = vol->GetName();// volume name
   G4int hitLayer = theTouchable->GetReplicaNumber();// 
-  G4int hitSegment = vol->GetCopyNo();// same number as above
+  G4int hitSegment = vol->GetCopyNo();// same results as theTouchable->GetReplicaNumber()
   
-  /*
+  
   {
-    G4cout << "hitName" << hitName << G4endl;
-    G4cout << "hitLayer" << hitLayer << G4endl;
-    G4cout << "hitSegment" << hitSegment << G4endl;
+    G4cout << __FILE__ << "  l." << __LINE__ << G4endl;
+    G4cout << "hitName: " << hitName << G4endl;
+    G4cout << "ReplicaNumber: " << hitLayer << G4endl;
+    G4cout << "CopyNo: " << hitSegment << G4endl;
   }
-  */
+
+
   G4int nHits = SFTCollection->entries();
   G4ThreeVector hitpos = aStep->GetPreStepPoint()->GetPosition();
   G4double hittime = aTrack->GetGlobalTime();
@@ -110,14 +112,21 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
     layerId= hitLayer;
     segId  = hitSegment;
   }else if( confMan->DetectorType()>=1 ){ //realistic detector, round or square fiber
-    layerId= hitLayer/1000;//layer 0 to 11
+    layerId= (G4int)hitLayer/1000-1;//layer 0 to 11
     segId  = hitSegment-1000*(layerId+1);//segment start from 0
-  }  
+  }
+
+  {
+    G4cout << __FILE__ << "  l." << __LINE__ << G4endl;
+    G4cout << "layerId" << layerId << G4endl;
+    G4cout << "segId" << segId << G4endl;
+  }
+
   
   SFTHit *aHit = new SFTHit();
   aHit->SetPass();
-  aHit->SetLayerID( layerId );
-  aHit->SetSegmentID( segId );
+  aHit->SetLayerID( layerId );//0-11
+  aHit->SetSegmentID( segId );//0-19
   aHit->SetEdep( edep );
   aHit->SetTime( hittime );
   aHit->SetPos( hitpos );
