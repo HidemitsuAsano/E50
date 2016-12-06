@@ -28,6 +28,7 @@ SFTSD::SFTSD( G4String name )
   : G4VSensitiveDetector(name)
 {
   collectionName.insert( G4String( "SFTCollection" ) );
+  Verbosity_=0;
 }
 
 SFTSD::~SFTSD()
@@ -49,7 +50,7 @@ void SFTSD::Initialize( G4HCofThisEvent *HCE )
 G4bool SFTSD::ProcessHits( G4Step *aStep,
 			   G4TouchableHistory *ROhist )
 {
-  G4double edep = aStep->GetTotalEnergyDeposit();
+  G4double edep = aStep->GetTotalEnergyDeposit(); //collect energy in this step
   ConfMan *confMan = ConfMan::GetConfManager();
   bool detEvt = confMan->DetectEveryThing();
   if( (!detEvt) && edep==0.0 ) return true;
@@ -57,13 +58,14 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
   G4Track *aTrack = aStep->GetTrack();
   const G4VTouchable *theTouchable =
     aStep->GetPreStepPoint()->GetTouchable();
-  G4VPhysicalVolume *vol=theTouchable->GetVolume();
+  G4VPhysicalVolume *vol=theTouchable->GetVolume();//get volume of the current step
   G4String hitName = vol->GetName();// volume name
-  G4int hitLayer = theTouchable->GetReplicaNumber();// 
+  G4int hitLayer = theTouchable->GetReplicaNumber();// = same as copyID defined in G4PVPlacement
   G4int hitSegment = vol->GetCopyNo();// same results as theTouchable->GetReplicaNumber()
   
   
-  {
+  if(Verbosity_>0){ 
+    G4cout << G4endl;
     G4cout << __FILE__ << "  l." << __LINE__ << G4endl;
     G4cout << "hitName: " << hitName << G4endl;
     G4cout << "ReplicaNumber: " << hitLayer << G4endl;
@@ -72,7 +74,7 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
 
 
   G4int nHits = SFTCollection->entries();
-  G4ThreeVector hitpos = aStep->GetPreStepPoint()->GetPosition();
+  G4ThreeVector hitpos = aStep->GetPreStepPoint()->GetPosition();//get global position of the current preStep
   G4double hittime = aTrack->GetGlobalTime();
   G4int trackNo = aTrack->GetTrackID();
   G4ThreeVector hitmom = aTrack->GetMomentum();
@@ -82,7 +84,7 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
   
   G4String PartName= aTrack->GetDefinition()->GetParticleName();
   G4ThreeVector hitposl = theTouchable->GetHistory()->
-    GetTopTransform().TransformPoint( hitpos );
+    GetTopTransform().TransformPoint( hitpos );//get local position of the current preStep
   G4ThreeVector hitmoml = theTouchable->GetHistory()->
     GetTopTransform().TransformAxis( hitmom );
   
@@ -94,7 +96,7 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
       G4double id = aHit->GetTrackNo();
       if( fabs(hittime-time)<=TimeSeparationThreshold &&
 	  id == trackNo )
-	aHit->AddEdep( edep );
+        aHit->AddEdep( edep );
     }
   }
 
@@ -116,10 +118,17 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
     segId  = hitSegment-1000*(layerId+1);//segment start from 0
   }
 
-  {
+  if(Verbosity_>0){ 
     G4cout << __FILE__ << "  l." << __LINE__ << G4endl;
-    G4cout << "layerId" << layerId << G4endl;
-    G4cout << "segId" << segId << G4endl;
+    G4cout << "layerId " << layerId << G4endl;
+    G4cout << "segId " << segId << G4endl;
+    G4cout << "local hitposx " << hitposl.x()*mm << G4endl;
+    G4cout << "local hitposy " << hitposl.y()*mm << G4endl;
+    G4cout << "local hitposz " << hitposl.z()*mm << G4endl;
+    G4cout << "global hitposx " << hitpos.x()*mm << G4endl;
+    G4cout << "global hitposy " << hitpos.y()*mm << G4endl;
+    G4cout << "global hitposz " << hitpos.z()*mm << G4endl;
+    G4cout << G4endl;
   }
 
   
@@ -134,6 +143,7 @@ G4bool SFTSD::ProcessHits( G4Step *aStep,
   aHit->SetLMom( hitmoml );
   aHit->SetTrackNo( trackNo );
   aHit->SetLocalPos( hitposl.x(), hitposl.y() );
+  aHit->SetGlobalPos( hitpos.x(), hitpos.y(),hitpos.z() );
   aHit->SetHitParticleName( PartName );
   aHit->SetPathLength( path );
   aHit->SetBeta( beta );

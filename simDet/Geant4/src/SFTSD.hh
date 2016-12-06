@@ -30,6 +30,7 @@ public:
   
 private:
   SFTHitsCollection *SFTCollection;
+  G4int Verbosity_;
 };
 
 #endif

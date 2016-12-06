@@ -8,6 +8,18 @@
   10 fibers (r=0.5 mm) x 2 sublayers x 12 layers (x,u,v x,u,v, u,v,x, u,v,x)
 
   Apr. 27th H.Asano
+
+  
+  description of fiber geometry
+  
+  LzLayer = layer position with respect to the center of physArea.
+  physArea is G4VPhysicalVolume , which represents the cage of of fiber tracker.
+  The center position of the physArea is the intermediate point between layer 5 and 6.
+  The global position of each layer is defined in "param_DetGeom001", however in this GEANT simulation, only the position of layer 5 and 6 is used.
+  The position of other layers is used in analysis stage.
+  
+  global z position of the layer i = LzLayer[i] + (global position of 5 + global position of 6)/2.0
+
 */
 
 #include "r_SFT_Round.hh"
@@ -141,7 +153,7 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
   for(G4int ilr = 0; ilr < rSFT_nLayer;ilr++){
     lPos[ilr] = InvMat*(gPos[ilr]-gPosCent);
     if( fabs(lPos[ilr].z()-LzLayer[ilr])>MaxDispl){
-      G4cout << Cname_ << "Layer" << ilr+1 << ": Geometry Error!:" 
+      G4cout << Cname_ << "Layer" << ilr << ": Geometry Error!:" 
         << "(0,0," << LzLayer[ilr] << ") --> " << lPos[ilr] << G4endl;
       G4Exception("Geometry Error");
     }
@@ -185,23 +197,23 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
       G4String Lname = os.str();;//+"_"+1;
 
       //first sublayer
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr] ),
           Cname_+"Layer"+Lname+"_0_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg );
 
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr] ),
           Cname_+"Layer"+Lname+"_0_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg );
 
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, -LzLayer[ilr] ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr] ),
           Cname_+"Layer"+Lname+"_0_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg );
 
       //second sublayer
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
           Cname_+"Layer"+Lname+"_1_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg+1 );
 
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
           Cname_+"Layer"+Lname+"_1_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg+1 );
 
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, -LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
           Cname_+"Layer"+Lname+"_1_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg+1 );
     }
   }

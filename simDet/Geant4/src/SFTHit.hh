@@ -40,7 +40,8 @@ private:
   G4ThreeVector lmom_;
   G4int trackNo_;
   G4bool fSignal_;
-  G4double xl_, yl_;
+  G4double xl_, yl_;//local x , local y
+  G4double xg_,yg_,zg_;//global x,y,z
   std::vector <G4String> HitPartName_;
   G4double path_;
   G4double beta_;
@@ -60,6 +61,7 @@ public:
   void SetTrueSignal() { fSignal_=true; }
   void SetFalseSignal() { fSignal_=false; }
   void SetLocalPos( G4double x, G4double y ) { xl_=x; yl_=y; }
+  void SetGlobalPos( G4double x, G4double y, G4double z){xg_=x;yg_=y;zg_=z;}
   void SetHitParticleName( const G4String & name ) 
   { HitPartName_.push_back( name ); }
   void SetPathLength( G4double path ) { path_=path; }
@@ -78,6 +80,9 @@ public:
   G4bool IsTrueSignal() const { return fSignal_; }
   G4double GetXLocal( void ) const { return xl_; }
   G4double GetYLocal( void ) const { return yl_; }
+  G4double GetXGlobal( void ) const { return xg_; }
+  G4double GetYGlobal( void ) const { return yg_; }
+  G4double GetZGlobal( void ) const { return zg_; }
   G4int NumOfHitParticles() const { return HitPartName_.size(); }
   G4String GetHitParticleName( int id ) const 
   { if(id<int(HitPartName_.size())) return HitPartName_[id];

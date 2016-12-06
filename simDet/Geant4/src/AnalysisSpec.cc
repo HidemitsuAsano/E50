@@ -101,7 +101,8 @@ struct Event{
   std::vector<G4double> sftedep, sfttime;
   std::vector<G4double> sftp;
   std::vector<G4double> sfttheta, sftphi;
-  std::vector<G4double> sftposx, sftposy;
+  std::vector<G4double> sftposlx, sftposly;
+  std::vector<G4double> sftposgx, sftposgy, sftposgz;
   std::vector<G4double> sftpath, sftbeta;
   std::vector<G4double> sftmass;
 };
@@ -246,6 +247,9 @@ void AnalysisSpec::EndOfEvent( const G4Event *anEvent )
       G4ThreeVector mom=aHit->GetLMom();
       G4ThreeVector Mom(mom.x(), mom.y(), mom.z());
       G4double xl=aHit->GetXLocal(), yl=aHit->GetYLocal();
+      G4double xg=aHit->GetXGlobal();
+      G4double yg=aHit->GetYGlobal();
+      G4double zg=aHit->GetZGlobal();
       G4double p=Mom.mag();    
       G4double theta=Mom.theta()*Rad2Deg;
       G4double phi=Mom.phi()*Rad2Deg;
@@ -266,8 +270,11 @@ void AnalysisSpec::EndOfEvent( const G4Event *anEvent )
       event.sftp.push_back(p/GeV);
       event.sfttheta.push_back(theta);
       event.sftphi.push_back(phi);
-      event.sftposx.push_back(xl/mm);
-      event.sftposy.push_back(yl/mm);
+      event.sftposlx.push_back(xl/mm);
+      event.sftposly.push_back(yl/mm);
+      event.sftposgx.push_back(xg/mm);
+      event.sftposgy.push_back(yg/mm);
+      event.sftposgz.push_back(zg/mm);
       event.sftpath.push_back(path/mm);
       event.sftbeta.push_back(beta);//
       event.sftmass.push_back(mass);// particle mass
@@ -506,8 +513,11 @@ void AnalysisSpec::InitializeEvent( void )
     event.sftp.clear();
     event.sfttheta.clear();
     event.sftphi.clear();
-    event.sftposx.clear();
-    event.sftposy.clear();
+    event.sftposlx.clear();
+    event.sftposly.clear();
+    event.sftposgx.clear();
+    event.sftposgy.clear();
+    event.sftposgz.clear();
     event.sftpath.clear();
     event.sftbeta.clear();
     event.sftmass.clear();
@@ -597,8 +607,11 @@ void AnalysisSpec::DefineHistograms( void )
     tree->Branch("sftp", &event.sftp);
     tree->Branch("sfttheta", &event.sfttheta);
     tree->Branch("sftphi", &event.sftphi);
-    tree->Branch("sftposx", &event.sftposx);
-    tree->Branch("sftposy", &event.sftposy);
+    tree->Branch("sftposlx", &event.sftposlx);
+    tree->Branch("sftposly", &event.sftposly);
+    tree->Branch("sftposgx", &event.sftposgx);
+    tree->Branch("sftposgy", &event.sftposgy);
+    tree->Branch("sftposgz", &event.sftposgz);
     tree->Branch("sftpath", &event.sftpath);
     tree->Branch("sftbeta", &event.sftbeta);
     tree->Branch("sftmass", &event.sftmass);
