@@ -207,7 +207,8 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
       
       G4double SegSpacing = rSFT_SegSpacing;
       G4double offset_2ndsublayer = 0.5*mm;
-      //u, v plane
+      //For U and V plane
+      //The distance between two fiber in x-axis is need to be mulitiplied by 1/cos(tiltangle)
       if(conf>0){
         const double Deg2Rad = acos(-1.)/180.;
         SegSpacing *= 1.0/cos(rSFT_TiltAngle/degree*Deg2Rad);
@@ -218,7 +219,8 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
         G4cout << "SegSpacing " << SegSpacing << G4endl;
         G4cout << "offset_2ndsublayer " << offset_2ndsublayer << G4endl;
       }
-      G4double ofsScinX=-(double)SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
+      //G4double ofsScinX=-(double)SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
+      G4double ofsScinX=(double)SegSpacing*(iseg+0.5-rSFT_SegNum/2.);
       
       //set name
       std::ostringstream os;
