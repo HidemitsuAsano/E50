@@ -43,8 +43,8 @@ public:
 private:
   r_SFT_Round( const r_SFT_Round & );
   r_SFT_Round & operator = ( const r_SFT_Round & );
-  
   G4String Cname_;
+  G4int Verbosity_; 
   G4LogicalVolume *logBox, *logFrame, *logArea;
   G4LogicalVolume *logLayer_core;
   G4LogicalVolume *logLayer_innerclad;

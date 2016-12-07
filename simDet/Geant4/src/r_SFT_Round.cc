@@ -28,6 +28,8 @@
 #include <sstream>
 #include <string>
 
+//change it to "false" if you don't need to check overlaps 
+#define CHECK_OVERLAPS true
 
 /*-->defined in DetectorConstructionSpec.cc
 const G4double LzLayer[rSFT_nLayer]={
@@ -73,7 +75,7 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
 		  G4Material *matFrame,
 		  G4Material *matArea,
 		  G4Material *matBox )
-  : Cname_(Cname)
+  : Cname_(Cname),Verbosity_(0)
 {
   G4ThreeVector gPosCent=(gPos[5]+gPos[6])/2.;
   G4ThreeVector gOffset=rotMat*OffsetLocal;
@@ -92,6 +94,19 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
   G4double FrameSize = rSFT_Round_FramesizeX;
   G4double FrameT = rSFT_Round_FrameThick;
 
+  if(Verbosity_){
+    G4cout << G4endl;
+    G4cout << "printing fiber geometry...." << G4endl;
+    G4cout << __FILE__ << " l" << __LINE__ << G4endl;
+    G4cout << "core radius " <<  radius_core_out << G4endl;
+    G4cout << "inner clad radius in" <<  radius_innerclad_in << G4endl;
+    G4cout << "inner clad radius out" <<  radius_innerclad_out << G4endl;
+    G4cout << "outer clad radius in" <<  radius_outerclad_in << G4endl;
+    G4cout << "outer clad radius out" <<  radius_outerclad_out << G4endl;
+    G4cout << G4endl;
+  }
+
+
   G4Box *solidBox  = 
     new G4Box( Cname_+"Box", (FrameSize+1.0*mm)/2.+FrameT, (rSFT_Round_Length+1.0*mm)/2.+FrameT, (BaseThick+0.5*mm)/2. );
   G4Box *solidBase  = 
@@ -100,7 +115,7 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
     new G4Box( Cname_+"Area", FrameSize/2., rSFT_Round_Length/2., BaseThick/2.+0.001*mm );
   
   
-  //Note the local coordinate system is different from type A, C (square fiber) because of the symmetry.
+  //Note the local coordinate system is different from square fiber type because of the symmetry of the volume
   G4Tubs *solidLayer_core = 
     new G4Tubs( Cname_+"Layer", radius_core_in, radius_core_out, rSFT_Round_Length/2.,0.*deg, 360.*deg);
   
@@ -137,14 +152,14 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
 				      G4ThreeVector( DCgPos.x()*mm,
 						     DCgPos.y()*mm,
 						     DCgPos.z()*mm ) ),
-		       Cname_+"Box", logBox, pMother, false, 0 );//name, logical volume, mother volume, no booliean operations its copy number
+		       Cname_+"Box", logBox, pMother, false, 0);//name, logical volume, mother volume, no booliean operations, copy number, overlap check
 //  G4VPhysicalVolume *physFrame =
 //    new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
 //                       Cname_+"Frame", logFrame, physBox, false, 0 );
 
   G4VPhysicalVolume *physArea =
     new G4PVPlacement( 0, G4ThreeVector( 0.0*mm, 0.0*mm, 0.0*mm ),
-                       Cname_+"Area", logArea, physBox, false, 0 );
+                       Cname_+"Area", logArea, physBox, false, 0);
  
   // Consitency should be checked.
   // Here, the position located in the GEANT world and parameter file (param/*** ) should be same
@@ -160,7 +175,6 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
   }
  
 
-  const G4double offset_2ndsublayer = 0.5*mm;
   //x u v x u v u v x u v x 
   //Here
   //x: 0 
@@ -175,46 +189,76 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
   
   //u layer rotation local -> global 
   layrot[1] = new G4RotationMatrix();
-  layrot[1]->rotateZ( (-1.0)*rSFT_TiltAngle);
+  layrot[1]->rotateZ( (-1.0)*rSFT_TiltAngle);//degree
   layrot[1]->rotateX( 90.*deg);
   
   //v layer rotation local -> global 
   layrot[2] = new G4RotationMatrix();
-  layrot[2]->rotateZ( (1.0)*rSFT_TiltAngle);
+  layrot[2]->rotateZ( (1.0)*rSFT_TiltAngle);//degree
   layrot[2]->rotateX( 90.*deg);
 
   
   //numbering convention
   //layer , segment (= a fiber) and sublayer number starts from 0 , not 1
-  for( G4int iseg=0; iseg<rSFT_SegNum; ++iseg ){ 
-    G4double ofsScinX=-rSFT_SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
-    for( G4int ilr=0; ilr<rSFT_nLayer;ilr++){
-      G4int conf = layer_conf[ilr];
+  for( G4int ilr=0; ilr<rSFT_nLayer;ilr++){
+    G4int conf = layer_conf[ilr];
+    
+    for( G4int iseg=0; iseg<rSFT_SegNum; iseg++ ){ 
+      
+      G4double SegSpacing = rSFT_SegSpacing;
+      G4double offset_2ndsublayer = 0.5*mm;
+      //u, v plane
+      if(conf>0){
+        const double Deg2Rad = acos(-1.)/180.;
+        SegSpacing *= 1.0/cos(rSFT_TiltAngle/degree*Deg2Rad);
+        offset_2ndsublayer *= 1.0/cos(rSFT_TiltAngle/degree*Deg2Rad);
+      }
 
+      if(Verbosity_>0){
+        G4cout << "SegSpacing " << SegSpacing << G4endl;
+        G4cout << "offset_2ndsublayer " << offset_2ndsublayer << G4endl;
+      }
+      G4double ofsScinX=-(double)SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
+      
       //set name
       std::ostringstream os;
-      os << ilr;
+      os << ilr << "_" << iseg ;
       G4String Lname = os.str();;//+"_"+1;
 
       //first sublayer
       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr] ),
-          Cname_+"Layer"+Lname+"_0_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg );
+          Cname_+"Layer"+Lname+"_0_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg, CHECK_OVERLAPS);
 
       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr] ),
-          Cname_+"Layer"+Lname+"_0_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg );
+          Cname_+"Layer"+Lname+"_0_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg, CHECK_OVERLAPS);
 
       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr] ),
-          Cname_+"Layer"+Lname+"_0_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg );
+          Cname_+"Layer"+Lname+"_0_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg, CHECK_OVERLAPS);
 
       //second sublayer
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
-          Cname_+"Layer"+Lname+"_1_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg+1 );
+        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
+      //new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*2.0 ),
+          Cname_+"Layer"+Lname+"_1_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg+1, CHECK_OVERLAPS);
 
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
-          Cname_+"Layer"+Lname+"_1_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg+1 );
+        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
+      //new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*2.0 ),
+          Cname_+"Layer"+Lname+"_1_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg+1, CHECK_OVERLAPS);
 
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
-          Cname_+"Layer"+Lname+"_1_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg+1 );
+       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
+      //new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*2.0 ),
+          Cname_+"Layer"+Lname+"_1_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg+1, CHECK_OVERLAPS);
+    
+      if(Verbosity_>0){
+        G4cout << G4endl;
+        G4cout << "Lname " << Lname << G4endl;
+        G4cout << "conf. (x:0, u:1, v:2) "<< conf << G4endl; 
+        G4cout << "x positon of 1st sublayer " << ofsScinX << G4endl;
+        G4cout << "x positon of 2nd sublayer " << ofsScinX+offset_2ndsublayer << G4endl;
+        G4cout << "z positon of 1st sublayer " << LzLayer[ilr] << G4endl;
+        G4cout << "z positon of 2nd sublayer " << LzLayer[ilr] + rSFT_Round_Radius*2.0  << G4endl;
+        G4cout << G4endl;
+      }
+    
     }
   }
 
