@@ -205,7 +205,7 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
     
     for( G4int iseg=0; iseg<rSFT_SegNum; iseg++ ){ 
       
-      G4double SegSpacing = rSFT_SegSpacing;
+      G4double SegSpacing = rSFT_Round_SegSpacing;
       G4double offset_2ndsublayer = 0.5*mm;
       //For U and V plane
       //The distance between two fiber in x-axis is need to be mulitiplied by 1/cos(tiltangle)
