@@ -11,7 +11,7 @@
 
 static const G4int    rSFT_nLayer = 12;
 //////Tracker size
-//SFT_A 1mm square fiber Single Cladding
+//SFT 1mm square fiber Single Cladding
 static const G4double rSFT_Square_LaysizeX   =    1.0*mm;
 static const G4double rSFT_Square_LaysizeY   =  200.0*mm;
 static const G4double rSFT_Square_LaysizeZ   =    1.0*mm;
@@ -23,10 +23,10 @@ static const G4double rSFT_FrameThick =   30.0*mm;
 
 static const G4double rSFT_livefraction = 0.96;//fraction of senstive area of fiber
 
-//SFT_B round fiber Multi Cladding r=1mm
+//SFT round fiber Multi Cladding phi=1mm
 static const G4double rSFT_Round_Radius     =    0.5*mm;
 static const G4double rSFT_Round_Length     =  200.0*mm;
-static const G4double rSFT_Round_SegSpacing =    1.00*mm;
+static const G4double rSFT_Round_SegSpacing =    1.00*mm;//must be same as dWdX in param file
 static const G4int    rSFT_Round_SegNum     =   10;
 static const G4double rSFT_Round_FramesizeX =  200.0*mm;
 static const G4double rSFT_Round_BoxThick   =   30.0*mm;
