@@ -220,7 +220,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   //SFT
   {
     for( int layer=0; layer<NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
+      const SFTRawHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nh=cont.size();
       //std::cout << "N raw hit " << nh << std::endl;
       event.sftnhits = nh;

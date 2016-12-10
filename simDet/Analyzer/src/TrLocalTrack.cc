@@ -99,33 +99,45 @@ bool TrLocalTrack::DoFit( void )
     SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       //double ww = geomMan.GetResolution( lnum );
+
+      //assuming uniform distribution, ADC info is not used here
       double ww = hitp->GetClusterLxSize()/sqrt(12.0);
-      double zz = hitp->GetLocalZ();
+      
+      double localz = hitp->GetLocalZ();
       
       //std::cout << __FILE__ << " line " << __LINE__ << 
-      //" resolution " << ww << " localz  " << zz << std::endl;
-
-      //double zz = geomMan.GetLocalZ( lnum );
-      double aa = hitp->GetTiltAngle()*Deg2Rad;
+      //" resolution " << ww << " localz  " << localz << std::endl;
       
-      
-      int lnum = hitp->GetLayer();
-      //if(lnum == 0) ww = 999999.9;//x
-      //if(lnum == 1) ww = 999999.9;//u
-      //if(lnum == 2) ww = 999999.9;//v
-      //if(lnum == 3) ww = 999999.9;//x
-      //if(lnum == 4) ww = 999999.9;//u
-      //if(lnum == 5) ww = 999999.9;//v
-      if(lnum == 6) ww = 999999.9;//u
-      if(lnum == 7) ww = 999999.9;//v
-      if(lnum == 8) ww = 999999.9;//x
-      if(lnum == 9) ww = 999999.9;//u
-      if(lnum == 10) ww = 999999.9;//v
-      if(lnum == 11) ww = 999999.9;//x
+      bool isChangeConf = false;
+      static bool isStated = false; 
 
-      z.push_back( zz ); w.push_back( 1./(ww*ww) ); 
+      if(isChangeConf){
+        int lnum = hitp->GetLayer();
+        //if(lnum == 0) ww = 999999.9;//x
+        if(lnum == 1) ww = 999999.9;//u
+        if(lnum == 2) ww = 999999.9;//v
+        if(lnum == 3) ww = 999999.9;//x
+        if(lnum == 4) ww = 999999.9;//u
+        if(lnum == 5) ww = 999999.9;//v
+        if(lnum == 6) ww = 999999.9;//u
+        if(lnum == 7) ww = 999999.9;//v
+        if(lnum == 8) ww = 999999.9;//x
+        if(lnum == 9) ww = 999999.9;//u
+        if(lnum == 10) ww = 999999.9;//v
+        //if(lnum == 11) ww = 999999.9;//x
+        if(!isStated){
+          std::cout << __FILE__ << " l. " << __LINE__ << "some layers are not used in tracking " << std::endl;
+          isStated = true;
+        }
+      }
+      //double localz = geomMan.GetLocalZ( lnum );
+      
+      double tiltangle = hitp->GetTiltAngle()*Deg2Rad;
+      
+
+      z.push_back( localz ); w.push_back( 1./(ww*ww) ); 
       s.push_back( hitp->GetLocalX() );
-      ct.push_back( cos(aa) ); st.push_back( sin(aa) );
+      ct.push_back( cos(tiltangle) ); st.push_back( sin(tiltangle) );
 
 #if 0
       std::cout << std::setw(10) << "layer = " << lnum 
@@ -152,24 +164,24 @@ bool TrLocalTrack::DoFit( void )
   }
 
   for( std::size_t i=0; i<nn; ++i ){
-    double ww=w[i], zz=z[i], ss=s[i], ctt=ct[i], stt=st[i];
+    double ww=w[i], localz=z[i], ss=s[i], ctt=ct[i], stt=st[i];
     mtp[0][0] += ww*ctt*ctt;//cost*cost
-    mtp[0][1] += ww*zz*ctt*ctt;//z*cost*cost
+    mtp[0][1] += ww*localz*ctt*ctt;//z*cost*cost
     mtp[0][2] += ww*ctt*stt;//cost*sint
-    mtp[0][3] += ww*zz*ctt*stt;//z*cost*sint
+    mtp[0][3] += ww*localz*ctt*stt;//z*cost*sint
 
-    mtp[1][1] += ww*zz*zz*ctt*ctt;//z*z*cost*cost
-    mtp[1][2] += ww*zz*ctt*stt;//z*cost*sint
-    mtp[1][3] += ww*zz*zz*ctt*stt;//z*z*cost*sint
+    mtp[1][1] += ww*localz*localz*ctt*ctt;//z*z*cost*cost
+    mtp[1][2] += ww*localz*ctt*stt;//z*cost*sint
+    mtp[1][3] += ww*localz*localz*ctt*stt;//z*z*cost*sint
 
     mtp[2][2] += ww*stt*stt;//sint*sint
-    mtp[2][3] += ww*zz*stt*stt;//z*sint*sint
-    mtp[3][3] += ww*zz*zz*stt*stt;//z*z*sint*sint
+    mtp[2][3] += ww*localz*stt*stt;//z*sint*sint
+    mtp[3][3] += ww*localz*localz*stt*stt;//z*z*sint*sint
 
     fitp[0] += ww*ss*ctt;//dl*cost
-    fitp[1] += ww*zz*ss*ctt;//dl*z*cost
+    fitp[1] += ww*localz*ss*ctt;//dl*z*cost
     fitp[2] += ww*ss*stt;//dl*cint
-    fitp[3] += ww*zz*ss*stt;//dl*z*sint
+    fitp[3] += ww*localz*ss*stt;//dl*z*sint
   }
   mtp[1][0]=mtp[0][1]; mtp[2][0]=mtp[0][2]; mtp[3][0]=mtp[0][3];
   mtp[2][1]=mtp[1][2]; mtp[3][1]=mtp[1][3]; mtp[3][2]=mtp[2][3];
@@ -282,20 +294,20 @@ bool TrLocalTrack::DoFit( void )
 
   double chisqr=0.0;
   for( std::size_t i=0; i<nn; ++i ){
-    double ww=w[i], zz=z[i];
-    double scal=GetX(zz)*ct[i]+GetY(zz)*st[i];
+    double ww=w[i], localz=z[i];
+    double scal=GetX(localz)*ct[i]+GetY(localz)*st[i];
     chisqr += ww*(s[i]-scal)*(s[i]-scal);
 
 #if 0
     if(1){
       //      std::cout<<" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
-      //     std::cout<<"x coordinate = "<<(x0_+u0_*zz)<<std::endl;
-      //     std::cout<<"y coordinate = "<<(y0_+v0_*zz)<<std::endl;
+      //     std::cout<<"x coordinate = "<<(x0_+u0_*localz)<<std::endl;
+      //     std::cout<<"y coordinate = "<<(y0_+v0_*localz)<<std::endl;
       std::cout<<std::setw(10)<<"layer = "<<i<<
 	std::setw(10)<<"scal = "<<scal<<
 	std::setw(10)<<"sdata = "<<s[i]<<std::endl;
       std::cout<<std::setw(10)<<"Res = "<<s[i]-scal<<std::endl;
-      std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
+      std::cout<<std::setw(10)<<"X = "<< GetX(localz)<<" Y = "<< GetY(localz)<<std::endl;
       std::cout<<std::setw(10)<<"chisqr = "<<chisqr<<std::endl;
     }
 #endif
@@ -313,15 +325,14 @@ bool TrLocalTrack::DoFit( void )
     SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       int lnum = hitp->GetLayer();
-      double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
+      double localz = TrGeomMan::GetInstance().GetLocalZ( lnum );
       /*  
 	  if(chisqr<2){
 	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
-	  std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
+	  std::cout<<std::setw(10)<<"X = "<< GetX(localz)<<" Y = "<< GetY(localz)<<std::endl;
 	  }
       */
-      hitp->SetProjectedPosition( GetX(zz), GetY(zz) );
-      
+      hitp->SetProjectedPosition( GetX(localz), GetY(localz) );
     }
   }
 
@@ -348,14 +359,13 @@ bool TrLocalTrack::DoFit2( void )
     if( hitp ){
       int lnum = hitp->GetLayer();
       double ww = geomMan.GetResolution( lnum );
-      double zz = geomMan.GetLocalZ( lnum );
+      double localz = geomMan.GetLocalZ( lnum );
       double aa = hitp->GetTiltAngle()*Deg2Rad;
 
-      z.push_back( zz ); w.push_back( 1./(ww*ww) ); 
+      z.push_back( localz ); w.push_back( 1./(ww*ww) ); 
       s.push_back( hitp->GetLocalX() );
       ct.push_back( cos(aa) );
       st.push_back( sin(aa) );
-
 #if 0
       std::cout << std::setw(10) << "layer = " << lnum 
 		<< std::setw(10) << "wire  = " << hitp->GetWire() << " "
@@ -386,57 +396,57 @@ bool TrLocalTrack::DoFit2( void )
   }
 
   for( std::size_t i=0; i<nn; ++i ){
-    double ww=w[i], zz=z[i], ss=s[i], ctt=ct[i], stt=st[i];
+    double ww=w[i], localz=z[i], ss=s[i], ctt=ct[i], stt=st[i];
 
     mtp[0][0] += ww*ctt*ctt;//cost*cost
-    mtp[0][1] += ww*zz*ctt*ctt;//z*cost*cost
-    mtp[0][2] += ww*zz*zz*ctt*ctt;//z*z*cost*cost
+    mtp[0][1] += ww*localz*ctt*ctt;//z*cost*cost
+    mtp[0][2] += ww*localz*localz*ctt*ctt;//z*z*cost*cost
     mtp[0][3] += ww*ctt*stt;//cost*sint
-    mtp[0][4] += ww*zz*ctt*stt;//z*cost*sint
-    mtp[0][5] += ww*zz*zz*ctt*stt;//z*z*cost*sint
+    mtp[0][4] += ww*localz*ctt*stt;//z*cost*sint
+    mtp[0][5] += ww*localz*localz*ctt*stt;//z*z*cost*sint
 
-    mtp[1][0] += ww*zz*ctt*ctt;//z*cost*cost
-    mtp[1][1] += ww*zz*zz*ctt*ctt;//z*z*cost*cost
-    mtp[1][2] += ww*zz*zz*zz*ctt*ctt;//z*z*z*cost*cost
-    mtp[1][3] += ww*zz*ctt*stt;//z*cost*sint
-    mtp[1][4] += ww*zz*zz*ctt*stt;//z*z*cost*sint
-    mtp[1][5] += ww*zz*zz*zz*ctt*stt;//z*z*z*cost*sint
+    mtp[1][0] += ww*localz*ctt*ctt;//z*cost*cost
+    mtp[1][1] += ww*localz*localz*ctt*ctt;//z*z*cost*cost
+    mtp[1][2] += ww*localz*localz*localz*ctt*ctt;//z*z*z*cost*cost
+    mtp[1][3] += ww*localz*ctt*stt;//z*cost*sint
+    mtp[1][4] += ww*localz*localz*ctt*stt;//z*z*cost*sint
+    mtp[1][5] += ww*localz*localz*localz*ctt*stt;//z*z*z*cost*sint
 
-    mtp[2][0] += ww*zz*zz*ctt*ctt;//z*z*cost*cost
-    mtp[2][1] += ww*zz*zz*zz*ctt*ctt;//z*z*z*cost*cost
-    mtp[2][2] += ww*zz*zz*zz*zz*ctt*ctt;//z*z*z*z*cost*cost
-    mtp[2][3] += ww*zz*zz*ctt*stt;//z*z*cost*sint
-    mtp[2][4] += ww*zz*zz*zz*ctt*stt;//z*z*z*cost*sint
-    mtp[2][5] += ww*zz*zz*zz*zz*ctt*stt;//z*z*z*z*cost*sint
+    mtp[2][0] += ww*localz*localz*ctt*ctt;//z*z*cost*cost
+    mtp[2][1] += ww*localz*localz*localz*ctt*ctt;//z*z*z*cost*cost
+    mtp[2][2] += ww*localz*localz*localz*localz*ctt*ctt;//z*z*z*z*cost*cost
+    mtp[2][3] += ww*localz*localz*ctt*stt;//z*z*cost*sint
+    mtp[2][4] += ww*localz*localz*localz*ctt*stt;//z*z*z*cost*sint
+    mtp[2][5] += ww*localz*localz*localz*localz*ctt*stt;//z*z*z*z*cost*sint
 
     mtp[3][0] += ww*ctt*stt;//cost*sint
-    mtp[3][1] += ww*zz*ctt*stt;//z*cost*sint
-    mtp[3][2] += ww*zz*zz*ctt*stt;//z*z*cost*sint
+    mtp[3][1] += ww*localz*ctt*stt;//z*cost*sint
+    mtp[3][2] += ww*localz*localz*ctt*stt;//z*z*cost*sint
     mtp[3][3] += ww*stt*stt;//sint*sint
-    mtp[3][4] += ww*zz*stt*stt;//z*sint*sint
-    mtp[3][5] += ww*zz*zz*stt*stt;//z*z*sint*sint
+    mtp[3][4] += ww*localz*stt*stt;//z*sint*sint
+    mtp[3][5] += ww*localz*localz*stt*stt;//z*z*sint*sint
 
-    mtp[4][0] += ww*zz*ctt*stt;//z*cost*sint
-    mtp[4][1] += ww*zz*zz*ctt*stt;//z*z*cost*sint
-    mtp[4][2] += ww*zz*zz*zz*ctt*stt;//z*z*z*cost*sint
-    mtp[4][3] += ww*zz*stt*stt;//z*sint*sint
-    mtp[4][4] += ww*zz*zz*stt*stt;//z*z*sint*sint
-    mtp[4][5] += ww*zz*zz*zz*stt*stt;//z*z*z*sint*sint
+    mtp[4][0] += ww*localz*ctt*stt;//z*cost*sint
+    mtp[4][1] += ww*localz*localz*ctt*stt;//z*z*cost*sint
+    mtp[4][2] += ww*localz*localz*localz*ctt*stt;//z*z*z*cost*sint
+    mtp[4][3] += ww*localz*stt*stt;//z*sint*sint
+    mtp[4][4] += ww*localz*localz*stt*stt;//z*z*sint*sint
+    mtp[4][5] += ww*localz*localz*localz*stt*stt;//z*z*z*sint*sint
 
-    mtp[5][0] += ww*zz*zz*ctt*stt;//z*z*cost*sint
-    mtp[5][1] += ww*zz*zz*zz*ctt*stt;//z*z*z*cost*sint
-    mtp[5][2] += ww*zz*zz*zz*zz*ctt*stt;//z*z*z*z*cost*sint
-    mtp[5][3] += ww*zz*zz*stt*stt;//z*z*sint*sint
-    mtp[5][4] += ww*zz*zz*zz*stt*stt;//z*z*z*sint*sint
-    mtp[5][5] += ww*zz*zz*zz*zz*stt*stt;//z*z*z*z*sint*sint
+    mtp[5][0] += ww*localz*localz*ctt*stt;//z*z*cost*sint
+    mtp[5][1] += ww*localz*localz*localz*ctt*stt;//z*z*z*cost*sint
+    mtp[5][2] += ww*localz*localz*localz*localz*ctt*stt;//z*z*z*z*cost*sint
+    mtp[5][3] += ww*localz*localz*stt*stt;//z*z*sint*sint
+    mtp[5][4] += ww*localz*localz*localz*stt*stt;//z*z*z*sint*sint
+    mtp[5][5] += ww*localz*localz*localz*localz*stt*stt;//z*z*z*z*sint*sint
 
     fitp[0] += ww*ss*ctt;//dl*cost
-    fitp[1] += ww*ss*zz*ctt;//dl*z*cost
-    fitp[2] += ww*ss*zz*zz*ctt;//dl*z*z*cost
+    fitp[1] += ww*ss*localz*ctt;//dl*z*cost
+    fitp[2] += ww*ss*localz*localz*ctt;//dl*z*z*cost
 
     fitp[3] += ww*ss*stt;//dl*sint
-    fitp[4] += ww*ss*zz*stt;//dl*z*sint
-    fitp[5] += ww*ss*zz*zz*stt;//dl*z*z*sint
+    fitp[4] += ww*ss*localz*stt;//dl*z*sint
+    fitp[5] += ww*ss*localz*localz*stt;//dl*z*z*sint
   }
 
   std::vector<int> indxc(nn), indxd(nn), ipiv(nn);
@@ -645,20 +655,20 @@ bool TrLocalTrack::DoFit2( void )
 
   double chisqr=0.0;
   for( std::size_t i=0; i<nn; ++i ){
-    double ww=w[i], zz=z[i];
-    double scal=GetX(zz)*ct[i]+GetY(zz)*st[i];
+    double ww=w[i], localz=z[i];
+    double scal=GetX(localz)*ct[i]+GetY(localz)*st[i];
     chisqr += ww*(s[i]-scal)*(s[i]-scal);
 
 #if 0
     if(1){
       //      std::cout<<" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
-      //     std::cout<<"x coordinate = "<<(x0_+u0_*zz)<<std::endl;
-      //     std::cout<<"y coordinate = "<<(y0_+v0_*zz)<<std::endl;
+      //     std::cout<<"x coordinate = "<<(x0_+u0_*localz)<<std::endl;
+      //     std::cout<<"y coordinate = "<<(y0_+v0_*localz)<<std::endl;
       std::cout<<std::setw(10)<<"layer = "<<i<<
 	std::setw(10)<<"scal = "<<scal<<
 	std::setw(10)<<"sdata = "<<s[i]<<std::endl;
       std::cout<<std::setw(10)<<"Res = "<<s[i]-scal<<std::endl;
-      std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
+      std::cout<<std::setw(10)<<"X = "<< GetX(localz)<<" Y = "<< GetY(localz)<<std::endl;
       std::cout<<std::setw(10)<<"chisqr = "<<chisqr<<std::endl;
     }
 #endif
@@ -676,14 +686,14 @@ bool TrLocalTrack::DoFit2( void )
     SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       int lnum = hitp->GetLayer();
-      double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
+      double localz = TrGeomMan::GetInstance().GetLocalZ( lnum );
       /*  
 	  if(chisqr<2){
 	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
-	  std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
+	  std::cout<<std::setw(10)<<"X = "<< GetX(localz)<<" Y = "<< GetY(localz)<<std::endl;
 	  }
       */
-      hitp->SetProjectedPosition( GetX(zz), GetY(zz) );
+      hitp->SetProjectedPosition( GetX(localz), GetY(localz) );
       
     }
   }
@@ -760,14 +770,14 @@ bool TrLocalTrack::DoFitVXU( void )
     SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       //int lnum = hitp->GetLayer();
-      //double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
+      //double localz = TrGeomMan::GetInstance().GetLocalZ( lnum );
       /*  
 	  if(chisqr<2){
 	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
-	  std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
+	  std::cout<<std::setw(10)<<"X = "<< GetX(localz)<<" Y = "<< GetY(localz)<<std::endl;
 	  }
       */
-     // hitp->SetLocalCalPosVXU( a_*zz+b_ );
+     // hitp->SetLocalCalPosVXU( a_*localz+b_ );
      std::cout << __FILE__ << "  " << __LINE__ << "this function is not implemeted yet ..." << std::endl;
     }
   }
@@ -792,9 +802,9 @@ bool TrLocalTrack::DoFitVXU2( void )
     if( hitp ){
       int lnum = hitp->GetLayer();
       double ww = geomMan.GetResolution( lnum );
-      double zz = geomMan.GetLocalZ( lnum );
+      double localz = geomMan.GetLocalZ( lnum );
 
-      z.push_back( zz ); w.push_back( 1./(ww*ww) ); 
+      z.push_back( localz ); w.push_back( 1./(ww*ww) ); 
       s.push_back( hitp->GetLocalX() );
 
 #if 0
@@ -824,16 +834,16 @@ bool TrLocalTrack::DoFitVXU2( void )
   }
 
   for( std::size_t i=0; i<nn; ++i ){
-    double ww=w[i], zz=z[i], ss=s[i];
+    double ww=w[i], localz=z[i], ss=s[i];
     mtp[0][0] += ww;//1
-    mtp[0][1] += ww*zz;//z
-    mtp[0][2] += ww*zz*zz;//z*z
-    mtp[1][2] += ww*zz*zz*zz;//z*z*z
-    mtp[2][2] += ww*zz*zz*zz*zz;//z*z*z*z
+    mtp[0][1] += ww*localz;//z
+    mtp[0][2] += ww*localz*localz;//z*z
+    mtp[1][2] += ww*localz*localz*localz;//z*z*z
+    mtp[2][2] += ww*localz*localz*localz*localz;//z*z*z*z
 
     fitp[0] += ww*ss;//s
-    fitp[1] += ww*zz*ss;//z*s
-    fitp[2] += ww*zz*zz*ss;//z*z*s
+    fitp[1] += ww*localz*ss;//z*s
+    fitp[2] += ww*localz*localz*ss;//z*z*s
   }
   mtp[1][0]=mtp[0][1];
   mtp[1][1]=mtp[0][2];
@@ -931,20 +941,20 @@ bool TrLocalTrack::DoFitVXU2( void )
 
   double chisqr=0.0;
   for( std::size_t i=0; i<nn; ++i ){
-    double ww=w[i], zz=z[i];
-    double scal= b_ + a_*zz +c_*zz*zz;
+    double ww=w[i], localz=z[i];
+    double scal= b_ + a_*localz +c_*localz*localz;
     chisqr += ww*(s[i]-scal)*(s[i]-scal);
     
 #if 0
     if(1){
       //      std::cout<<" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
-      //     std::cout<<"x coordinate = "<<(x0_+u0_*zz)<<std::endl;
-      //     std::cout<<"y coordinate = "<<(y0_+v0_*zz)<<std::endl;
+      //     std::cout<<"x coordinate = "<<(x0_+u0_*localz)<<std::endl;
+      //     std::cout<<"y coordinate = "<<(y0_+v0_*localz)<<std::endl;
       std::cout<<std::setw(10)<<"layer = "<<i<<
 	std::setw(10)<<"scal = "<<scal<<
 	std::setw(10)<<"sdata = "<<s[i]<<std::endl;
       std::cout<<std::setw(10)<<"Res = "<<s[i]-scal<<std::endl;
-      std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
+      std::cout<<std::setw(10)<<"X = "<< GetX(localz)<<" Y = "<< GetY(localz)<<std::endl;
       std::cout<<std::setw(10)<<"chisqr = "<<chisqr<<std::endl;
     }
 #endif
@@ -962,15 +972,15 @@ bool TrLocalTrack::DoFitVXU2( void )
     SFTCluster *hitp = sftclusterArray_[i];
     if( hitp ){
       //int lnum = hitp->GetLayer();
-      //double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
+      //double localz = TrGeomMan::GetInstance().GetLocalZ( lnum );
       /*  
 	  if(chisqr<2){
 	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
-	  std::cout<<std::setw(10)<<"X = "<< GetX(zz)<<" Y = "<< GetY(zz)<<std::endl;
+	  std::cout<<std::setw(10)<<"X = "<< GetX(localz)<<" Y = "<< GetY(localz)<<std::endl;
 	  }
       */
-      //hitp->SetCalPosition( GetX(zz), GetY(zz) );
-      //hitp->SetLocalCalPosVXU( b_ + a_*zz +c_*zz*zz );
+      //hitp->SetCalPosition( GetX(localz), GetY(localz) );
+      //hitp->SetLocalCalPosVXU( b_ + a_*localz +c_*localz*localz );
       std::cout << __FILE__ << "  " << __LINE__ << "this function is not implemeted yet ..." << std::endl;
     }
   }

@@ -326,12 +326,15 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
 		double l = x*cos(angle*Deg2Rad) + y*sin(angle*Deg2Rad);
 		dl = l + CLHEP::RandGauss::shoot( 0.0, confMan->GetSFTResol() );
 		AddRawHit(SFTRawHitContainerArray[lnum-PlOffsSFT], lnum, ch, x, y, dl);
-	      }
+	      }else{
+          std::cout << "Invalid SFT layer number !!  " << lnum << std::endl;
+        }
 	    }	    
       
       //Type 1 ,2, 3 realistic detector
 	    if( confMan->AnaMode()>=1 ){
 	      In >> ch;
+        if(ch>=20){std::cout << "Invalid ch number" << ch << std::endl;}
 	      x=0.0; y=0.0; dl=0.0;//
 	      
 	      //SFT only stores layer number and segment id
@@ -375,7 +378,7 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
 		 >> x >> y >> pid >> beta;
 	      
 	      //T0
-	      if( lnum == geomMan.GetDetectorId("T0U") ){
+	      if( lnum == geomMan.GetDetectorId("T0") ){
 		double T = time + CLHEP::RandGauss::shoot( 0.0, confMan->GetT0Resol() );
 		AddHodoRHit(T0RHC, lnum, layer, seg, T, edep, path, mom, x, y, pid, beta);
 	      }

@@ -110,6 +110,8 @@ private:
  
   friend class TrGeomMan;
   friend class TrGeomRecordComp;
+
+  //int Verbosity_;
 };
 
 struct TrGeomRecordComp 

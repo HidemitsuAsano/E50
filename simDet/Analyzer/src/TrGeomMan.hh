@@ -55,7 +55,7 @@ public:
   ThreeVector Global2LocalDir( int lnum, const ThreeVector &in ) const;
 
   double calcChPosition( int lnum, double ch ) const;
-  int calcWireNumber( int lnum, double position ) const;
+  int calcChNumber( int lnum, double position ) const;
 
   std::vector<int> GetDetectorIDList( void ) const;
   int GetDetectorId( const std::string &detName ) const;

@@ -2,6 +2,8 @@
   TrAnalyzer.cc
 
   2016/2  K.Shirotori
+
+  update 2016/6  H.Asano
 */
 
 #include <iostream>
@@ -75,7 +77,7 @@ bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
       std::cout << __FILE__  << "  " << __LINE__ << " type 0 detector is chosen " << std::endl;
       first++;
     }
-    for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+    for( int layer=0; layer<NumOfLayersSFT; ++layer ){
       const SFTRawHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nhit=cont.size();
       //std::cout<< nh << std::endl;
@@ -122,8 +124,7 @@ bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
 	int nhitpos= rhit->GetSize();
   for( int j=0; j<nhitpos; ++j ){
 	  hit->SetPos( rchID ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
-                            // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
-	  
+                          // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
 	}
 	//if(!hit) continue; 
 	
@@ -136,12 +137,11 @@ bool TrAnalyzer::DecodeSFTRawHits( RawData *rawData )
   hit->SetChPosition(wpos);
   hit->SetTiltAngle(angle);
   //std::cout << __FILE__ << " : " << __LINE__ << " layer: " << rlayerID << " segment " <<rchID  <<  ": wpos "<< wpos << "angle " << angle << std::endl;
-//	if(hit->CalcObservables()){//hit position for each hit (before clustering) is calculated in this function, calling TrGeomRecord
+  //if(hit->CalcObservables()){//hit position for each hit (before clustering) is calculated in this function, calling TrGeomRecord
   SFTTrHitContainer_[layer].push_back(hit);
-//	}else{
- //   std::cout << __FILE__ << "TrHit::CalcObservables fail " << __LINE__ << std::endl;
-//  }
-  //  delete hit; //why ??? (Asano)
+  //	}else{
+  //   std::cout << __FILE__ << "TrHit::CalcObservables fail " << __LINE__ << std::endl;
+  //  }
       }//for nhit
     }//for ilayer
   }//if Type 1,2,3
@@ -158,7 +158,7 @@ bool TrAnalyzer::SortTrHits()
 {
   //test
   /*
-  for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
+  for( int layer=0; layer<NumOfLayersSFT; ++layer ){
     int nhit = SFTTrHitContainer_[layer].size();
     std::cout << "layer : size" << layer << " : " << nhit << std::endl;
     for(int ihit = 0;ihit<nhit; ihit++){
@@ -246,9 +246,9 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
       unsigned int vlinksize = vLinkSegment.size();
       bool isclusteringOK = false;
       
-   //      std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
-   //      " layer: " << layer << " segment " << segment << 
-   //      " local x pos " << lxpos << std::endl;
+      //std::cout << __FILE__ << " : " << __LINE__ << " : " << "ihit " << ihit << " nhit " << nhit <<
+      //" layer: " << layer << " segment " << segment << 
+      //" local x pos " << lxpos << std::endl;
          //" clusterID: " << clusterID << std::endl;
          //std::cout << " size " << vlinksize << std::endl;
          

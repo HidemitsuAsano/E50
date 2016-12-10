@@ -440,7 +440,6 @@ int TrGeomMan::GetSFTID(int lnum) const
 int TrGeomMan::GetSFTLayer(int detectorID) const
 {
   //range check 
-
   if(detectorID <=PlMinSFT || detectorID > PlMaxSFT+1){
     std::cerr << __FILE__ << "  " << __LINE__ << " invalid SFT detector ID! " << detectorID << std::endl;
     return -1;

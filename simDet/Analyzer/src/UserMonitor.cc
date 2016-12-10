@@ -138,8 +138,8 @@ bool EventMonitor::ProcessingNormal( std::ifstream &In )
 
   //SFT
   {
-    for( int layer=1; layer<=NumOfLayersSFT; ++layer ){
-      const TrRHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
+    for( int layer=0; layer<NumOfLayersSFT; ++layer ){
+      const SFTRawHitContainer &cont =rawData->GetSFTRawHitContainer(layer);
       int nh=cont.size();
       for( int i=0; i<nh; ++i ){
   	SFTRawHit *hit=cont[i];
@@ -147,7 +147,7 @@ bool EventMonitor::ProcessingNormal( std::ifstream &In )
   	event.sftnhits = nt;
   	for( int j=0; j<nt; j++ ) {
   	  event.sftlayer.push_back(hit->LayerId());
-  	  event.sftseg.push_back(hit->WireId());
+  	  event.sftseg.push_back(hit->ChId());
   	  event.sftposx.push_back(hit->GetPosX(j));
   	  event.sftposy.push_back(hit->GetPosY(j));
   	  event.sftdl.push_back(hit->GetDL(j));

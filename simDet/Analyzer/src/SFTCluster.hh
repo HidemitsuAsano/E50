@@ -15,15 +15,15 @@ public:
   ~SFTCluster();
 
 private:
-  int clustersize_; // number of hit fiber (MPPC)
+  int clustersize_; // number of hit fibers (or bundles of fibers)
   float clusterlxsize_; // cluster size in local x axis
   int clusterlzsize_; // 1 or 2 (max number = number of sublayer)
   unsigned int clusterID_; // assigned layer by layer , start from 0
-  float localx_;//mean (maybe weighted mean) of Raw Hits
-//  float adcsum_;//sum of adc of each MPPC
+  float localx_;//mean (maybe weighted mean using ADC) of Raw Hits
+  // float adcsum_;//sum of adc of each MPPC
                  //TODO : how to deal with TDC info ?
-  float tiltangle_; // maybe don't need to implement here, since tiltangle and z position can be obtained from the confmanager (unit degree)
-  float localz_;      //
+  float tiltangle_; // maybe don't need to implement here, since tiltangle and z position can be obtained from the confmanager (unit : degree)
+  float localz_;    //
   int layer_;
   int AssociatedLocalTrack_;//pointer to the associated local track (TrLocalTrack);
                             //if -1 , there is no associated track
