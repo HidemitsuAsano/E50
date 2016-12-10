@@ -29,7 +29,7 @@
 #include <string>
 
 //change it to "false" if you don't need to check overlaps 
-#define CHECK_OVERLAPS true
+#define CHECK_OVERLAPS false
 
 /*-->defined in DetectorConstructionSpec.cc
 const G4double LzLayer[rSFT_nLayer]={
@@ -75,7 +75,7 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
 		  G4Material *matFrame,
 		  G4Material *matArea,
 		  G4Material *matBox )
-  : Cname_(Cname),Verbosity_(0)
+  : Cname_(Cname),Verbosity_(1)
 {
   G4ThreeVector gPosCent=(gPos[5]+gPos[6])/2.;
   G4ThreeVector gOffset=rotMat*OffsetLocal;
@@ -216,11 +216,12 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
       }
 
       if(Verbosity_>0){
+        G4cout << "conf(x:0,u:1,v:2) " << conf << G4endl;
         G4cout << "SegSpacing " << SegSpacing << G4endl;
         G4cout << "offset_2ndsublayer " << offset_2ndsublayer << G4endl;
       }
       //G4double ofsScinX=-(double)SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
-      G4double ofsScinX=(double)SegSpacing*(iseg+0.5-rSFT_SegNum/2.);
+      G4double ofsScinX = SegSpacing*(iseg+0.5-rSFT_SegNum/2.);
       
       //set name
       std::ostringstream os;
@@ -257,7 +258,7 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
         G4cout << "x positon of 1st sublayer " << ofsScinX << G4endl;
         G4cout << "x positon of 2nd sublayer " << ofsScinX+offset_2ndsublayer << G4endl;
         G4cout << "z positon of 1st sublayer " << LzLayer[ilr] << G4endl;
-        G4cout << "z positon of 2nd sublayer " << LzLayer[ilr] + rSFT_Round_Radius*2.0  << G4endl;
+        G4cout << "z positon of 2nd sublayer " << LzLayer[ilr] + rSFT_Round_Radius*1.732051  << G4endl;
         G4cout << G4endl;
       }
     
