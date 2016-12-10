@@ -227,27 +227,28 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
       std::ostringstream os;
       os << ilr << "_" << iseg ;
       G4String Lname = os.str();;//+"_"+1;
-
+      
+      const G4double zOffsetFraction = 1.732051;
       //first sublayer
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr] ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr]-rSFT_Round_Radius*zOffsetFraction/2.0),
           Cname_+"Layer"+Lname+"_0_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg, CHECK_OVERLAPS);
 
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr] ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr]-rSFT_Round_Radius*zOffsetFraction/2.0),
           Cname_+"Layer"+Lname+"_0_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg, CHECK_OVERLAPS);
 
-      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr] ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX, 0.0*mm, LzLayer[ilr]-rSFT_Round_Radius*zOffsetFraction/2.0 ),
           Cname_+"Layer"+Lname+"_0_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg, CHECK_OVERLAPS);
 
       //second sublayer
-        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*zOffsetFraction/2.0),
       //new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*2.0 ),
           Cname_+"Layer"+Lname+"_1_core", logLayer_core, physArea, false, 1000*detid[ilr]+2*iseg+1, CHECK_OVERLAPS);
 
-        new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*zOffsetFraction/2.0),
       //new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*2.0 ),
           Cname_+"Layer"+Lname+"_1_innerclad", logLayer_innerclad, physArea, false, 1000*detid[ilr]+2*iseg+1, CHECK_OVERLAPS);
 
-       new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*1.732051 ),
+      new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer,  0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*zOffsetFraction/2.0),
       //new G4PVPlacement( layrot[conf], G4ThreeVector(  ofsScinX+offset_2ndsublayer, 0.0*mm, LzLayer[ilr]+rSFT_Round_Radius*2.0 ),
           Cname_+"Layer"+Lname+"_1_outerclad", logLayer_outerclad, physArea, false, 1000*detid[ilr]+2*iseg+1, CHECK_OVERLAPS);
     
@@ -257,8 +258,8 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
         G4cout << "conf. (x:0, u:1, v:2) "<< conf << G4endl; 
         G4cout << "x positon of 1st sublayer " << ofsScinX << G4endl;
         G4cout << "x positon of 2nd sublayer " << ofsScinX+offset_2ndsublayer << G4endl;
-        G4cout << "z positon of 1st sublayer " << LzLayer[ilr] << G4endl;
-        G4cout << "z positon of 2nd sublayer " << LzLayer[ilr] + rSFT_Round_Radius*1.732051  << G4endl;
+        G4cout << "z positon of 1st sublayer " << LzLayer[ilr] - rSFT_Round_Radius*zOffsetFraction/2.0  << G4endl;
+        G4cout << "z positon of 2nd sublayer " << LzLayer[ilr] + rSFT_Round_Radius*zOffsetFraction/2.0  << G4endl;
         G4cout << G4endl;
       }
     
