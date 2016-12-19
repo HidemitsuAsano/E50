@@ -401,7 +401,7 @@ SetPrimaryInformation( const G4ThreeVector & pos,
 		       const G4ThreeVector & mom3 )
 {
   PrimaryInfo pI;
-  pI.x=pos.x(); pI.y=pos.y(); pI.z=pos.z();
+  pI.x=pos.x(); pI.y=pos.y(); pI.z=pos.z();//vertex info.
   pI.m1 = mass1; pI.m2 = mass2;
   pI.p1=mom1.mag();
   pI.p2=mom2.mag();
@@ -445,6 +445,13 @@ SetPrimaryInformation( const G4ThreeVector & pos,
   }
   else{
     pI.ubeam=0.0; pI.vbeam=0.0;
+  }
+
+  if(beamMom.z()!=0.0){
+    pI.xangle=atan2(beamMom.x(),beamMom.z()); pI.yangle=atan2(beamMom.y(),beamMom.z());
+  }
+  else{
+    pI.xangle=0.0; pI.yangle=0.0;
   }
 
   pI.p3=mom3.mag();

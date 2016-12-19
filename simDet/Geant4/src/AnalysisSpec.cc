@@ -70,7 +70,7 @@ void AnalysisSpec::PrimaryGeneration( const PrimaryInfo *info )
 
 struct Event{
   //Primary info
-  G4double priposx, priposy, priposz;
+  G4double priposx, priposy, priposz; //Vertex position
   G4double prim1, prim2;
   G4double prip1, prip2, prip1cm, prip2cm;
   G4double pritheta1, pritheta2, pritheta1cm, pritheta2cm;
@@ -80,8 +80,9 @@ struct Event{
   G4double priv1, priv2, priv1cm, priv2cm;
   G4double pribeta1, pribeta2;
   G4double pbeam, ubeam, vbeam;
+  G4double pxangle, pyangle; // beam angle in x and y axis
   G4double prip3, priu3, priv3;
- // G4int    pnpart;
+  //G4int    pnpart;//number of particle per event
 
   //T0
   G4int    t0nhits;
@@ -133,6 +134,7 @@ void AnalysisSpec::EndOfEvent( const G4Event *anEvent )
     G4double pb=pInfo_->pbeam/GeV, ub=pInfo_->ubeam, vb=pInfo_->vbeam;
     G4double cos1=cos(pInfo_->theta1), cos2=cos(pInfo_->theta2);
     G4double cos1cm=cos(pInfo_->theta1cm), cos2cm=cos(pInfo_->theta2cm);
+    G4double xangle=pInfo_->xangle, yangle=pInfo_->yangle;//radian
     G4double p3=pInfo_->p3/GeV, u3=pInfo_->u3, v3=pInfo_->v3;
 
     event.priposx = x, event.priposy = y, event.priposz = z; 
@@ -151,6 +153,8 @@ void AnalysisSpec::EndOfEvent( const G4Event *anEvent )
     event.priv1cm = v1cm, event.priv2cm = v2cm; 
     event.pribeta1 = beta1, event.pribeta2 = beta2; 
     event.pbeam = pb, event.ubeam = ub, event.vbeam = vb; 
+    event.pxangle = xangle;
+    event.pyangle = yangle;
     event.prip3 = p3, event.priu3 = u3, event.priv3 = v3; 
 
     G4double pt=pb/sqrt(1.+ub*ub+vb*vb);
@@ -331,7 +335,7 @@ void AnalysisSpec::PrintHitsInformation( const G4Event *anEvent, std::ostream &o
   if( pInfo_ ){
     ost << PrimInfoF << std::endl; 
     //IP poimt
-    ost.precision(5);
+    ost.precision(7);
     ost << std::setw(12) << pInfo_->x/mm 
 	<< std::setw(12) << pInfo_->y/mm 
 	<< std::setw(12) << pInfo_->z/mm;
@@ -339,7 +343,9 @@ void AnalysisSpec::PrintHitsInformation( const G4Event *anEvent, std::ostream &o
     //Beam
     ost << std::setw(12) << pInfo_->pbeam/GeV
 	<< std::setw(12) << pInfo_->ubeam 
-	<< std::setw(12) << pInfo_->vbeam;
+	<< std::setw(12) << pInfo_->vbeam//; added x and y angle H. Asano  
+	<< std::setw(12) << pInfo_->xangle
+	<< std::setw(12) << pInfo_->yangle;
     //	<< std::endl;
     //Measured beam mom
     G4bool flag_VD1 = false;
@@ -476,6 +482,8 @@ void AnalysisSpec::InitializeEvent( void )
   event.pbeam = -9999.0; 
   event.ubeam = -9999.0;
   event.vbeam = -9999.0;
+  event.pxangle = -9999.0;
+  event.pyangle = -9999.0;
   event.prip3 = -9999.0; 
   event.priu3 = -9999.0;
   event.priv3 = -9999.0;
@@ -571,6 +579,8 @@ void AnalysisSpec::DefineHistograms( void )
   tree->Branch("pbeam", &event.pbeam, "pbeam/D"); 
   tree->Branch("ubeam", &event.ubeam, "ubeam/D"); 
   tree->Branch("vbeam", &event.vbeam, "vbeam/D"); 
+  tree->Branch("xangle", &event.pxangle, "xangle/D");
+  tree->Branch("yangle", &event.pyangle, "yangle/D");
   tree->Branch("prip3", &event.prip3, "prip3/D"); 
   tree->Branch("priu3", &event.priu3, "priu3/D"); 
   tree->Branch("priv3", &event.priv3, "priv3/D"); 

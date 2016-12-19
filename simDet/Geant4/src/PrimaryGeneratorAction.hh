@@ -60,15 +60,15 @@ private:
   void GPBeamUniformInUVUniformInXY( G4Event *anEvent );
   void GPBeamUniformInUVGaussInXY( G4Event *anEvent );
 
-  void SetPrimaryInformation( const G4ThreeVector & pos,
-			      double mass1, 
-			      double mass2, 
-			      const G4ThreeVector & mom1,
-			      const G4ThreeVector & mom2,
-			      const G4ThreeVector & mom1CM,
-			      const G4ThreeVector & mom2CM,
-			      const G4ThreeVector & beamMom,
-			      const G4ThreeVector & pisMom );
+  void SetPrimaryInformation( const G4ThreeVector & pos, //3D Vertex Position
+			      double mass1, //
+			      double mass2, //
+			      const G4ThreeVector & mom1, //
+			      const G4ThreeVector & mom2, //
+			      const G4ThreeVector & mom1CM, //
+			      const G4ThreeVector & mom2CM, //
+			      const G4ThreeVector & beamMom, //
+			      const G4ThreeVector & pisMom ); //
   
   void GPBeamDemonstration( G4Event *anEvent );
 
