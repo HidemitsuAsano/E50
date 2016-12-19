@@ -19,11 +19,11 @@ private:
   float clusterlxsize_; // cluster size in local x axis
   int clusterlzsize_; // 1 or 2 (max number = number of sublayer)
   unsigned int clusterID_; // assigned layer by layer , start from 0
-  float localx_;//mean (maybe weighted mean using ADC) of Raw Hits
+  float localx_;//center position of the cluster. The coordinate system is defined in each layer
   // float adcsum_;//sum of adc of each MPPC
                  //TODO : how to deal with TDC info ?
   float tiltangle_; // maybe don't need to implement here, since tiltangle and z position can be obtained from the confmanager (unit : degree)
-  float localz_;    //
+  float globalz_;    //
   int layer_;
   int AssociatedLocalTrack_;//pointer to the associated local track (TrLocalTrack);
                             //if -1 , there is no associated track
@@ -42,8 +42,8 @@ public:
   void SetClusterLzSize(int lzsize) { clusterlzsize_ = lzsize; }
   float GetLocalX( void ) const { return localx_; }
   void SetLocalX(float lx )  { localx_=lx; }
-  float GetLocalZ( void ) const { return localz_; }
-  void SetLocalZ(float lz )  { localz_=lz; }
+  float GetGlobalZ( void ) const { return globalz_; }
+  void SetGlobalZ(float lz )  { globalz_=lz; }
   float GetTiltAngle (void) const { return tiltangle_ ; }
   void SetTiltAngle (float angle) { tiltangle_ = angle; }
   int GetLayer(void) const { return layer_;}

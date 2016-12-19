@@ -307,8 +307,8 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
         //mean position of local-x
         calclxpos = calclxpos/(double)currentvlinksize;
         hitcluster->SetLocalX(calclxpos);
-        double clslocalz = geomMan->GetLocalZ(layer);//get localz position from geometry file
-        hitcluster->SetLocalZ(clslocalz);
+        double clsglobalz = geomMan->GetGlobalZ(layer);//get global z position from geometry file
+        hitcluster->SetGlobalZ(clsglobalz);
         double tiltangle = geomMan->GetTiltAngle(layer);//degree 
         hitcluster->SetTiltAngle(tiltangle);
         hitcluster->SetLayer(layer);

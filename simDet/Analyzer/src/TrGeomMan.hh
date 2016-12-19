@@ -32,7 +32,7 @@ public:
   { filename_=filename; return Initialize(); }
 
   static TrGeomMan & GetInstance( void );
-  double GetLocalZ( int lnum ) const;
+  double GetGlobalZ( int lnum ) const;
   double GetResolution( int lnum ) const;
 
   // Do not use this method except for special cases

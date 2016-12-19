@@ -15,14 +15,15 @@ class PrimInfo
 private:
   double x_, y_, z_;
   double pb_, ub_, vb_;
+  double xangle_,yangle_;
   double abmom_;
   double m1_, p1_, theta1_, phi1_, thetaCM1_, phiCM1_;
   double m2_, p2_, theta2_, phi2_, thetaCM2_, phiCM2_;
-
 public:
   PrimInfo()
     : x_(0.0), y_(0.0), z_(0.0),
       pb_(0.0), ub_(0.0), vb_(0.0),
+      xangle_(0.0),yangle_(0.0),
       abmom_(0.0),
       m1_(0.0), p1_(0.0), 
       theta1_(0.0), phi1_(0.0), thetaCM1_(0.0), phiCM1_(0.0),
@@ -38,6 +39,8 @@ public:
   void SetBeamMom( double pb ) { pb_=pb; }
   void SetBeamU( double ub ) { ub_=ub; }
   void SetBeamV( double vb ) { vb_=vb; }
+  void SetBeamXangle (double angle) {xangle_ = angle; }
+  void SetBeamYangle (double angle) {yangle_ = angle; }
   void SetAnaBeamMom( double abmom ) { abmom_=abmom; }
   void SetMass1( double m1 ) { m1_=m1; }
   void SetMom1( double p1 ) { p1_=p1; }
@@ -58,6 +61,8 @@ public:
   double GetBeamMom( void ) const { return pb_; };
   double GetBeamU( void ) const { return ub_; };
   double GetBeamV( void ) const { return vb_; };
+  double GetBeamXangle ( void ) const { return xangle_;}
+  double GetBeamYangle ( void ) const { return yangle_;}
   double GetAnaBeamMom( void ) const { return abmom_; };
   double GetMass1( void ) const { return m1_; };
   double GetMom1( void ) const { return p1_; };

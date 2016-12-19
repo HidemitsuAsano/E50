@@ -84,6 +84,7 @@ struct Event{
   double pritheta1, priphi1, prithetacm1, priphicm1;
   double prim2, prip2;
   double pritheta2, priphi2, prithetacm2, priphicm2;
+  double pxangle, pyangle;//true track angle
 
   //Generated Beam
   int    gbnhits;
@@ -100,10 +101,10 @@ struct Event{
   std::vector<int> sftlayerc;
   std::vector<int> sftclssize;
   std::vector<double> sftclssizelx, sftclssizelz;//
-  std::vector<double> sftposlxc, sftposlzc;//
+  std::vector<double> sftposlxc, sftposgzc;//
   std::vector<double> sftposgxc,sftposgyc;//global position calculated from localx and tiltangle
-  std::vector<double> sftdl;
-
+  std::vector<double> sftdl;//drift length ??? maybe, not necessary ?
+  std::vector<double> xangle,yangle;//track angle at layer 0
   //T0
   int    t0nhits;
   std::vector<int>    t0layer, t0seg;
@@ -113,7 +114,7 @@ struct Event{
   std::vector<int>    t0pid;
   std::vector<double> t0beta;
 
-  //Local tracking ( search beam position at (0, 0, 0) in SFT global coordinate system.
+  //Local tracking ( search beam position at z=0 in global coordinate system.
   int    ntr;
   std::vector<int>    layer;
   std::vector<double> chisqr;
@@ -121,6 +122,7 @@ struct Event{
   std::vector<double> x0diff,y0diff;
   std::vector<double> u0, v0;
   std::vector<double> pos, res;
+  std::vector<double> xanglediff,yanglediff;//track angle at layer 0
 };
 static Event event;
 
@@ -132,7 +134,7 @@ struct Cluster
   int sftlayerc;
   int sftclssize;
   double sftclssizelx, sftclssizelz;//
-  double sftposlxc, sftposlzc;//
+  double sftposlxc, sftposgzc;//
   double sftposgxc,sftposgyc;//global position calculated from localx and tiltangle
 
 };
@@ -150,7 +152,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
   const std::string funcname = "ProcessingNormal";
 
   rawData = new RawData;
-  if( !rawData->DecodeSFTRawHits(In) ) return false;
+  if( !rawData->Decode(In) ) return false;
   //std::cout << "***" << std::endl;
 
   //**************************************************************************
@@ -173,6 +175,8 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
       event.pbeam = hit->GetBeamMom();
       event.ubeam = hit->GetBeamU();
       event.vbeam = hit->GetBeamV();
+      event.pxangle= hit->GetBeamXangle();
+      event.pyangle= hit->GetBeamYangle();
       event.abmom = hit->GetAnaBeamMom();
       
       event.prim1 = hit->GetMass1();
@@ -263,7 +267,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
         double clusterlxsize = trhitclus->GetClusterLxSize();
         double clusterlzsize = trhitclus->GetClusterLzSize();
         double lx = trhitclus->GetLocalX();
-        double lz = trhitclus->GetLocalZ();
+        double gz = trhitclus->GetGlobalZ();
         double angle = trhitclus->GetTiltAngle();
         double globalx = lx * cos(angle);
         double globaly = lx * sin(angle);
@@ -271,7 +275,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
           std::cout << "layer " << layer << std::endl;
           std::cout << "clsID " << clsID << std::endl;
           std::cout << "lx " << lx << std::endl;
-          std::cout << "lz " << lz << std::endl;
+          std::cout << "global z " << gz << std::endl;
         }
         cluster.nevents = event.nevents;
         //double adc = trhitclus->GetAdcSum();
@@ -280,7 +284,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
         event.sftclssizelx.push_back(clusterlxsize);
         event.sftclssizelz.push_back(clusterlzsize);
         event.sftposlxc.push_back(lx);
-        event.sftposlzc.push_back(lz);
+        event.sftposgzc.push_back(gz);
         event.sftposgxc.push_back(globalx);
         event.sftposgyc.push_back(globaly);
         
@@ -289,7 +293,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
         cluster.sftclssizelx = clusterlxsize;
         cluster.sftclssizelz = clusterlzsize;
         cluster.sftposlxc = lx;
-        cluster.sftposlzc = lz;
+        cluster.sftposgzc = gz;
         cluster.sftposgxc = globalx;
         cluster.sftposgyc = globaly;
         ctree->Fill();
@@ -299,7 +303,7 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
           std::cout << __FILE__ << "  " << __LINE__ << " cluster  " << iclus << std::endl;
           std::cout << __FILE__ << "  " << __LINE__ << " layer  " << layer << std::endl;
           std::cout << __FILE__ << "  " << __LINE__ << " lx  " << lx << std::endl;
-          std::cout << __FILE__ << "  " << __LINE__ << " lz  " << lz << std::endl;
+          std::cout << __FILE__ << "  " << __LINE__ << " global z  " << gz << std::endl;
           std::cout << __FILE__ << "  " << __LINE__ << " globalx  " << globalx << std::endl;
           std::cout << __FILE__ << "  " << __LINE__ << " globaly  " << globaly << std::endl;
         }
@@ -307,7 +311,8 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
     }
     
     
-    
+    //This loop is for evaluating tracking performance while event matching between
+    //primary info and reconstructed track info.
     int nt=TrAna->GetNtracksSFTT();
     event.ntr=nt;
     if(Verbosity>10){
@@ -318,15 +323,16 @@ bool EventBeamTracking::ProcessingNormal( std::ifstream &In )
       int nh=tp->GetNHit();
       double chisqr=tp->GetChiSquare();
       //double x0=tp->GetX0(), y0=tp->GetY0();
-      double u0=tp->GetU0(), v0=tp->GetV0();
+      double u0=tp->GetU0(), v0=tp->GetV0();//fitting results of u0 and v0 position
+                                            //TODO : what is the definition of u0 and v0 ?
       double xtgt=tp->GetX( 0.0 ), ytgt=tp->GetY( 0.0 );
       double utgt=u0, vtgt=v0;
       
       event.chisqr.push_back(chisqr);
       event.x0.push_back(xtgt);
       event.y0.push_back(ytgt);
-      event.x0diff.push_back(xtgt - event.priposx  );
-      event.y0diff.push_back(ytgt - event.priposy  );
+      event.x0diff.push_back(xtgt - event.priposx);
+      event.y0diff.push_back(ytgt - event.priposy);
       event.u0.push_back(utgt);
       event.v0.push_back(vtgt); 
       
@@ -370,6 +376,8 @@ void EventBeamTracking::InitializeEvent( void )
   event.priphi2 = -9999.0;
   event.prithetacm2 = -9999.0;
   event.priphicm2 = -9999.0;
+  event.pxangle = -9999.0;
+  event.pyangle = -9999.0;
 
   //SFT
   event.sftnhits = 0;
@@ -382,10 +390,12 @@ void EventBeamTracking::InitializeEvent( void )
   event.sftclssizelx.clear();
   event.sftclssizelz.clear();
   event.sftposlxc.clear();
-  event.sftposlzc.clear();
+  event.sftposgzc.clear();
   event.sftposgxc.clear();
   event.sftposgyc.clear();
   event.sftdl.clear();
+  event.xangle.clear();
+  event.yangle.clear();
 
   //T0
   event.t0nhits = -1;
@@ -412,6 +422,8 @@ void EventBeamTracking::InitializeEvent( void )
   event.v0.clear();
   event.pos.clear();
   event.res.clear();
+  event.xanglediff.clear();
+  event.yanglediff.clear();
   
   if(Verbosity>0){
     std::cout << __FILE__ << "  " << __LINE__ << " Init. end " << std::endl;
@@ -440,9 +452,9 @@ bool ConfMan:: InitializeHistograms()
   ctree->Branch("sftclssizelx", &cluster.sftclssizelx);//cluster size in local x coordinate
   ctree->Branch("sftclssizelz", &cluster.sftclssizelz);//cluster size in local z coordiante
   ctree->Branch("sftposlxc", &cluster.sftposlxc);//local hit position of cluster
-  ctree->Branch("sftposlzc", &cluster.sftposlzc);//local hit position of cluster
-  ctree->Branch("sftposgxc", &cluster.sftposgxc);//local hit position of cluster
-  ctree->Branch("sftposgyc", &cluster.sftposgyc);//local hit position of cluster
+  ctree->Branch("sftposgzc", &cluster.sftposgzc);//global hit position of cluster
+  ctree->Branch("sftposgxc", &cluster.sftposgxc);//global hit position of cluster
+  ctree->Branch("sftposgyc", &cluster.sftposgyc);//global hit position of cluster
   
   HBTree("tree","event wise tree");
   TTree *tree = dynamic_cast<TTree *>(gFile->Get("tree"));
@@ -468,6 +480,8 @@ bool ConfMan:: InitializeHistograms()
   tree->Branch("priphi2", &event.priphi2);
   tree->Branch("prithetacm2", &event.prithetacm2);
   tree->Branch("priphicm2", &event.priphicm2);
+  tree->Branch("pxangle",&event.pxangle);
+  tree->Branch("pyangle",&event.pyangle);
 
   //SFT
   tree->Branch("sftnhits", &event.sftnhits);
@@ -479,11 +493,13 @@ bool ConfMan:: InitializeHistograms()
   tree->Branch("sftclssizelx", &event.sftclssizelx);//cluster size in local x coordinate
   tree->Branch("sftclssizelz", &event.sftclssizelz);//cluster size in local z coordiante
   tree->Branch("sftposlxc", &event.sftposlxc);//local hit position of cluster
-  tree->Branch("sftposlzc", &event.sftposlzc);//local hit position of cluster
-  tree->Branch("sftposgxc", &event.sftposgxc);//local hit position of cluster
-  tree->Branch("sftposgyc", &event.sftposgyc);//local hit position of cluster
+  tree->Branch("sftposgzc", &event.sftposgzc);//global hit position of cluster
+  tree->Branch("sftposgxc", &event.sftposgxc);//global hit position of cluster
+  tree->Branch("sftposgyc", &event.sftposgyc);//global hit position of cluster
+  tree->Branch("sftxangle", &event.xangle);//x angle
+  tree->Branch("sftyangle", &event.yangle);//y angle
   
-  tree->Branch("sftdl", &event.sftdl);
+  tree->Branch("sftdl", &event.sftdl);//drift length ???
 
   //T0
   tree->Branch("t0nhits", &event.t0nhits);
@@ -510,6 +526,8 @@ bool ConfMan:: InitializeHistograms()
   tree->Branch("v0", &event.v0);
   tree->Branch("pos", &event.pos);
   tree->Branch("res", &event.res);
+  tree->Branch("xanglediff",&event.xanglediff);
+  tree->Branch("yanglediff",&event.yanglediff);
 
   return true;
 }

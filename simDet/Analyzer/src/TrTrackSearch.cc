@@ -222,7 +222,7 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
       int nhit=tp->GetNHit();
       for( int j=0; j<nhit; ++j ){
 	int lnum = tp->GetHit(j)->GetLayer();
-	double zz = TrGeomMan::GetInstance().GetLocalZ( lnum );
+	double zz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
 	tp->GetHit(j)->SetProjectedPosition(tp->GetX(zz), tp->GetY(zz));
       }
     }

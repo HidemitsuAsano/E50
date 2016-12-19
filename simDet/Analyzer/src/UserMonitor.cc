@@ -96,7 +96,7 @@ bool EventMonitor::ProcessingNormal( std::ifstream &In )
   const std::string funcname = "ProcessingNormal";
 
   rawData = new RawData;
-  if( !rawData->DecodeSFTRawHits(In) ) return false;
+  if( !rawData->Decode(In) ) return false;
   //std::cout << "***" << std::endl;
 
   //**************************************************************************

@@ -23,7 +23,7 @@ public:
       rotAngle1_(ra1), rotAngle2_(ra2),
       length_(length), resol_(resol), w0_(w0), dd_(dd), offset_(ofs)
   { calcVectors(); }
-    //perhaps, "length_" is confusing. This is just local z position defined in the parameter file
+    //perhaps, "length_" is confusing. This is just global z position defined in the parameter file
   TrGeomRecord( int id, const std::string &name,
                 double x, double y, double z, double ta,
                 double ra1, double ra2, double length, double resol,

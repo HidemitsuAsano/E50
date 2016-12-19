@@ -38,7 +38,7 @@ public:
   ~RawData();
 
   void clearAll();
-  bool DecodeSFTRawHits( std::ifstream & );
+  bool Decode( std::ifstream & );
 
 private:
   RawData(const RawData&);
@@ -48,6 +48,7 @@ private:
   bool AddPrimInfo( PrimInfoContainer& cont,
 		    double VertX, double VertY, double VertZ,
 		    double BeamMom, double BeamU, double BeamV,
+        double Beamxangle, double Beamyangle,
 		    double AnaBeamMom,
 		    double Mass1, double Mom1,
 		    double Theta1, double Phi1, double ThetaCM1, double PhiCM1,

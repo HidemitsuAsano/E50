@@ -58,6 +58,7 @@ RawData::~RawData()
 bool RawData::AddPrimInfo( PrimInfoContainer& cont,
 			   double VertX, double VertY, double VertZ,
 			   double BeamMom, double BeamU, double BeamV,
+         double Beamxangle, double Beamyangle,
 			   double AnaBeamMom, 
 			   double Mass1, double Mom1,
 			   double Theta1, double Phi1, double ThetaCM1, double PhiCM1,
@@ -83,6 +84,8 @@ bool RawData::AddPrimInfo( PrimInfoContainer& cont,
     p->SetBeamMom( BeamMom );
     p->SetBeamU( BeamU );
     p->SetBeamV( BeamV );
+    p->SetBeamXangle ( Beamxangle );
+    p->SetBeamYangle ( Beamyangle );
     p->SetAnaBeamMom( AnaBeamMom );
     p->SetMass1( Mass1 );
     p->SetMom1( Mom1 );
@@ -223,7 +226,7 @@ void RawData::clearAll()
 
 //Decode data from text file 
 //called event by event in EventBeamTracking::ProcessingNormal(std::ifstream &In)
-bool RawData::DecodeSFTRawHits( std::ifstream &In )
+bool RawData::Decode( std::ifstream &In )
 {
   clearAll();
   ConfMan *confMan = ConfMan::GetConfManager();
@@ -257,26 +260,30 @@ bool RawData::DecodeSFTRawHits( std::ifstream &In )
     if( type==PrimInfoF ){
       while( type!=PrimInfoFEnd ){ 
 	double x=0, y=0, z=0, pb=0, ub=0, vb=0, abmom=0;
+	double pxangle=0, pyangle=0;
 	double m1=0, p1=0, theta1=0, phi1=0, thetacm1=0, phicm1=0;
 	double m2=0, p2=0, theta2=0, phi2=0, thetacm2=0, phicm2=0;
 	double pbeam=0; 
-	
+
 	In >> x;
 	if( x==PrimInfoFEnd ) break;
+  //added xangle and yangle H.Asano Dec 10 2016
 	In >> y >> z 
-	   >> pb >> ub >> vb >> abmom 
+	   >> pb >> ub >> vb >> pxangle >> pyangle >> abmom 
 	   >> m1 >> p1 >> theta1 >> phi1 >> thetacm1 >> phicm1
 	   >> m2 >> p2 >> theta2 >> phi2 >> thetacm2 >> phicm2;
 
 	pbeam = abmom + CLHEP::RandGauss::shoot( 0.0, 0.0 );	
-
-	AddPrimInfo( PrimHC, x, y, z, pb, ub, vb, pbeam, 
+  
+  //added xangle and yangle H.Asano Dec 10 2016
+	AddPrimInfo( PrimHC, x, y, z, pb, ub, vb, pxangle, pyangle, pbeam, 
 		     m1, p1, theta1, phi1, thetacm1, phicm1,
 		     m2, p2, theta2, phi2, thetacm2, phicm2 );
 	
 #if check1
 	std::cout << x  << " " << y  << " " << z  << " " 
-		  << pb << " " << ub << " " << ub << " " << abmom << " " 
+		  << pb << " " << ub << " " << ub << " "<< pxangle << " " << pyangle << " " 
+      << abmom << " " 
 		  << m1 << " " << p1 << " " 
 		  << theta1 << " " << phi1 << " " << thetacm1 << " " << phicm1 << " "
 		  << m2 << " " << p2 << " " 

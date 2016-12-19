@@ -34,9 +34,9 @@ TrGeomMan & TrGeomMan::GetInstance( void )
   return *geomMan_;
 }
 
-double TrGeomMan::GetLocalZ( int lnum ) const
+double TrGeomMan::GetGlobalZ( int lnum ) const
 {
-  static const std::string funcname = "[TrGeomMan::GetLocalZ(int)]"; 
+  static const std::string funcname = "[TrGeomMan::GetGlobalZ(int)]"; 
   int id = GetSFTID(lnum);
   TrGeomRecord *pGeo = geomRecord_[id];
   if( pGeo ) return pGeo->length_;

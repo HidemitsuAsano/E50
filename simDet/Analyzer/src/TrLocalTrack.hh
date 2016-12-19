@@ -98,7 +98,7 @@ public:
 
 private:
   bool status_;//status of fitting : fail or success
-  double x0_, y0_, u0_, v0_, u1_, v1_; // x0_, y0_ .. : fitting results of beam position at (0,0,0) in SFT coordinate system.
+  double x0_, y0_, u0_, v0_, u1_, v1_; // x0_, y0_ .. : fitting results of beam position at z=0;
   double a_,b_,c_;
   double chisqr_;
   bool gftstatus_;// gft : Good For Tracking 

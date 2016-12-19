@@ -16,7 +16,7 @@ SFTCluster::SFTCluster( ):
   clusterID_(-1),
   localx_(-9999.),
   tiltangle_(0.),
-  localz_(-9999.),//,adcsum_(-9999)
+  globalz_(-9999.),//,adcsum_(-9999)
   layer_(-1),
   AssociatedLocalTrack_(-1),
   ProjectedPosX_(-9999.),
