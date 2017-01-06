@@ -220,7 +220,6 @@ r_SFT_Round::r_SFT_Round( const G4String & Cname,
         G4cout << "SegSpacing " << SegSpacing << G4endl;
         G4cout << "offset_2ndsublayer " << offset_2ndsublayer << G4endl;
       }
-      //G4double ofsScinX=-(double)SegSpacing*(rSFT_SegNum/2.+0.5-iseg);
       G4double ofsScinX = SegSpacing*(iseg+0.5-rSFT_SegNum/2.);
       
       //set name
