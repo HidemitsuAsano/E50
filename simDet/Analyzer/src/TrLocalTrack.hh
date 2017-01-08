@@ -95,6 +95,8 @@ public:
   bool GoodForTracking( bool status )
   { bool ret=gftstatus_; gftstatus_=status; return ret; } 
   //bool ReCalc( bool ApplyRecursively=false );  
+  int GetTrackId( void ) const { return trackid_; }
+  void SetTrackId( int id ) { trackid_ = id; }
 
 private:
   bool status_;//status of fitting : fail or success
@@ -102,6 +104,7 @@ private:
   double a_,b_,c_;
   double chisqr_;
   bool gftstatus_;// gft : Good For Tracking 
+  int trackid_;//track id (0 origin)
 
   double *Coefficients_x[6];
   double *Coefficients_y[6];

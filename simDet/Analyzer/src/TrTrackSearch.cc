@@ -214,16 +214,20 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
       }
     }      
   }
-
+  
+  //Set Track Id and  after deleting duplicated track above and
+  //
   {
     int nn=TrackCont.size();
     for(int i=0; i<nn; ++i ){
       TrLocalTrack *tp=TrackCont[i];
+      tp->SetTrackId(i);
       int nhit=tp->GetNHit();
       for( int j=0; j<nhit; ++j ){
 	int lnum = tp->GetHit(j)->GetLayer();
-	double zz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
-	tp->GetHit(j)->SetProjectedPosition(tp->GetX(zz), tp->GetY(zz));
+  double zz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
+  tp->GetHit(j)->SetProjectedPosition(tp->GetX(zz), tp->GetY(zz));
+  tp->GetHit(j)->SetAssociatedLocalTrack(i);
       }
     }
   }

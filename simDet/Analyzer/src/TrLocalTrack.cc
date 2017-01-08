@@ -39,7 +39,8 @@ TrLocalTrack::TrLocalTrack()
     u1_(0.0), v1_(0.0),
     a_(0.0),b_(0.0),c_(0.0),
     chisqr_(0),
-    gftstatus_(true)
+    gftstatus_(true),
+    trackid_(-1)
 {
   sftclusterArray_.reserve( ReservedNumOfHits );
   Coefficients_x[0]=0;
@@ -96,34 +97,36 @@ bool TrLocalTrack::DoFit( void )
   ct.reserve(n); st.reserve(n);
   
   for( std::size_t i=0; i<n; ++i ){
-    SFTCluster *hitp = sftclusterArray_[i];
-    if( hitp ){
+    SFTCluster *sftclusterp = sftclusterArray_[i];
+    if( sftclusterp ){
       //double ww = geomMan.GetResolution( lnum );
 
       //assuming uniform distribution, ADC info is not used here
-      double ww = hitp->GetClusterLxSize()/sqrt(12.0);
+      //perhaps, fiber diameter/sqrt(12) because left-right ambiguity is reduced by 2 layer structure
+      double ww = sftclusterp->GetClusterLxSize()/sqrt(12.0);
       
-      double gz = hitp->GetGlobalZ();
+      double gz = sftclusterp->GetGlobalZ();
       
       //std::cout << __FILE__ << " line " << __LINE__ << 
       //" resolution " << ww << " gz  " << gz << std::endl;
       
-      bool isChangeConf = false;
+      //flag for removing some layers 
+      bool isChangeTrackingConf = false;
       static bool isStated = false; 
 
-      if(isChangeConf){
-        int lnum = hitp->GetLayer();
+      if(isChangeTrackingConf){
+        //int lnum = sftclusterp->GetLayer();
         //if(lnum == 0) ww = 999999.9;//x
-        if(lnum == 1) ww = 999999.9;//u
-        if(lnum == 2) ww = 999999.9;//v
-        if(lnum == 3) ww = 999999.9;//x
-        if(lnum == 4) ww = 999999.9;//u
-        if(lnum == 5) ww = 999999.9;//v
-        if(lnum == 6) ww = 999999.9;//u
-        if(lnum == 7) ww = 999999.9;//v
-        if(lnum == 8) ww = 999999.9;//x
-        if(lnum == 9) ww = 999999.9;//u
-        if(lnum == 10) ww = 999999.9;//v
+        //if(lnum == 1) ww = 999999.9;//u
+        //if(lnum == 2) ww = 999999.9;//v
+        //if(lnum == 3) ww = 999999.9;//x
+        //if(lnum == 4) ww = 999999.9;//u
+        //if(lnum == 5) ww = 999999.9;//v
+        //if(lnum == 6) ww = 999999.9;//u
+        //if(lnum == 7) ww = 999999.9;//v
+        //if(lnum == 8) ww = 999999.9;//x
+        //if(lnum == 9) ww = 999999.9;//u
+        //if(lnum == 10) ww = 999999.9;//v
         //if(lnum == 11) ww = 999999.9;//x
         if(!isStated){
           std::cout << __FILE__ << " l. " << __LINE__ << "some layers are removed from track fitting" << std::endl;
@@ -132,24 +135,25 @@ bool TrLocalTrack::DoFit( void )
       }
       //double gz = geomMan.GetGlobalZ( lnum );
       
-      double tiltangle = hitp->GetTiltAngle()*Deg2Rad;
+      double tiltangle = sftclusterp->GetTiltAngle()*Deg2Rad;
       
 
       z.push_back( gz ); w.push_back( 1./(ww*ww) ); 
-      s.push_back( hitp->GetLocalX() );
+      s.push_back( sftclusterp->GetLocalX() );
       ct.push_back( cos(tiltangle) ); st.push_back( sin(tiltangle) );
 
 #if 0
       std::cout << std::setw(10) << "layer = " << lnum 
-		<< std::setw(10) << "wire  = " << hitp->GetWire() << " "
-		<< std::setw(20) << "WirePosition = "<<hitp->GetWirePosition() << " "
-		<< std::setw(20) << "DriftLength = "<<hitp->GetDriftLength() << " "
-		<< std::setw(20) << "hit position = "<<hitp->GetLocalHitPos()<< " " 
+		<< std::setw(10) << "wire  = " << sftclusterp->GetWire() << " "
+		<< std::setw(20) << "WirePosition = "<<sftclusterp->GetWirePosition() << " "
+		<< std::setw(20) << "DriftLength = "<<sftclusterp->GetDriftLength() << " "
+		<< std::setw(20) << "hit position = "<<sftclusterp->GetLocalHitPos()<< " " 
 		<< std::endl;
 #endif
     }
   }
-
+  
+  //nn = number of layers
   std::size_t nn = z.size();
   ///std::cout << "nn = " << nn << std::endl;
 
@@ -162,8 +166,10 @@ bool TrLocalTrack::DoFit( void )
       mtp[i][j]=0.0;
     }
   }
-
+  
+  //nn = number of layers
   for( std::size_t i=0; i<nn; ++i ){
+    //weight, globalz , globalx, cos(tileangle) , sin(tiltangle)
     double ww=w[i], gz=z[i], ss=s[i], ctt=ct[i], stt=st[i];
     mtp[0][0] += ww*ctt*ctt;//cost*cost
     mtp[0][1] += ww*gz*ctt*ctt;//z*cost*cost
@@ -322,17 +328,17 @@ bool TrLocalTrack::DoFit( void )
   */
   chisqr_=chisqr;
   for( std::size_t i=0; i<nn; ++i ){
-    SFTCluster *hitp = sftclusterArray_[i];
-    if( hitp ){
-      int lnum = hitp->GetLayer();
+    SFTCluster *sftclusterp = sftclusterArray_[i];
+    if( sftclusterp ){
+      int lnum = sftclusterp->GetLayer();
       double gz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
       /*  
-	  if(chisqr<2){
-	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
-	  std::cout<<std::setw(10)<<"X = "<< GetX(gz)<<" Y = "<< GetY(gz)<<std::endl;
-	  }
+          if(chisqr<2){
+          std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
+          std::cout<<std::setw(10)<<"X = "<< GetX(gz)<<" Y = "<< GetY(gz)<<std::endl;
+          }
       */
-      hitp->SetProjectedPosition( GetX(gz), GetY(gz) );
+      sftclusterp->SetProjectedPosition( GetX(gz), GetY(gz) );
     }
   }
 
@@ -355,23 +361,23 @@ bool TrLocalTrack::DoFit2( void )
   ct.reserve(n); st.reserve(n);
   
   for( std::size_t i=0; i<n; ++i ){
-    SFTCluster *hitp = sftclusterArray_[i];
-    if( hitp ){
-      int lnum = hitp->GetLayer();
+    SFTCluster *sftclusterp = sftclusterArray_[i];
+    if( sftclusterp ){
+      int lnum = sftclusterp->GetLayer();
       double ww = geomMan.GetResolution( lnum );
       double gz = geomMan.GetGlobalZ( lnum );
-      double aa = hitp->GetTiltAngle()*Deg2Rad;
+      double aa = sftclusterp->GetTiltAngle()*Deg2Rad;
 
       z.push_back( gz ); w.push_back( 1./(ww*ww) ); 
-      s.push_back( hitp->GetLocalX() );//local x of the layer
+      s.push_back( sftclusterp->GetLocalX() );//local x of the layer
       ct.push_back( cos(aa) );
       st.push_back( sin(aa) );
 #if 0
       std::cout << std::setw(10) << "layer = " << lnum 
-		<< std::setw(10) << "wire  = " << hitp->GetWire() << " "
-		<< std::setw(20) << "WirePosition = "<<hitp->GetWirePosition() << " "
-		<< std::setw(20) << "DriftLength = "<<hitp->GetDriftLength() << " "
-		<< std::setw(20) << "hit position = "<<hitp->GetLocalHitPos()<< " " 
+		<< std::setw(10) << "wire  = " << sftclusterp->GetWire() << " "
+		<< std::setw(20) << "WirePosition = "<<sftclusterp->GetWirePosition() << " "
+		<< std::setw(20) << "DriftLength = "<<sftclusterp->GetDriftLength() << " "
+		<< std::setw(20) << "hit position = "<<sftclusterp->GetLocalHitPos()<< " " 
 		<< std::endl;
 #endif
     }
@@ -683,9 +689,9 @@ bool TrLocalTrack::DoFit2( void )
   */
   chisqr_=chisqr;
   for( std::size_t i=0; i<nn; ++i ){
-    SFTCluster *hitp = sftclusterArray_[i];
-    if( hitp ){
-      int lnum = hitp->GetLayer();
+    SFTCluster *sftclusterp = sftclusterArray_[i];
+    if( sftclusterp ){
+      int lnum = sftclusterp->GetLayer();
       double gz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
       /*  
 	  if(chisqr<2){
@@ -693,7 +699,7 @@ bool TrLocalTrack::DoFit2( void )
 	  std::cout<<std::setw(10)<<"X = "<< GetX(gz)<<" Y = "<< GetY(gz)<<std::endl;
 	  }
       */
-      hitp->SetProjectedPosition( GetX(gz), GetY(gz) );
+      sftclusterp->SetProjectedPosition( GetX(gz), GetY(gz) );
       
     }
   }
@@ -717,21 +723,21 @@ bool TrLocalTrack::DoFitVXU( void )
   double w[n+1],z[n+1],x[n+1];
 
   for( std::size_t i=0; i<n; ++i ){
-    SFTCluster *hitp = sftclusterArray_[i];
-    if( hitp ){
-      int lnum = hitp->GetLayer();
+    SFTCluster *sftclusterp = sftclusterArray_[i];
+    if( sftclusterp ){
+      int lnum = sftclusterp->GetLayer();
       w[i] = geomMan.GetResolution( lnum );
       z[i] = geomMan.GetGlobalZ( lnum );
-      x[i] = hitp->GetLocalX();
+      x[i] = sftclusterp->GetLocalX();
 
 #if 0
       std::cout << "" << std::endl;
       std::cout << "**********" << std::endl;
       std::cout << std::setw(10) << "layer = " << lnum 
-		<< std::setw(10) << "wire  = " << hitp->GetWire() << " "
-		<< std::setw(20) << "WirePosition = "<<hitp->GetWirePosition() << " "
-		<< std::setw(20) << "DriftLength = "<<hitp->GetDriftLength() << " "
-		<< std::setw(20) << "hit position = "<<hitp->GetLocalHitPos()<< " " 
+		<< std::setw(10) << "wire  = " << sftclusterp->GetWire() << " "
+		<< std::setw(20) << "WirePosition = "<<sftclusterp->GetWirePosition() << " "
+		<< std::setw(20) << "DriftLength = "<<sftclusterp->GetDriftLength() << " "
+		<< std::setw(20) << "hit position = "<<sftclusterp->GetLocalHitPos()<< " " 
 		<< std::endl;
       std::cout << "**********" << std::endl;
       std::cout << "" << std::endl;
@@ -767,9 +773,9 @@ bool TrLocalTrack::DoFitVXU( void )
   //std::cout << " "  << std::endl;
 
   for( std::size_t i=0; i<n; ++i ){
-    SFTCluster *hitp = sftclusterArray_[i];
-    if( hitp ){
-      //int lnum = hitp->GetLayer();
+    SFTCluster *sftclusterp = sftclusterArray_[i];
+    if( sftclusterp ){
+      //int lnum = sftclusterp->GetLayer();
       //double gz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
       /*  
 	  if(chisqr<2){
@@ -777,7 +783,7 @@ bool TrLocalTrack::DoFitVXU( void )
 	  std::cout<<std::setw(10)<<"X = "<< GetX(gz)<<" Y = "<< GetY(gz)<<std::endl;
 	  }
       */
-     // hitp->SetLocalCalPosVXU( a_*gz+b_ );
+     // sftclusterp->SetLocalCalPosVXU( a_*gz+b_ );
      std::cout << __FILE__ << "  " << __LINE__ << "this function is not implemeted yet ..." << std::endl;
     }
   }
@@ -798,21 +804,21 @@ bool TrLocalTrack::DoFitVXU2( void )
   z.reserve(n); w.reserve(n); s.reserve(n);
   
   for( std::size_t i=0; i<n; ++i ){
-    SFTCluster *hitp = sftclusterArray_[i];
-    if( hitp ){
-      int lnum = hitp->GetLayer();
+    SFTCluster *sftclusterp = sftclusterArray_[i];
+    if( sftclusterp ){
+      int lnum = sftclusterp->GetLayer();
       double ww = geomMan.GetResolution( lnum );
       double gz = geomMan.GetGlobalZ( lnum );
 
       z.push_back( gz ); w.push_back( 1./(ww*ww) ); 
-      s.push_back( hitp->GetLocalX() );
+      s.push_back( sftclusterp->GetLocalX() );
 
 #if 0
       std::cout << std::setw(10) << "layer = " << lnum 
-		<< std::setw(10) << "wire  = " << hitp->GetWire() << " "
-		<< std::setw(20) << "WirePosition = "<<hitp->GetWirePosition() << " "
-		<< std::setw(20) << "DriftLength = "<<hitp->GetDriftLength() << " "
-		<< std::setw(20) << "hit position = "<<hitp->GetLocalHitPos()<< " " 
+		<< std::setw(10) << "wire  = " << sftclusterp->GetWire() << " "
+		<< std::setw(20) << "WirePosition = "<<sftclusterp->GetWirePosition() << " "
+		<< std::setw(20) << "DriftLength = "<<sftclusterp->GetDriftLength() << " "
+		<< std::setw(20) << "hit position = "<<sftclusterp->GetLocalHitPos()<< " " 
 		<< std::endl;
 #endif
     }
@@ -969,9 +975,9 @@ bool TrLocalTrack::DoFitVXU2( void )
   */
   chisqr_=chisqr;
   for( std::size_t i=0; i<nn; ++i ){
-    SFTCluster *hitp = sftclusterArray_[i];
-    if( hitp ){
-      //int lnum = hitp->GetLayer();
+    SFTCluster *sftclusterp = sftclusterArray_[i];
+    if( sftclusterp ){
+      //int lnum = sftclusterp->GetLayer();
       //double gz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
       /*  
 	  if(chisqr<2){
@@ -979,8 +985,8 @@ bool TrLocalTrack::DoFitVXU2( void )
 	  std::cout<<std::setw(10)<<"X = "<< GetX(gz)<<" Y = "<< GetY(gz)<<std::endl;
 	  }
       */
-      //hitp->SetCalPosition( GetX(gz), GetY(gz) );
-      //hitp->SetLocalCalPosVXU( b_ + a_*gz +c_*gz*gz );
+      //sftclusterp->SetCalPosition( GetX(gz), GetY(gz) );
+      //sftclusterp->SetLocalCalPosVXU( b_ + a_*gz +c_*gz*gz );
       std::cout << __FILE__ << "  " << __LINE__ << "this function is not implemeted yet ..." << std::endl;
     }
   }
@@ -997,8 +1003,8 @@ bool TrLocalTrack::ReCalc( bool applyRecursively )
 
   std::size_t n = sftclusterArray_.size();
   for( std::size_t i=0; i<n; ++i ){
-    TrLTrackHit *hitp = sftclusterArray_[i];
-    if( hitp ) hitp->ReCalc( applyRecursively );
+    TrLTrackHit *sftclusterp = sftclusterArray_[i];
+    if( sftclusterp ) sftclusterp->ReCalc( applyRecursively );
   }
   
   bool ret=DoFit();
