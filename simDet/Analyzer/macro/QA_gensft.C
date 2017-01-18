@@ -3,6 +3,7 @@
 #include <iostream>
 #include <math.h>
 #include <map>
+#include <cstring>
 
 #include <TRint.h>
 #include <TH1.h>
@@ -10,6 +11,7 @@
 #include <TFile.h>
 #include <TTree.h>
 #include <TStyle.h>
+#include <TSystem.h>
 
 void QA_gensft(const char* filename)
 {
@@ -20,23 +22,30 @@ void QA_gensft(const char* filename)
   //number of hits/event
   int  bsftnhits;
   //hit layer /hit segment (=fiber/MPPC)
-  std::vector<int> *bsftlayer,*bsftseg;
+  std::vector<int> *bsftlayer=0;
+  std::vector<int> *bsftseg=0;
   //PID on SFT, track No. on SFT
-  std::vector<int> *bsftpid,*bsftid;
+  std::vector<int> *bsftpid=0;
+  std::vector<int> *bsftid=0;
   //E deposit on SFT and time ?
-  std::vector<double> *bsftedep, *bsfttime;
+  std::vector<double> *bsftedep=0;
+  std::vector<double> *bsfttime=0;
   //absolute value of Momentum  
-  std::vector<double> *bsftp;
+  std::vector<double> *bsftp=0;
   //theta and phi of momentum vector of beam
-  std::vector<double> *bstdtheta,*bsftphi;
+  std::vector<double> *bstdtheta=0;
+  std::vector<double> *bsftphi=0;
   //local x and y position of sft 
-  std::vector<double> *bsftposlx, *bsftposly;
+  std::vector<double> *bsftposlx=0;
+  std::vector<double> *bsftposly=0;
   //global x, y and z position of sft
-  std::vector<double> *bsftposgx, *bsftposgy, *bsftposgz;
+  std::vector<double> *bsftposgx=0;
+  std::vector<double> *bsftposgy=0;
+  std::vector<double> *bsftposgz=0;
   //pathlength , beta of particle
-  std::vector<double> *bsftpath, *bsftbeta;
+  //std::vector<double> *bsftpath, *bsftbeta;
   //mass of particle
-  std::vector<double> *bsftmass;
+  //std::vector<double> *bsftmass;
   
  
   tree->SetBranchAddress("sftnhits",&bsftnhits);
@@ -61,9 +70,10 @@ void QA_gensft(const char* filename)
   
 
   Long64_t nentries = tree->GetEntries();
+  Long64_t nbytes = 0;
   std::cout << "# of entries " << nentries << std::endl;
   for(Long64_t i=0;i < nentries;i++){
-    tree->GetEntry(i);
+    nbytes += tree->GetEntry(i);
     hsftnhits->Fill(bsftnhits);
     if(bsftnhits != (int)bsftlayer->size()){
       std::cout << "something is wrong" << std::endl;
@@ -71,22 +81,30 @@ void QA_gensft(const char* filename)
     if(bsftnhits != (int)bsftseg->size()){
       std::cout << "something is wrong" << std::endl;
     }
+    if(bsftnhits != (int)bsftp->size()){
+      std::cout << "something is wrong" << std::endl;
+    }
 
-    for(unsigned int ihit=0; ihit< bsftlayer->size(); ihit++){
+
+    for(int ihit=0; ihit< bsftnhits; ++ihit){
       int sfthitlayer = bsftlayer->at(ihit);
       hsftlayer->Fill(sfthitlayer);
       int sfthitsegment = bsftseg->at(ihit);
       hsftseg->Fill(sfthitsegment);
+      double p = bsftp->at(ihit);
+      hsftp->Fill(p);
+      double poslx = bsftposlx->at(ihit);
+      hsftposlx->Fill(poslx);
+      double posly = bsftposly->at(ihit);
+      hsftposly->Fill(posly);
+      double posgx = bsftposgx->at(ihit);
+      hsftposgx->Fill(posgx);
+      double posgy = bsftposgy->at(ihit);
+      hsftposgy->Fill(posgy);
+      double posgz = bsftposgz->at(ihit);
+      hsftposgz->Fill(posgz);
     }
      
-    hsftp->Fill(bsftp);
-    hsftposlx->Fill(bsftposlx);
-    hsftposly->Fill(bsftposly);
-    hsftposgx->Fill(bsftposgx);
-    hsftposgy->Fill(bsftposgy);
-    hsftposgz->Fill(bsftposgz);
-
-
     // hsftlayer->Fill(&bsftlayer); 
   }
 
@@ -110,66 +128,36 @@ void QA_gensft(const char* filename)
   hsftp->SetXTitle("beam momentum [GeV/c]");
   hsftp->Draw();
   
-  TCanvas *csftposlx = new TCanvas("csftposlx",400,500,400,400);
+  TCanvas *csftposlx = new TCanvas("csftposlx","csftposlx",400,500,400,400);
   csftposlx->cd();
   hsftposlx->SetXTitle("local x position (mm)");
+  hsftposlx->Draw();
 
-  TCanvas *csftposly = new TCanvas("csftposly",800,500,400,400);
+  TCanvas *csftposly = new TCanvas("csftposly","csftposly",800,500,400,400);
   csftposly->cd();
   hsftposly->SetXTitle("local y position (mm)");
+  hsftposly->Draw();
 
-  TCanvas *csftposgx = new TCanvas("csftposgx",0,1000,400,400);
-  csftposlx->cd();
-  hsftposlx->SetXTitle("global x position (mm)");
+  TCanvas *csftposgx = new TCanvas("csftposgx","csftposgx",0,1000,400,400);
+  csftposgx->cd();
+  hsftposgx->SetXTitle("global x position (mm)");
+  hsftposgx->Draw();
 
-  TCanvas *csftposgy = new TCanvas("csftposgy",400,1000,400,400);
+  TCanvas *csftposgy = new TCanvas("csftposgy","csftposgy",400,1000,400,400);
   csftposgy->cd();
   hsftposgy->SetXTitle("global y position (mm)");
+  hsftposgy->Draw();
 
-  TCanvas *csftposgz = new TCanvas("csftposgz",800,1000,400,400);
+  TCanvas *csftposgz = new TCanvas("csftposgz","csftposgz",800,1000,400,400);
   csftposgz->cd();
   hsftposgz->SetXTitle("global z position (mm)");
+  hsftposgz->Draw();
 
 
-
-  /*
-  TCanvas *cpriposy = new TCanvas("cpriposy","primary pos y",400,0,400,400);
-  cpriposy->cd();
-  hpriposy->SetXTitle("position y [mm]");
-  hpriposy->Draw();
-
-  TCanvas *cpriposz = new TCanvas("cpriposz","primary pos z",800,0,400,400);
-  cpriposz->cd();
-  hpriposz->SetXTitle("position z [mm]");
-  hpriposz->Draw();
-  
-  TCanvas *cpbeam = new TCanvas("cpbeam","primary beam momentum",0,500,400,400);
-  cpbeam->cd();
-  hpbeam->SetXTitle("beam momentum [GeV/c]");
-  hpbeam->Draw();
-
-  TCanvas *cubeam = new TCanvas("cubeam","cubeam",400,500,400,400);
-  cubeam->cd();
-  hubeam->SetXTitle("dP_{x}/dP_{z}");
-  hubeam->Draw();
-
-  TCanvas *cvbeam = new TCanvas("cvbeam","cvbeam",800,500,400,400);
-  cvbeam->cd();
-  hvbeam->SetXTitle("dP_{y}/dP_{z}");
-  hvbeam->Draw();
-  
-  TCanvas *cxangle = new TCanvas("cxangle","cxangle",1200,500,400,400);
-  cxangle->cd();
-  hxangle->SetXTitle("primary beam angle in x [radian]");
-  hxangle->Draw();
-
-  TCanvas *cyangle = new TCanvas("cyangle","cyangle",1600,500,400,400);
-  cyangle->cd();
-  hyangle->SetXTitle("primary beam angle in y [radian]");
-  hyangle->Draw();
   
   //TString *dirname = filename;
-  char *ifile[strlen(filename)+1];
+  int len = strlen(filename);
+  char ifile[len+1];
   strcpy(ifile,filename);
   strtok(ifile,"_");
   char *date = strtok(0,"v");  
@@ -180,14 +168,14 @@ void QA_gensft(const char* filename)
   sprintf(dirname,"%sv%d",date,version);
   gSystem->mkdir(dirname);
   gSystem->cd(dirname);
-  cpriposx->SaveAs("priposx.pdf");
-  cpriposy->SaveAs("priposy.pdf");
-  cpriposz->SaveAs("priposz.pdf");
-  cpbeam->SaveAs("pbeam.pdf");
-  cubeam->SaveAs("ubeam.pdf");
-  cvbeam->SaveAs("vbeam.pdf");
-  cxangle->SaveAs("xangle.pdf");
-  cyangle->SaveAs("yangle.pdf");
-  */
+  csftnhits->SaveAs("sftnhits.pdf");
+  csftlayer->SaveAs("sftlayer.pdf");
+  csftseg->SaveAs("sftseg.pdf");
+  csftp->SaveAs("sftp.pdf");
+  csftposlx->SaveAs("sftposlx.pdf");
+  csftposly->SaveAs("sftposly.pdf");
+  csftposgx->SaveAs("sftposgx.pdf");
+  csftposgy->SaveAs("sftposgy.pdf");
+  csftposgz->SaveAs("sftposgz.pdf");
 
 }
