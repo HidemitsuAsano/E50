@@ -36,6 +36,8 @@ void QA_gensft(const char* filename)
   std::vector<double> *bstdtheta=0;
   std::vector<double> *bsftphi=0;
   //local x and y position of sft 
+  //local x : phi direction in G4Tubs
+  //local y : radial direction in G4Tubs
   std::vector<double> *bsftposlx=0;
   std::vector<double> *bsftposly=0;
   //global x, y and z position of sft
