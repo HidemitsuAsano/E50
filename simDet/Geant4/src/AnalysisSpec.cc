@@ -96,15 +96,27 @@ struct Event{
   std::vector<G4double> t0mass;
 
   //SFT
+  //number of hits/event
   G4int    sftnhits;
+  //hit layer /hit segment (=fiber/MPPC)
   std::vector<G4int>    sftlayer, sftseg;
+  //PID on SFT, track No. on SFT
   std::vector<G4int>    sftpid, sftid;
+  //E deposit on SFT and time ?
   std::vector<G4double> sftedep, sfttime;
+  //absolute value of Momentum  
   std::vector<G4double> sftp;
+  //theta and phi of momentum vector of beam
   std::vector<G4double> sfttheta, sftphi;
+  //local x and y position of sft 
+  //local x : phi direction in G4Tubs
+  //local y : radial direction in G4Tubs
   std::vector<G4double> sftposlx, sftposly;
+  //global x, y and z position of sft
   std::vector<G4double> sftposgx, sftposgy, sftposgz;
+  //pathlength , beta of particle
   std::vector<G4double> sftpath, sftbeta;
+  //mass of particle
   std::vector<G4double> sftmass;
 };
 static Event event;
