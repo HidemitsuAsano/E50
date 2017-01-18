@@ -1,7 +1,18 @@
 //QA_pri
 //quick check for primary information and generate pdf files
 //
+#include <iostream>
+#include <math.h>
+#include <map>
+#include <cstring>
 
+#include <TRint.h>
+#include <TH1.h>
+#include <TCanvas.h>
+#include <TFile.h>
+#include <TTree.h>
+#include <TStyle.h>
+#include <TSystem.h>
 
 void QA_pri(const char* filename)
 {
@@ -95,7 +106,7 @@ void QA_pri(const char* filename)
   hyangle->Draw();
   
   //TString *dirname = filename;
-  char *ifile[strlen(filename)+1];
+  char ifile[strlen(filename)+1];
   strcpy(ifile,filename);
   strtok(ifile,"_");
   char *date = strtok(0,"v");  
