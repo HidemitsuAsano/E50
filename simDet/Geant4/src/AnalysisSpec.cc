@@ -553,7 +553,7 @@ void AnalysisSpec::DefineHistograms( void )
   fActive_=true;
 
   //Tree
-  HBTree("tree","tree of Sks");
+  HBTree("tree","geant4 tree");
   TTree *tree = dynamic_cast<TTree *>(gFile->Get("tree"));
    
   //Primary
