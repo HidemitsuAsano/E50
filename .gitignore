@@ -8,6 +8,6 @@
 *.out
 *.root
 *.dat
-*.gitignore
+*.a
 simDet/Geant4/bin/*
 simDet/Geant4/conf/*
