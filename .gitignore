@@ -9,5 +9,6 @@
 *.root
 *.dat
 *.a
+*.swp
 simDet/Geant4/bin/*
 simDet/Geant4/conf/*
