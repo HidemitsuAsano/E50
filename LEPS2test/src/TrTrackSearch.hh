@@ -13,7 +13,7 @@ class TrLTrackHit;
 //Full combination by Linear fitting
 int LocalTrackSearch(const  SFTClusterContainer  *HC,
 		      std::vector <TrLocalTrack *> &TrackCont,
-		      int NumOfLayers, unsigned int MinNumOfHits);
+		      int NumOfLayers, unsigned int MinNumOfHits, double MaxChisquare);
 
 std::vector< std::vector<int> > makeindex( int ndim_org, int minimumHit, int ndim, const int *index1 ); 
 std::vector< std::vector<int> > makeindex_below( int ndim_org, int maximumHit, int ndim, const int *index1 ); 

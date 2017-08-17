@@ -1,6 +1,17 @@
 #ifndef TrAnalyzer_h 
 #define TrAnalyzer_h 1
 
+//author: H.Asano
+//email: hidemitsu.asano@riken.jp
+//last update Aug.13th,2017
+//class name: TrAnalyzer
+//
+//Main class to reconstruct event and called in AnaBFT.cc 
+//This class works for 
+//1. settting threshold of ADC and TDC. defining hits
+//2. clustering
+//3. calling several functions for tracking
+
 #include "DetectorID.hh"
 #include <vector>
 
@@ -11,7 +22,7 @@ class RawData;
 
 //vector of hit/cluster object in each layer 
 typedef std::vector <TrHit *> TrHitContainer;
-typedef std::vector <SFTCluster *> SFTClusterContainer;//added by H.Asano
+typedef std::vector <SFTCluster *> SFTClusterContainer;//
 
 class TrAnalyzer
 {
@@ -23,17 +34,23 @@ private:
   TrAnalyzer & operator = ( const TrAnalyzer & );
   bool isTrHitsSorted_;
   double sigmathreshold_;
-private:
+  bool isTOTcut_;
+  double TOTcutlow_;
+  double TOTcutup_;
   TrHitContainer SFTTrHitContainer_[NumOfLayersSFT];
   SFTClusterContainer SFTClusterContainer_[NumOfLayersSFT];
 
   std::vector <TrLocalTrack *> TrackSFTTCol;//vector of SFT track class 
+  //chi2/ndf cut for tracking
+  double MaxChisquare_;
 
 public:
-  bool DecodeSFTRawHits( RawData *rawData );
+  bool MakeSFTRawHits( RawData *rawData );
   bool SortTrHits();
   void SetSigmaThreshold(double sigma) { sigmathreshold_ = sigma; };
   double GetSigmaThreshold() {return sigmathreshold_;};
+  void UseTOTcut(bool yes=true){ isTOTcut_ = yes;};
+  void SetTOTcut(double low,double up);
   inline const TrHitContainer & GetSFTTrHitContainer( int layer ) const;
   inline const SFTClusterContainer & GetSFTClusterContainer( int layer ) const;
    
@@ -49,6 +66,7 @@ public:
   bool ReCalcTrackSFTT( bool applyRecursively=false ); 
 
   bool ReCalcAll( void );
+  void SetMaxChisuquare( double cut) { MaxChisquare_ = cut;}
 
 private:
   void clearTrHits( void );

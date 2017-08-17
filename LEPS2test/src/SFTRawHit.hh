@@ -32,7 +32,7 @@ private:
 
 public:   
   void SetLayer( int layer ) { LayerId_=layer; }
-  void SetWire( int ch ) { ChId_=ch; }
+  void SetChId( int ch ) { ChId_=ch; }
   void SetType( int xuv ) { type_ = xuv; }
   void SetFiberId( int id ) { fiberId_ = id; }
   void SetPosX( double posx ) { PosX_.push_back(posx); }

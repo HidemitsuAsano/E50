@@ -1,19 +1,14 @@
 //author: Hidemitsu Asano
 //email: hidemitsu.asano@riken.jp
 //date: June 23th, 2017
-
-
+//
+//main function of RawData class is to decode raw data and store raw hit information to arrays.
+//
 //how to Unpack NIMEasiroc raw data////////////////////////////////////
 //1 word = 4 bytes = 32 bits and those 32bits are ordered as BigEndian.
 //Then,
 //1. run getBigEndian32() for 1 word 
 //2. 32bits data should be shifted by Decode32bitWord();
-//
-//
-//
-//
-//
-//
 //////////////////////////////////////////////////////////////////////
 
 
@@ -29,11 +24,9 @@
 #include <vector>
 
 class PrimInfo;
-class HodoRawHit;
 class SFTRawHit;
 
 typedef std::vector<PrimInfo*>   PrimInfoContainer;
-typedef std::vector<HodoRawHit*> HodoRHitContainer;
 typedef std::vector<SFTRawHit*>  SFTRawHitContainer;
 
 class RawData
@@ -41,8 +34,6 @@ class RawData
 
 private:
   PrimInfoContainer PrimHC;
-
-  HodoRHitContainer T0RHC;
 
   SFTRawHitContainer SFTRawHitCont;//vector of data object class for a single hit
 
@@ -70,16 +61,7 @@ private:
        int AdcLow, bool otrAdcLow,
        int TdcLeading, int TdcTrailing);
   
-  bool AddHodoRHit( HodoRHitContainer& cont,
-		    int DetId, int Layer, int Seg,
-		    double Time, double Edep, 
-		    double Path, double Mom,
-		    double PosX, double PosY, 
-		    int Pid, double Beta );
-
 public:
-
-  const HodoRHitContainer& GetT0RHC() const;
 
   const SFTRawHitContainer & GetSFTRawHitContainer() const;
    
