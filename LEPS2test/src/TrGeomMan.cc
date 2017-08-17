@@ -292,7 +292,8 @@ std::vector <int> TrGeomMan::GetDetectorIDList( void ) const
 //EASIROC 0-3
 //fiber no. 0 origin max. is fiber 11
 //X:0,U:1,V:2
-//
+//layer configuration
+//X,U,V,X,U,V,U,V,X,U,V,X
 
 
 //X:0,U:1,V:2

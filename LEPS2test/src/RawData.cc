@@ -15,7 +15,6 @@
 
 #include "DataType.hh"
 #include "DetectorID.hh"
-#include "HodoRawHit.hh"
 #include "SFTRawHit.hh"
 #include "TemplateLib.hh"
 
@@ -30,7 +29,6 @@ const double Rad2Deg = 180./acos(-1.);
 
 RawData::RawData():
   PrimHC(0),
-  T0RHC(0),
   SFTRawHitCont(0) //vector of data object class for a single track in SFT
 {}
 
@@ -76,51 +74,8 @@ bool RawData::AddRawHit( SFTRawHitContainer& cont,
   }
 }
 
-bool RawData::AddHodoRHit( HodoRHitContainer& cont,
-			   int DetId, int Layer, int Seg,
-			   double Time, double Edep, 
-			   double Path, double Mom,
-			   double PosX, double PosY, 
-			   int Pid, double Beta )
-{
-  static const std::string funcname = "[RawData::AddHodoRHit]";
-
-  HodoRawHit *p=0;
-  int nh=cont.size();
-  for( int i=0; i<nh; ++i ){
-    HodoRawHit *q=cont[i];
-    if( q->DetectorId()==DetId &&
-        q->LayerId()==Layer &&
-        q->SegmentId()==Seg ){
-      p=q; break;
-    }
-  }
-  if(!p){
-    p = new HodoRawHit( DetId, Layer, Seg );
-    if(p) cont.push_back(p);
-  }
-  if(p){
-    p->SetTime( Time );
-    p->SetEdep( Edep );
-    p->SetPath( Path );
-    p->SetMom( Mom );
-    p->SetPosX( PosX );
-    p->SetPosY( PosY );
-    p->SetPid( Pid );
-    p->SetBeta( Beta );
-
-    return true;
-  }else{
-    std::cerr << funcname << ": new fail." << std::endl;
-    return false;
-  }
-}
-
 void RawData::clearAll()
 {
-  std::for_each(T0RHC.begin(), T0RHC.end(), DeleteObject());
-  T0RHC.clear();
-
   std::for_each( SFTRawHitCont.begin(), SFTRawHitCont.end(), DeleteObject());
   SFTRawHitCont.clear();
 
@@ -168,7 +123,7 @@ bool RawData::Decode( std::ifstream &In )
       }
       int ch = (data >> 13) & 0x3f;
       if(imod%2==1) ch += 64; 
-      SFTRawHitCont[ch]->SetWire(ch);
+      SFTRawHitCont[ch]->SetChId(ch);
       int type = geomMan.getXUV(ch);
       SFTRawHitCont[ch]->SetType(type);
       int layer = geomMan.getlayer(ch);
@@ -203,6 +158,7 @@ bool RawData::Decode( std::ifstream &In )
       }else {
         int ch = (data >> 13) & 0x3f;
         int value = data & 0x0fff;
+        std::cout << __FILE__  << " l." <<  __LINE__ << " invalid data " << std::endl;
         std::cout << "adchg:"  << (data & 0x00680000);
         std::cout << "adclg:"  << (data & 0x00680000);
         std::cout << "tdcl:"   << (data & 0x00601000);
@@ -221,10 +177,6 @@ bool RawData::Decode( std::ifstream &In )
 }
 
 
-const HodoRHitContainer& RawData::GetT0RHC() const
-{
-  return T0RHC;
-}
 
 const SFTRawHitContainer & RawData::GetSFTRawHitContainer() const
 {

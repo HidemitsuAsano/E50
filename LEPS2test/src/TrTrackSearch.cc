@@ -18,14 +18,14 @@
 
 const double Deg2Rad = acos(-1.)/180.;
 const double Rad2Deg = 180./acos(-1.);
-const double MaxChisquare = 100000000.;//30
-const double MaxChisquareTr = 1000.;//30
+//const double MaxChisquare = 100000000.;//30
+//const double MaxChisquareTr = 1000.;//30
 const double MaxNumberOfClusters = 100.;//10.
 const double MaxCombi = 1.0e6;
 
-const double MaxChisquareVXU = 1000.;
-const double ChisquareCutVXU = 1000.;
-int NhitGroup=0;
+//const double MaxChisquareVXU = 1000.;
+//const double ChisquareCutVXU = 1000.;
+//int NhitGroup=0;
 int Verbosity=0;
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
@@ -36,14 +36,54 @@ int Verbosity=0;
 //output :  vector of TrLocalTrack
 //NumOfLayers : number of sft layers 12
 //MinNumOfHits : numboer of required hits for locak tracking
+//MaxChisquare : chi2/ndf cut of tracking. If this is <=0, no chi2/ndf cuts are applied 
 int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
 		      std::vector <TrLocalTrack *> &TrackCont, 
-		      int NumOfLayers, unsigned int MinNumOfHits )
+		      int NumOfLayers, unsigned int MinNumOfHits, double MaxChisquare )
 {
   static const std::string funcname = "[LocalTrackSearch]";
   if(Verbosity>0){
     std::cout <<  __FILE__ << "  " << __LINE__ << "  " << funcname << std::endl;
   }
+
+  const bool RequiredHitPattern[NumOfLayersSFT]=
+  {
+    true,//L0  X
+    false,//L1  U
+    false,//L2  V
+    true,//L3  X
+    false,//L4  U
+    false,//L5  V
+    false,//L6  U
+    false,//L7  V
+    true,//L8  X
+    false,//L9  U
+    false,//L10 V
+    true,//L11 X
+  };
+  
+  
+  static int first=0;
+  if(first==0){
+    std::cout << std::endl;
+    std::cout << __FILE__ << " L" << __LINE__ << " tracking parameters" << std::endl;
+    std::cout << "# of layers " << NumOfLayers << std::endl;
+    std::cout << "Minimum # of hits " << MinNumOfHits << std::endl;
+    std::cout << "Max Chi2/ndf " << MaxChisquare << std::endl;
+    std::cout << "Max # of clusters " <<  MaxNumberOfClusters << std::endl;
+    std::cout << "Max # of Combination " << MaxCombi << std::endl;
+    std::cout << "*** Required hit pattern*** " << std::endl;
+    const char yes[2][4] = {"no","yes"};
+    for(int ilr=0;ilr<NumOfLayersSFT;ilr++){
+      std::cout << "Layer" << ilr << "  "  << yes[RequiredHitPattern[ilr]] << std::endl;
+    }
+    std::cout << "********************" << std::endl;
+    std::cout << std::endl;
+    first++;
+  }
+
+
+
   //vector of vector of SFTCluster 
   //1st row is layer 
   //2nd row is cluster in each layer
@@ -116,26 +156,48 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
   for( int i=0; i<nnCombi; ++i ){
     TrLocalTrack *track = MakeTrack( ClusterCont, &((CombiIndex[i])[0]) );
     if( !track ){std::cout << __FILE__ << "  " << __LINE__ << " no track " << std::endl; continue;}
-    //int nhit = track->GetNHit();
+    
+    
+    bool hitpattern[NumOfLayersSFT]={false};
+    int nhit = track->GetNHit();
     //std::cout << __FILE__ << "  " << __LINE__ << "  " << nhit << std::endl;
-    //for(int ihit = 0 ; ihit< nhit; ihit++){
-    //  SFTCluster *clsp = track->GetHit(ihit);
+    for(int ihit = 0 ; ihit< nhit; ihit++){
+      SFTCluster *clsp = track->GetHit(ihit);
+      if(clsp){
+        int lnum = clsp->GetLayer();
+        hitpattern[lnum] = true;
+      }
       //std::cout << "ihit " << ihit << "layer " << clsp->GetLayer() << std::endl;
-    //}
+    }
+    
+
 
     //for(int ilr=0;ilr<12;ilr++){
     //  std::cout << "layer: " << ilr << " Nhit " << track->GetHitOfLayerNumber(ilr) << std::endl;
     //}
 
+    //check hit pattern
+    bool isPatternOK=true;
+    for( int ilr=0; ilr<NumOfLayersSFT; ilr++){
+      if(RequiredHitPattern[ilr]){
+        if(!hitpattern[ilr]){
+          isPatternOK=false;
+        }
+      }
+    }
+    if(MaxChisquare<0) MaxChisquare = 99999999999.;
 
     if( track->GetNHit()>=MinNumOfHits && 
 	track->DoFit() &&
-	track->GetChiSquare()<MaxChisquare ){
+	track->GetChiSquare()<MaxChisquare  &&
+     isPatternOK
+    ){
       TrackCont.push_back(track);
       //double chisqr = track->GetChiSquare();
     }
     else{
-      /*std::cout << "No tracks available" << std::endl;
+      /*
+      *std::cout << "No tracks available" << std::endl;
       std::cout << "Nhit " << track->GetNHit() << std::endl;
       std::cout << "Fit? " << track->DoFit()  << std::endl;
       std::cout << "chi2 " << track->GetChiSquare() << std::endl;

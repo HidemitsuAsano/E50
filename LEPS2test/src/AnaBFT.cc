@@ -1,6 +1,6 @@
 //author: Hidemitsu Asano
 //data: June 24th, 2017
-//analysis code for proto type BFT readout by 2 NIM-EASIROCs
+//analysis code for proto type BFT read out by 2 NIM-EASIROCs
 
 #include "VEvent.hh"
 
@@ -14,11 +14,14 @@
 #include "ConfMan.hh"
 #include "HistHelper.hh"
 #include "DetectorID.hh"
+#include "TrGeomMan.hh"
+#include "TrParameters.hh"
 #include "RawData.hh"
 #include "TrHit.hh"
+#include "SFTRawHit.hh"
 #include "SFTCluster.hh"
 #include "TrAnalyzer.hh"
-#include "SpecLib.hh"
+#include "TrLocalTrack.hh"
 
 const double Deg2Rad = acos(-1.)/180.;
 const double Rad2Deg = 180./acos(-1.);
@@ -47,7 +50,6 @@ class AnaBFT
 private:
   RawData *rawData;
   TrAnalyzer *TrAna;
-  //  HodoAnalyzer *HodoAna;
   bool is_doTracking;
 public:
   AnaBFT();
@@ -65,14 +67,12 @@ AnaBFT::AnaBFT()
     rawData(0),
     TrAna(new TrAnalyzer()),
     is_doTracking(true)
-    //HodoAna(new HodoAnalyzer())
 {
   //InitializeHistograms(); 
 }
 
 AnaBFT::~AnaBFT()
 {
-  //  if (HodoAna)   delete HodoAna;
   if (TrAna)   delete TrAna;
   if (rawData) delete rawData;
 }
@@ -293,7 +293,8 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
 
   
   TrAna->SetSigmaThreshold (10.);
-  TrAna->DecodeSFTRawHits( rawData ); // name of this func. is confusing in real data analysis. change it
+  TrAna->UseTOTcut(true);
+  TrAna->MakeSFTRawHits( rawData ); // name of this func. is confusing in real data analysis. change it
   //SFT TrHit (hits above threshold)
   //TODO change name of class "TrHit", these hits are not necessarily associated track.
   for( int ilr=0; ilr<NumOfLayersSFT; ++ilr ){
@@ -395,11 +396,13 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
 
     
   TH2F* hxy0 = dynamic_cast<TH2F*>(gFile->Get("hxy0"));
-  TH1I* hresi[NumOfLayersSFT];
+  TH1I* hnassociate = dynamic_cast<TH1I*>(gFile->Get("hnassociate"));
+  TH1F* hchi2 = dynamic_cast<TH1F*>(gFile->Get("hchi2"));
+  TH1F* hresi[NumOfLayersSFT];
   for(int ilr=0;ilr<NumOfLayersSFT;ilr++){
     char hname[256];
     sprintf(hname,"hresi%s%d",XUVorder[ilr],ilr);
-    hresi[ilr] = dynamic_cast<TH1I*>(gFile->Get(hname));
+    hresi[ilr] = dynamic_cast<TH1F*>(gFile->Get(hname));
   }
   
 
@@ -416,7 +419,10 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
     for( int it=0; it<nt; ++it ){
       TrLocalTrack *tp=TrAna->GetTrackSFTT(it);
       int nh=tp->GetNHit();
+      hnassociate->Fill(nh);
+      //get chi2/ndf
       double chisqr=tp->GetChiSquare();
+      hchi2->Fill(chisqr);
       //double x0=tp->GetX0(), y0=tp->GetY0();
       double u0=tp->GetU0(), v0=tp->GetV0();//fitting results of u0 and v0 position
                                             //TODO : what is the definition of u0 and v0 ?
@@ -429,6 +435,8 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
       event.y0.push_back(ytgt);
       event.u0.push_back(utgt);
       event.v0.push_back(vtgt); 
+
+
       
       for( int ih=0; ih<nh; ++ih ){
         SFTCluster *hit=tp->GetHit(ih);
@@ -640,7 +648,6 @@ bool ConfMan::InitializeHistograms()
   }
 
 
-
   TH1I* hitprofile_ch[NumOfLayersSFT];//
   for(int ilr=0 ;ilr<NumOfLayersSFT; ilr++){
     hitprofile_ch[ilr] = new TH1I(Form("Hitproflayer_ch%s%d",XUVorder[ilr],ilr),Form("Hit ch. profile %s layer %d",XUVorder[ilr],ilr), 12,0,12); 
@@ -676,15 +683,20 @@ bool ConfMan::InitializeHistograms()
   TH2I* hitcorrXX[4];
   //TH2I* hitcorrUU[4];
   //TH2I* hitcorrVV[4];
-
+  
+  TH1I* hnassociate = new TH1I("hnassociate","number of associated hits",15,0,15);
+  hnassociate->SetXTitle("nhit");
   
   TH2F* hxy0 = new TH2F("hxy0","X0:Y0 pos.", 300,-30,30,300,-30,30);
   hxy0->GetXaxis()->SetTitle("x0 [mm]");
   hxy0->GetYaxis()->SetTitle("y0 [mm]");
 
-  TH1I* hresi[NumOfLayersSFT];
+  TH1F* hchi2 = new TH1F("hchi2","chi2/ndf", 1000,0,200);
+  hchi2->SetXTitle("chi2/ndf");
+
+  TH1F* hresi[NumOfLayersSFT];
   for(int ilr=0; ilr<NumOfLayersSFT; ilr++){
-    hresi[ilr] = new TH1I(Form("hresi%s%d",XUVorder[ilr],ilr),Form("residual %s layer %d",XUVorder[ilr],ilr),100,-10,10);
+    hresi[ilr] = new TH1F(Form("hresi%s%d",XUVorder[ilr],ilr),Form("residual %s layer %d",XUVorder[ilr],ilr),100,-10,10);
     hresi[ilr]->SetXTitle("residual [mm]");
   }
 

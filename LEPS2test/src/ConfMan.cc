@@ -1,4 +1,3 @@
-
 #include "ConfMan.hh"
 
 #include <algorithm>

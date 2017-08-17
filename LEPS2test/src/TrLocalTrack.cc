@@ -1,10 +1,3 @@
-/*
-  TrLocalTrack.cc
-
-  2012/5  K.Shirotori
-*/
-
-
 #include "TrLocalTrack.hh"
 //#include "TrLTrackHit.hh"
 #include "SFTCluster.hh"
@@ -26,7 +19,8 @@ const double Deg2Rad = acos(-1.)/180.;
 const double Rad2Deg = 180./acos(-1.);
 
 const int ReservedNumOfHits = 16;
-const unsigned int TrLocalMinNHits  = 4;
+//const unsigned int TrLocalMinNHits  = 6;
+const unsigned int TrLocalMinNHits  = 10;
 const unsigned int TrLocalMinNHitsVXU = 3;
 const unsigned int TrLocalMinNHitsVXU2= 4;
 const unsigned int TrLocalMinNHits2 = 8;
@@ -96,7 +90,7 @@ bool TrLocalTrack::DoFit( void )
   z.reserve(n); w.reserve(n); s.reserve(n);
   ct.reserve(n); st.reserve(n);
   
-  bool hitpattern[12]={false};
+  //bool hitpattern[12]={false};
   for( std::size_t i=0; i<n; ++i ){
     SFTCluster *sftclusterp = sftclusterArray_[i];
     if( sftclusterp ){
@@ -112,12 +106,12 @@ bool TrLocalTrack::DoFit( void )
       //" resolution " << ww << " gz  " << gz << std::endl;
       
       //flag for removing some layers 
-      bool isChangeTrackingConf = true;
+      bool isChangeTrackingConf = false;
       static bool isStated = false; 
 
+      int lnum = sftclusterp->GetLayer();
+      //hitpattern[lnum] = true;
       if(isChangeTrackingConf){
-        int lnum = sftclusterp->GetLayer();
-        hitpattern[lnum] = true;
         //if(lnum == 0) ww = 999999.9;//x
         if(lnum == 1) ww = 999999.9;//u
         if(lnum == 2) ww = 999999.9;//v
@@ -154,11 +148,12 @@ bool TrLocalTrack::DoFit( void )
 #endif
     }
   }
+  /*
   if(!(hitpattern[0] == true &&
       hitpattern[3] == true &&
       hitpattern[8] == true &&
       hitpattern[11] == true)) return status_ = false;
-  
+  */
   //nn = number of layers
   std::size_t nn = z.size();
   ///std::cout << "nn = " << nn << std::endl;
