@@ -34,6 +34,7 @@ LIBSONL = $(RTLIBS)
 
 CC = gcc
 C++ = g++
+#C++ = clang
 
 BINDIR = ../bin
 
@@ -42,10 +43,9 @@ SRCS    = $(wildcard *.cc)
 
 OBJ =   ConfMan.o RawData.o \
 	GetNumberFromKernelEntropyPool.o \
-        PrimInfo.o HodoRawHit.o SFTRawHit.o \
+        SFTRawHit.o \
         TrGeomMan.o TrGeomRecord.o \
 	MathTools.o \
-	HodoAnalyzer.o HodoHit.o HodoCluster.o\
 	TrHit.o TrAnalyzer.o TrTrackSearch.o \
 	SFTCluster.o TrLocalTrack.o  
 

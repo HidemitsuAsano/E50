@@ -3,8 +3,6 @@ type "make all"
 
 //flow of fiber geometry
 
-- The global position of each layer is written in param/param_DetGeom001(_ana), but the current code does not use this information in Analyzer.
-
 TrGeomRecord -- double WirePos(double wire) ->assign wire position by geometric calculation
 
 <-> WireNumber (recover wire number from geometry)
@@ -54,3 +52,8 @@ TrAna->TrackSearchSFTT();  is used in the UserBeamTracking.
 
 
 ------
+
+Aug.22 2017
+1. fiber geometry, position are hard-coded in TrAnalyzer class
+2. 
+

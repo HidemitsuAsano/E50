@@ -293,7 +293,7 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
 
   
   TrAna->SetSigmaThreshold (10.);
-  TrAna->UseTOTcut(true);
+  TrAna->UseTOTcut(false);
   TrAna->MakeSFTRawHits( rawData ); // name of this func. is confusing in real data analysis. change it
   //SFT TrHit (hits above threshold)
   //TODO change name of class "TrHit", these hits are not necessarily associated track.
@@ -308,7 +308,7 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
         std::cout << "layer number does not match !! " << std::endl;
         return false;
       }
-      int fiber = hit->GetCh();
+      int fiber = hit->GetFiber();
       //int type = geomMan->getXUV(ch);
       hitprofile_ch[ilr]->Fill(fiber);
     }

@@ -18,8 +18,6 @@
 
 const double Deg2Rad = acos(-1.)/180.;
 const double Rad2Deg = 180./acos(-1.);
-//const double MaxChisquare = 100000000.;//30
-//const double MaxChisquareTr = 1000.;//30
 const double MaxNumberOfClusters = 100.;//10.
 const double MaxCombi = 1.0e6;
 
@@ -48,18 +46,18 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
 
   const bool RequiredHitPattern[NumOfLayersSFT]=
   {
-    true,//L0  X
-    false,//L1  U
-    false,//L2  V
-    true,//L3  X
-    false,//L4  U
-    false,//L5  V
-    false,//L6  U
-    false,//L7  V
-    true,//L8  X
-    false,//L9  U
-    false,//L10 V
-    true,//L11 X
+    false,//L0  X
+    true, //L1  U
+    true, //L2  V
+    false,//L3  X
+    true, //L4  U
+    true, //L5  V
+    true, //L6  U
+    true, //L7  V
+    false,//L8  X
+    true, //L9  U
+    true, //L10 V
+    false,//L11 X
   };
   
   

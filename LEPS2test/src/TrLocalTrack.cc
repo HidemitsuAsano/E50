@@ -20,7 +20,7 @@ const double Rad2Deg = 180./acos(-1.);
 
 const int ReservedNumOfHits = 16;
 //const unsigned int TrLocalMinNHits  = 6;
-const unsigned int TrLocalMinNHits  = 10;
+const unsigned int TrLocalMinNHits  = 8;
 const unsigned int TrLocalMinNHitsVXU = 3;
 const unsigned int TrLocalMinNHitsVXU2= 4;
 const unsigned int TrLocalMinNHits2 = 8;
@@ -83,7 +83,12 @@ bool TrLocalTrack::DoFit( void )
   //const TrGeomMan & geomMan=TrGeomMan::GetInstance();
   
   std::size_t n = sftclusterArray_.size();
-  
+  static int state = 0;
+  if(!state){
+    std::cout << __FILE__ << " L" << __LINE__ << " " <<  __FUNCTION__ <<" Minimum Numbef of hits: "  << TrLocalMinNHits << std::endl;
+    state++;
+  }
+
   if(n < TrLocalMinNHits ) return status_ = false;
   
   std::vector <double> z, w, s, ct, st;

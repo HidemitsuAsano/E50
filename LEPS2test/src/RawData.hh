@@ -23,17 +23,14 @@
 #include "DetectorID.hh"
 #include <vector>
 
-class PrimInfo;
 class SFTRawHit;
 
-typedef std::vector<PrimInfo*>   PrimInfoContainer;
 typedef std::vector<SFTRawHit*>  SFTRawHitContainer;
 
 class RawData
 {
 
 private:
-  PrimInfoContainer PrimHC;
 
   SFTRawHitContainer SFTRawHitCont;//vector of data object class for a single hit
 

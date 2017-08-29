@@ -113,11 +113,12 @@ private:
   double dudx_, dudy_, dudz_;
  
   friend class TrGeomMan;
-  friend class TrGeomRecordComp;
+  //friend class TrGeomRecordComp;
 
   //int Verbosity_;
 };
 
+/*
 struct TrGeomRecordComp 
   : public std::binary_function <TrGeomRecord *, TrGeomRecord *, bool> 
 {
@@ -125,5 +126,6 @@ struct TrGeomRecordComp
 		   const TrGeomRecord * const p2 ) const
   { return p1->id_ < p2->id_; }
 };
+*/
 
 #endif

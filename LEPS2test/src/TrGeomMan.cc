@@ -13,7 +13,8 @@ const int MaxChar = 200;
 
 TrGeomMan *TrGeomMan::geomMan_=0;
 
-TrGeomMan::TrGeomMan()
+TrGeomMan::TrGeomMan():
+reversech_(true)
 {}
 
 TrGeomMan::~TrGeomMan()
@@ -283,23 +284,33 @@ std::vector <int> TrGeomMan::GetDetectorIDList( void ) const
 }
 
 //proto type BFT ch. scheme 
-//0 origin  max. is ch. 127
-//MPPC 1 ch  0 - 31  L0 subL0
-//MPPC 2 ch 32 - 63  L1 subL1
-//MPPC 3 ch 64 - 95  L2 subL0
-//MPPC 4 ch 96 - 127 L3 subL1
+//0 origin, up to 127 ch.
+//MPPC board 1: ch  0 - 31  L0 subL0
+//MPPC board 2: ch 32 - 63  L1 subL1
+//MPPC board 3: ch 64 - 95  L2 subL0
+//MPPC board 4: ch 96 - 127 L3 subL1
 //layer 0 (beam downstream) - 3 (beam upstream)
 //EASIROC 0-3
-//fiber no. 0 origin max. is fiber 11
+//
+//fiber no. is defined in each layer
+//0 origin, up to fiber 11.
+//
 //X:0,U:1,V:2
 //layer configuration
+//<-downstream    upstream->
 //X,U,V,X,U,V,U,V,X,U,V,X
 
 
-//X:0,U:1,V:2
+//return X:0,U:1,V:2
 int TrGeomMan::getXUV(int ch = -1) const
 {
+  
   if(64<= ch) ch -= 64;
+  
+  if(reversech_){
+    if(ch<32)  ch = 32 - ch; 
+    //else       ch = 64 - ch;
+  }
 
   if(0 <= ch && ch <= 7){
     return 1;   //U (8 fibers)
@@ -320,7 +331,7 @@ int TrGeomMan::getXUV(int ch = -1) const
   }else if(46 <= ch && ch <= 63){
     return 2; //V (18 fibers)
   }else{ 
-    std::cout << "invalid ch" << ch << std::endl;
+    std::cout << "invalid ch: " << ch << std::endl;
     return -1;
   }
 }
@@ -329,6 +340,11 @@ int TrGeomMan::getXUV(int ch = -1) const
 int TrGeomMan::getsublayer(int ch = -1) const
 {
   if(64<= ch) ch -= 64;
+  
+  if(reversech_){
+    if(ch<32)  ch = 32 - ch; 
+    //else       ch = 64 - ch;
+  }
 
   int type = getXUV(ch);
   int sublayer = -1;
@@ -364,6 +380,11 @@ int TrGeomMan::getlayer(int ch = -1) const
   if(64<= ch){
     ch -= 64;
     is64over = true;
+  }
+  
+  if(reversech_){
+    if(ch<32)  ch = 32 - ch; 
+    //else       ch = 64 - ch;
   }
 
   int type = getXUV(ch);
@@ -402,6 +423,12 @@ int TrGeomMan::getlayer(int ch = -1) const
 int TrGeomMan::getfiber(int ch = -1) const
 {
   if(64<= ch) ch = ch - 64;
+  
+  if(reversech_){
+    if(ch<32)  ch = 32 - ch; 
+    //else       ch = 64 - ch;
+  }
+
   int type = getXUV(ch);
   int fiber = -1;
   //U type
@@ -436,6 +463,11 @@ int TrGeomMan::getbiglayer(int ch = -1) const
     ch -= 64;
     is64over = true;
   }
+  
+  if(reversech_){
+    if(ch<32)  ch = 32 - ch; 
+    //else       ch = 64 - ch;
+  }
 
   int type = getXUV(ch);
   int layer = -1;
@@ -467,7 +499,7 @@ int TrGeomMan::getbiglayer(int ch = -1) const
 int TrGeomMan::geteasiroc(int ch = -1) const
 {
   int easiroc = -1;
-  if(0 <= ch && ch <= 32) easiroc = 0;
+  if(0 <= ch && ch <= 31) easiroc = 0;
   else if(32<= ch && ch <= 63) easiroc = 1;
   else if(64<= ch && ch <= 95) easiroc = 2;
   else if(96<= ch && ch <= 127) easiroc = 3;

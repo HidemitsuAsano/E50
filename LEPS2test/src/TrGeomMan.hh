@@ -70,7 +70,7 @@ private:
   static TrGeomMan *geomMan_;
   std::string filename_;
   mutable std::map <int, TrGeomRecord *> geomRecord_;
-
+  bool reversech_;
 private:
   void clearElements( void );
 };

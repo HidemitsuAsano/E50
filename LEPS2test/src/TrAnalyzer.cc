@@ -21,13 +21,6 @@
 #include "TrGeomMan.hh"
 #include "DetectorID.hh"
 
-const double Deg2Rad = acos(-1.)/180.;
-const double Rad2Deg = 180./acos(-1.);
-
-const double MaxChiSqrBeamTrack = 10000.;
-const double MaxChiSqrScatTrack = 10000.;
-
-
 TrAnalyzer::TrAnalyzer():
   isTrHitsSorted_(false),
   sigmathreshold_(10),
@@ -74,29 +67,45 @@ bool TrAnalyzer::MakeSFTRawHits( RawData *rawData )
   clearTracksSFTT();
 
   //SFT
-
   //Type 1,2,3 realistic detector
   static int first=0; 
   if( confMan->AnaMode()>=1 ){
     if(first==0){
-      std::cout << __FILE__  << "  " << __LINE__ << " realistic detector is chosen " << std::endl;
-      std::cout << __FILE__  << "  " << __LINE__ << " ADC threshold of hits: "  << sigmathreshold_ << " sigma" << std::endl;
+      std::cout << __FILE__  << "  L." << __LINE__ << " realistic detector is chosen " << std::endl;
+      std::cout << __FILE__  << "  L." << __LINE__ << " ADC threshold of hits: "  << sigmathreshold_ << " sigma" << std::endl;
       const char yes[2][4]={"no","yes"};
-      std::cout << __FILE__  << "  " << __LINE__ << " TOT cut ? "  << yes[isTOTcut_]  << std::endl;
+      std::cout << __FILE__  << "  L." << __LINE__ << " TOT cut ? "  << yes[isTOTcut_]  << std::endl;
       if(isTOTcut_){
         std::cout << " TOT cut low "  << TOTcutlow_ << std::endl;
         std::cout << " TOT cut up "  << TOTcutup_ << std::endl;
       }
       first++;
     }
+
     const SFTRawHitContainer &cont = rawData->GetSFTRawHitContainer();
     int nhit=cont.size();
       //std::cout<< nh << std::endl;
-      
+    if(nhit != 128){
+      //All 128 channels must have ADC data !
+      std::cout << "nhit: " << nhit << std::endl;
+      std::cout << "something is wrong " << std::endl;
+      return false;
+    }
+
     for( int i=0; i<nhit; ++i ){
       SFTRawHit *rhit=cont[i];
       int rlayerID = rhit->LayerId();
-      int rchID  = rhit->ChId();//readout channel ID 0-128
+      int rchID  = rhit->ChId();//readout channel ID 0-127
+      
+      //range check 
+      if( (rlayerID < PlMinSFT) && (PlMaxSFT <  rlayerID) ){
+        std::cout << "layer ID is out of range !! : " << rlayerID << std::endl;
+      }
+
+      if( (rchID < 0) && (128 < rchID) ){
+        std::cout << "ch. ID is out of range !! : " << rlayerID << std::endl;
+      }
+
       int adcval = rhit->GetAdcHigh();
       int tdclead = rhit->GetTdcLeading();
       int tdctrail = rhit->GetTdcTrailing();
@@ -109,19 +118,23 @@ bool TrAnalyzer::MakeSFTRawHits( RawData *rawData )
         if(! ((TOTcutlow_<tot) && (tot<TOTcutup_)) ) continue;
       }
       int fiber = geomMan->getfiber(rchID);
-      //need to store fiber ID to sort hits for clusterig
+      
+      //need to store fiber ID instead of readout ch. to sort hits in clustering 
       TrHit *hit = new TrHit(rlayerID ,fiber);
+      
       //hit->SetID // not implemented yet, need to change structure of TrHit
-      int nhitpos= rhit->GetSize();
-      for( int j=0; j<nhitpos; ++j ){
-        hit->SetPos( fiber ); // set a segment ID as a hit position ??? ->re-fill in the CalcObservables
-                          // May.23 2016 added comment: the TrHit object does not have the number of hits at this moment.Here, the vector of hit position is filled by setting the segment ID
-      }
-      //if(!hit) continue; 
+
       //should be use this function, tempolary hard-coded here. 
       //double wpos = geomMan->calcChPosition(rlayerID,rchID);
-  
       int type = rhit->GetType();
+      
+      //check layer type
+      const int XUVorder[12] = {0,1,2,0,1,2,1,2,0,1,2,0};
+      if( XUVorder[rlayerID] != type ){
+        std::cout << "wrong data type: " << type << std::endl;
+      }
+      
+      //add offset to the local x pos.
       double offset = -9999;
       if(type==0){//X 
         offset = -3.0;
@@ -133,8 +146,9 @@ bool TrAnalyzer::MakeSFTRawHits( RawData *rawData )
       double angle = geomMan->GetTiltAngle(rlayerID);
       // std::cout<< __FILE__ << "  "  << __LINE__ << ": Layer  " << rhit->LayerId() << "  segment " << rhit->ChId() << 
       //   "  local x " << wpos << std::endl;
-      hit->SetChPosition(wpos);
+      hit->SetFiberPosition(wpos);
       hit->SetTiltAngle(angle);
+      //hit->Print();
       //std::cout << __FILE__ << " : " << __LINE__ << " layer: " << rlayerID << " segment " <<rchID  <<  ": wpos "<< wpos << "angle " << angle << std::endl;
       //if(hit->CalcObservables()){//hit position for each hit (before clustering) is calculated in this function, calling TrGeomRecord
       SFTTrHitContainer_[rlayerID].push_back(hit);
@@ -154,7 +168,7 @@ bool TrAnalyzer::MakeSFTRawHits( RawData *rawData )
 //output: SFTTrHitContainer_ after sorting
 bool TrAnalyzer::SortTrHits()
 {
-  //test
+  //test (before sorting TrHits)
   /*
   for( int layer=0; layer<NumOfLayersSFT; ++layer ){
     int nhit = SFTTrHitContainer_[layer].size();
@@ -173,7 +187,8 @@ bool TrAnalyzer::SortTrHits()
   }
   
   /*
-  //test
+  //test (after sorting TrHits) 
+  //
   for( int layer=0; layer<NumOfLayersSFT; ++layer ){
     int nhit = SFTTrHitContainer_[layer].size();
     std::cout << "layer : size" << layer << " : " << nhit << std::endl;
@@ -232,8 +247,8 @@ bool TrAnalyzer::MakeHitCluster( const TrHitContainer &trhitcontainer,
     if( hit ){
       //int multiplicity = hit->GetPosSize();
       int layer = hit->GetLayer(); 
-      int segment= hit->GetCh();
-      double lxpos= hit->GetChPosition();//local x position
+      int segment= hit->GetFiber();
+      double lxpos= hit->GetFiberPosition();//local x position
       /*
          if(multiplicity>1){
       //   std::cout << __FILE__ << "  " << __LINE__ << " multiple hits on one segment!!: " << multiplicity << std::endl;
@@ -383,8 +398,8 @@ void TrAnalyzer::clearTracksSFTT( void )
 }
 
 
-bool TrAnalyzer::ReCalcTrHits( bool applyRecursively )
-{
+//bool TrAnalyzer::ReCalcTrHits( bool applyRecursively )
+//{
   // for( int l=0; l<=NumOfLayersSTIn; ++l ){
   //   int n=STInHC[l].size();
   //   for( int i=0; i<n; ++i ){
@@ -393,8 +408,8 @@ bool TrAnalyzer::ReCalcTrHits( bool applyRecursively )
   //   }
   // }
  
-  return true;
-}
+ // return true;
+//}
 
 // bool TrAnalyzer::ReCalcTrackSTIn( bool applyRecursively )
 // {

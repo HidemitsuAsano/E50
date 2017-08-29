@@ -10,24 +10,16 @@
 #include <algorithm>
 
 #include "TrHit.hh"
-#include "ConfMan.hh"
-#include "TrGeomMan.hh"
-// #include "TrTdcCalibMan.hh"
-// #include "TrDriftParamMan.hh"
-//#include "TrLTrackHit.hh"
-#include "TrParameters.hh"
 
-const double Deg2Rad = acos(-1)/180.;
-const double Rad2Deg = 180./acos(-1);
 
 TrHit::TrHit()
-  : layer_(-1), ch_(-1),wpos_(0),angle_(0)
+  : layer_(-1), fiber_(-1),localx_(0),angle_(0)
 {
   hitcounter_ = 0 ;
 }
 
 TrHit::TrHit( int layer, int ch )
-  : layer_(layer), ch_(ch),wpos_(0),angle_(0)
+  : layer_(layer), fiber_(ch),localx_(0),angle_(0)
 {
   hitcounter_ = 0 ;
 }
@@ -38,6 +30,22 @@ TrHit::~TrHit()
  // clearRegisteredHits();
 }
 
+
+
+void TrHit::Print()
+{
+  std::cout << "TrHit::Print() " << std::endl;
+  std::cout << "Layer:   " << layer_ << std::endl; 
+  std::cout << "fiber:      " << fiber_ << std::endl; 
+  std::cout << "hitcount " << hitcounter_ << std::endl;
+  std::cout << "Local X  " << localx_ << std::endl;
+  std::cout << "angle    " << angle_ << std::endl;
+}
+
+
+
+
+/*
 void TrHit::SetPos( double pos )
 {
   pos_.push_back(pos); 
@@ -45,7 +53,7 @@ void TrHit::SetPos( double pos )
   dlRange_.push_back(true);
   hitcounter_++;
   hitID_.push_back(hitcounter_);
-}
+}*/
 
 /*
 void TrHit::clearRegisteredHits( void )
@@ -56,34 +64,34 @@ void TrHit::clearRegisteredHits( void )
 }
 */
 
-bool TrHit::CalcObservables( void )
-{
-  static const std::string funcname="[TrHit::CalcObservables]";
+//bool TrHit::CalcObservables( void )
+//;{
+//  static const std::string funcname="[TrHit::CalcObservables]";
   
-  ConfMan *confMan=ConfMan::GetConfManager();
-  if(!confMan){
-    std::cout << "Can not find ConfManager !! " << std::endl;
-    return false;
-  }
-
-  TrGeomMan *geomMan=confMan->GetTrGeomManager();
-  if(!geomMan){
-    std::cout << "Can not find GeomManager !! " << std::endl;
-    return false;
-  }
+//  ConfMan *confMan=ConfMan::GetConfManager();
+//  if(!confMan){
+//    std::cout << "Can not find ConfManager !! " << std::endl;
+//    return false;
+//  }
+//
+//  TrGeomMan *geomMan=confMan->GetTrGeomManager();
+//  if(!geomMan){
+//    std::cout << "Can not find GeomManager !! " << std::endl;
+//    return false;
+//  }
 //   TrTdcCalibMan *calibMan=confMan->GetTrTdcCalibManager();
 //   if(!calibMan) return false;
 //   TrDriftParamMan *driftMan=confMan->GetTrDriftParamManager();
 //   if(!driftMan) return false;
 
-  wpos_=geomMan->calcChPosition(layer_,ch_);
-  angle_=geomMan->GetTiltAngle(layer_);
+//  wpos_=geomMan->calcChPosition(layer_,ch_);
+//  angle_=geomMan->GetTiltAngle(layer_);
 
-  std::cout << __FILE__ << " : " << __LINE__ << " layer: " << layer_ << " segment " <<ch_  <<  ": wpos_ "<< wpos_ << "angle " << angle_ << std::endl;
+//  std::cout << __FILE__ << " : " << __LINE__ << " layer: " << layer_ << " segment " <<ch_  <<  ": wpos_ "<< wpos_ << "angle " << angle_ << std::endl;
   
-  bool Status = true;
-  int nhitpos  = pos_.size();//nhitpos : number of hits 
-  for (int i=0; i<nhitpos; i++) {
+//  bool Status = true;
+  //int nhitpos  = pos_.size();//nhitpos : number of hits 
+  //for (int i=0; i<nhitpos; i++) {
     //     double ctime;
     //     if(!calibMan->GetTime( layer_, ch_, tdc_[i], ctime ))
     //       return false;
@@ -96,12 +104,12 @@ bool TrHit::CalcObservables( void )
 //     dt_.push_back(dtime);
     
     //Type 0, simple detector
-    if( confMan->AnaMode()==0 ){
-      dl_.push_back(pos_[i]);
-    }//Type 1-3, realistic detector
-    else if( confMan->AnaMode()>=1 ){
-      dl_.push_back(0.0);
-    }
+    //if( confMan->AnaMode()==0 ){
+    //  dl_.push_back(pos_[i]);
+    //}//Type 1-3, realistic detector
+   // else if( confMan->AnaMode()>=1 ){
+    //  dl_.push_back(0.0);
+   // }
     
 //     if(layer_>=100){
 //       if( dl_[i]>MinDLBc[layer_-100] && dl_[i]<MaxDLBc[layer_-100] )
@@ -112,7 +120,7 @@ bool TrHit::CalcObservables( void )
 // 	dlRange_[i]=true;
 //     }
 //   }
-  }
-
-  return Status;
-}
+//  }
+//
+//  return Status;
+//}

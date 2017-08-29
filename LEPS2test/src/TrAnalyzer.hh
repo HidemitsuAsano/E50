@@ -62,7 +62,7 @@ public:
 
   inline TrLocalTrack * GetTrackSFTT(unsigned int i ) const;
 
-  bool ReCalcTrHits( bool applyRecursively=false ); 
+  //bool ReCalcTrHits( bool applyRecursively=false ); 
   bool ReCalcTrackSFTT( bool applyRecursively=false ); 
 
   bool ReCalcAll( void );

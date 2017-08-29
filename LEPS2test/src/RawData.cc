@@ -1,5 +1,3 @@
-#include "RawData.hh"
-#include "GetNumberFromKernelEntropyPool.hh"
 
 #include <algorithm>
 #include <iostream>
@@ -10,25 +8,16 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstdio>
-#include <cstdlib>
-#include <string.h>
 
-#include "DataType.hh"
+#include "RawData.hh"
+#include "GetNumberFromKernelEntropyPool.hh"
 #include "DetectorID.hh"
 #include "SFTRawHit.hh"
 #include "TemplateLib.hh"
-
 #include "ConfMan.hh"
 #include "TrGeomMan.hh"
 
-#define check1 0
-#define check2 0
-
-const double Deg2Rad = acos(-1.)/180.;
-const double Rad2Deg = 180./acos(-1.);
-
 RawData::RawData():
-  PrimHC(0),
   SFTRawHitCont(0) //vector of data object class for a single track in SFT
 {}
 
@@ -89,20 +78,24 @@ bool RawData::Decode( std::ifstream &In )
   clearAll();
   //ConfMan *confMan = ConfMan::GetConfManager();
   const TrGeomMan & geomMan=TrGeomMan::GetInstance();
+  
   //# of total ch. hard-coded. modify later
   for(int ich=0;ich<128;ich++){
     SFTRawHit *p = new SFTRawHit(ich);
     SFTRawHitCont.push_back(p);
   }
   
+  //number of NIM-EASIROCs
   const int nmodule = 2;
-  for(int imod=0;imod<nmodule ;imod++){
+
+  for(int imod=0;imod < nmodule ;imod++){
     char headerByte[4];
     In.read(headerByte, 4);
     unsigned int header32 = getBigEndian32(headerByte);
     unsigned int header = Decode32bitWord(header32);
     bool isHeader = ((header >> 27) & 0x01) == 0x01;
     if(!isHeader) {
+      std::cerr << __FILE__ << " L." << __LINE__ << std::endl;
       std::cerr << "Header data Frame Error" << std::endl;
       fprintf(stderr, "    %08X\n", header32);
       //std::exit(1);
@@ -110,7 +103,11 @@ bool RawData::Decode( std::ifstream &In )
     }
     size_t dataSize = header & 0x0fff;
     //cout << dataSize << endl;
-    unsigned int scalerValues[69];
+    
+    //scaler is always off,
+    //maybe, not impletemented in Chikuma-san's FPGA ? 
+    //(version ver.20150923) 
+    //unsigned int scalerValues[69];
     char* dataBytes = new char[dataSize * 4];
     In.read(dataBytes, dataSize * 4);
     for(size_t i = 0; i < dataSize; ++i) {
@@ -148,7 +145,7 @@ bool RawData::Decode( std::ifstream &In )
         int value = data & 0x0fff;
         SFTRawHitCont[ch]->SetTdcTrailing(value);
       }else if(isScaler(data)) {
-        int value = data & 0x3fff;
+        //int value = data & 0x3fff;
         /*
         if(ch == 68) {
           int scalerValuesArrayIndex = events % 100;
@@ -235,11 +232,9 @@ bool RawData::isTdcTrailing(unsigned int data = 0)
     return (data & 0x00601000) == 0x00200000;
 }
 
-//not impletented yet in firmware (?) 
+//scaler function is not impletented yet in firmware (?) 
 bool RawData::isScaler(unsigned int data = 0)
 {
     return (data & 0x00600000) == 0x00400000;
 }
-
-
 
