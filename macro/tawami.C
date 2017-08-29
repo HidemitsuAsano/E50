@@ -1,13 +1,16 @@
-const double w = 150; //kg fiber
+const double w = 0.7; //kg weight of fiber (0.5 mm fiber * 140 cm * 2400 )
 const double wFe = 7.85/1000./1000.0; //kg/mm^3 SS400
-const double g = 9.80665;//
-const double E = 206000;// N/mm^2
-const double L = 2000.0;// mm
+const double g = 9.80665;//acceleration of gravity
+const double E = 206000;// N/mm^2 Young's modules of SS400
+const double L = 2000.0;// mm  
 const double a = 700.0;// mm
 const double b = 600.0;// mm
-const double W = 30;// mm
-const double H = 100;// mm 
+const double W = 10;// mm
+//const double H = 100;// mm 
 
+Double_t func_w(Double_t *x,Double_t *par);
+Double_t func_self(Double_t *x,Double_t *par);
+Double_t func_sum(Double_t *x,Double_t *par);
 
 void tawami(){
 
@@ -17,9 +20,10 @@ void tawami(){
   f1sum->GetXaxis()->SetTitle("H [mm]");
   f1sum->GetYaxis()->SetTitle(" [mm]");
   char title[512];
-  sprintf(title,"deflexion of SS400 (W = %d mm)",W);
+  sprintf(title,"deflexion of SS400 (W = %0.2f mm)",W);
   f1sum->SetTitle(title);
   f1sum->SetLineColor(3);
+  f1sum->GetYaxis()->SetRangeUser(0.001,0.1);
   f1sum->Draw();
   TF1* f1w = new TF1("f1w",func_w,100,300,0);
   f1w->SetLineColor(2);
