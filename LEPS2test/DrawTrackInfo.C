@@ -56,5 +56,15 @@ void DrawTrackInfo(string filename="19.root"){
   picname +="_xy0.png";
   cxy0->SaveAs(picname.c_str());
 
+  TCanvas *cnhit = new TCanvas("cnhit","cnhit",800,800);
+  cnhit->cd();
+  TH1I *hnassociate = (TH1I*)fin->Get("hnassociate");
+  hnassociate->Draw();
+
+  string picname = filename.substr(0,iext);
+  picname +="_nssociate.png";
+  cnhit->SaveAs(picname.c_str());
+
+  
 
 }
