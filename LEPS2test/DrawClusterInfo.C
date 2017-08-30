@@ -50,7 +50,7 @@ void DrawClusterInfo(string filename="20170615T144153_000015_0.root"){
     chitprof->cd(ilr+1);
     char hname[256];
     sprintf(hname,"Hitproflayer%s%d",XUVorder[ilr],ilr);
-    hitprofile[ilr] = (TH1F)(gFile->Get(hname));
+    hitprofile[ilr] = (TH1F*)(gFile->Get(hname));
     hitprofile[ilr]->Draw();
   }
   

@@ -370,19 +370,19 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
     hnhitadc->Fill(ich,nadchit);
     hnhittot->Fill(ich,ntothit);
   }
-  string picname = filename.substr(0,iext);
+  picname = filename.substr(0,iext);
   picname+="_adctotcorr0.png";
   ctotadc0->SaveAs(picname.c_str());
   
-  string picname = filename.substr(0,iext);
+  picname = filename.substr(0,iext);
   picname+="_adctotcorr1.png";
   ctotadc1->SaveAs(picname.c_str());
 
-  string picname = filename.substr(0,iext);
+  picname = filename.substr(0,iext);
   picname+="_adctotcorr2.png";
   ctotadc2->SaveAs(picname.c_str());
   
-  string picname = filename.substr(0,iext);
+  picname = filename.substr(0,iext);
   picname+="_adctotcorr3.png";
   ctotadc3->SaveAs(picname.c_str());
 

@@ -33,7 +33,7 @@ void DrawTrackInfo(string filename="19.root"){
   hchi2->Draw();
   
   iext  = filename.find_last_of(".");
-  string picname = filename.substr(0,iext);
+  picname = filename.substr(0,iext);
   picname +="_chi2.png";
   cchi2->SaveAs(picname.c_str());
 
@@ -52,7 +52,7 @@ void DrawTrackInfo(string filename="19.root"){
   hy0->SetTitle("Y0 pos.");
   hy0->Draw();
 
-  string picname = filename.substr(0,iext);
+  picname = filename.substr(0,iext);
   picname +="_xy0.png";
   cxy0->SaveAs(picname.c_str());
 
@@ -61,7 +61,7 @@ void DrawTrackInfo(string filename="19.root"){
   TH1I *hnassociate = (TH1I*)fin->Get("hnassociate");
   hnassociate->Draw();
 
-  string picname = filename.substr(0,iext);
+  picname = filename.substr(0,iext);
   picname +="_nssociate.png";
   cnhit->SaveAs(picname.c_str());
 
