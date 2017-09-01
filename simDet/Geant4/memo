@@ -1,5 +1,5 @@
 TODO 
 
-- compile with cmake and latest geant4.
+- compile with cmake (or automake) and latest geant4.
 - documentation 
 - make visularization tools (Qt4 , for example)
