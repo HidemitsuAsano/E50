@@ -5,7 +5,7 @@
 #include <functional>
 
 class SFTCluster;
-class TrAnalyzer;
+class BSFTReco;
 
 class TrLocalTrack
 {

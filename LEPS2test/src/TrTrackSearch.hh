@@ -1,7 +1,7 @@
 #ifndef TrTrackSearch_h
 #define TrTrackSearch_h 1
 
-#include "TrAnalyzer.hh"
+#include "BSFTReco.hh"
 #include "DetectorID.hh"
 
 #include <vector>

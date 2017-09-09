@@ -4,7 +4,7 @@
 #include <string>
 
 class VEvent;
-class TrGeomMan;
+class GeomMan;
 class FieldMan;
 
 class ConfMan
@@ -21,7 +21,7 @@ private:
 
   //Geometry files  
   std::string TrGeomFileName_;
-  TrGeomMan *TrGeomManager_;
+  GeomMan *GeomManager_;
 
   //Tracker position resolution
   double SFTResol_;
@@ -47,8 +47,7 @@ public:
 
   int AnaMode( void ) const { return anaMode_; }
 
-  //Tr
-  TrGeomMan *GetTrGeomManager( void ) { return TrGeomManager_; }
+  GeomMan *GetGeomManager( void ) { return GeomManager_; }
 
   double GetSFTResol( void ) const { return SFTResol_; }
 

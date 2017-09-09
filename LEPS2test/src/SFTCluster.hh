@@ -57,6 +57,7 @@ public:
   double GetResidual( void ) const { return localx_ - GetProjectedLocalX() ; }
   //  float GetAdcSum( void ) const { return adcsum_; }
   //  void SetAdcSum(float adc )  { adcsum_=adc; }
+  void Print( void );
 
 };
 
