@@ -6,7 +6,7 @@
 #include <iterator>
 #include <sstream>
 
-#include "TrGeomMan.hh"
+#include "GeomMan.hh"
 
 const std::string defDCGeomFile="DCgeom.param";
 
@@ -17,7 +17,7 @@ ConfMan::ConfMan( const std::string & filename, const std::string tablename)
     PedetableName_(tablename),
     anaMode_(0), 
     TrGeomFileName_(defDCGeomFile),
-    TrGeomManager_(0),
+    GeomManager_(0),
     SFTResol_(0.0),
     T0Resol_(0.0)
 {
@@ -31,7 +31,7 @@ ConfMan::ConfMan( const std::string & filename, const std::string tablename)
 
 ConfMan::~ConfMan( )
 {
-  if(TrGeomManager_) delete TrGeomManager_;
+  if(GeomManager_) delete GeomManager_;
   confManager_=0;
 }
 
@@ -83,8 +83,8 @@ bool ConfMan::Initialize()
 
 bool ConfMan::InitializeParameterFiles( void )
 {
-  TrGeomManager_ = & TrGeomMan::GetInstance();
-  TrGeomManager_->Initialize(TrGeomFileName_);
+  GeomManager_ = & GeomMan::GetInstance();
+  GeomManager_->Initialize(TrGeomFileName_);
   
   std::ifstream ftable;
   ftable.open(PedetableName_.c_str());

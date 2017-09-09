@@ -5,7 +5,7 @@
 #include "TrLocalTrack.hh"
 #include "TemplateLib.hh"
 #include "DetectorID.hh"
-#include "TrGeomMan.hh"
+#include "GeomMan.hh"
 
 #include "ConfMan.hh"
 
@@ -46,18 +46,18 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
 
   const bool RequiredHitPattern[NumOfLayersSFT]=
   {
-    false,//L0  X
-    true, //L1  U
-    true, //L2  V
-    false,//L3  X
-    true, //L4  U
-    true, //L5  V
-    true, //L6  U
-    true, //L7  V
-    false,//L8  X
-    true, //L9  U
-    true, //L10 V
-    false,//L11 X
+    true,//L0  X
+    false, //L1  U
+    false, //L2  V
+    true,//L3  X
+    false, //L4  U
+    false, //L5  V
+    false, //L6  U
+    false, //L7  V
+    true,//L8  X
+    false, //L9  U
+    false, //L10 V
+    true,//L11 X
   };
   
   
@@ -72,8 +72,9 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
     std::cout << "Max # of Combination " << MaxCombi << std::endl;
     std::cout << "*** Required hit pattern*** " << std::endl;
     const char yes[2][4] = {"no","yes"};
+    const char XUVorder[12][2] = {"X","U","V","X","U","V","U","V","X","U","V","X"};
     for(int ilr=0;ilr<NumOfLayersSFT;ilr++){
-      std::cout << "Layer" << ilr << "  "  << yes[RequiredHitPattern[ilr]] << std::endl;
+      std::cout << "Layer" << ilr << "  " << XUVorder[ilr] << "  " << yes[RequiredHitPattern[ilr]] << std::endl;
     }
     std::cout << "********************" << std::endl;
     std::cout << std::endl;
@@ -280,7 +281,7 @@ int LocalTrackSearch(const  SFTClusterContainer *ClusterCont,
       int nhit=tp->GetNHit();
       for( int j=0; j<nhit; ++j ){
 	int lnum = tp->GetHit(j)->GetLayer();
-  double zz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
+  double zz = GeomMan::GetInstance().GetGlobalZ( lnum );
   tp->GetHit(j)->SetProjectedPosition(tp->GetX(zz), tp->GetY(zz));
   tp->GetHit(j)->SetAssociatedLocalTrack(i);
       }

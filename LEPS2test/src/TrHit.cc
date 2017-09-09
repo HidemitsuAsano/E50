@@ -1,5 +1,5 @@
 //TrHits object has the vector of hit positions and TrLTrackHit in one segment (layer /fiber or ch)
-//layer and ch information is stored when TrAnalyzer is called
+//layer and ch information is stored when BSFTReco is called
 
 #include <cmath>
 #include <iostream>

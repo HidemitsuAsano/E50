@@ -1,6 +1,11 @@
 //author: Hidemitsu Asano
-//data: June 24th, 2017
-//analysis code for proto type BFT read out by 2 NIM-EASIROCs
+//last update: June 24th, 2017
+//analysis code for proto type BSFT read out by 2 NIM-EASIROCs
+//
+//This code is compiled by "make all" (only "make" is not sufficient)
+//Main function of this code is to produce disk resident files.
+//Histograms and TTrees to be looked should be defined in "InitializeHistograms()" 
+//
 
 #include "VEvent.hh"
 
@@ -14,13 +19,13 @@
 #include "ConfMan.hh"
 #include "HistHelper.hh"
 #include "DetectorID.hh"
-#include "TrGeomMan.hh"
+#include "GeomMan.hh"
 #include "TrParameters.hh"
 #include "RawData.hh"
 #include "TrHit.hh"
 #include "SFTRawHit.hh"
 #include "SFTCluster.hh"
-#include "TrAnalyzer.hh"
+#include "BSFTReco.hh"
 #include "TrLocalTrack.hh"
 
 const double Deg2Rad = acos(-1.)/180.;
@@ -49,7 +54,7 @@ class AnaBFT
 
 private:
   RawData *rawData;
-  TrAnalyzer *TrAna;
+  BSFTReco *BSFTRecoPtr;
   bool is_doTracking;
 public:
   AnaBFT();
@@ -65,7 +70,7 @@ public:
 AnaBFT::AnaBFT()
   : VEvent(),
     rawData(0),
-    TrAna(new TrAnalyzer()),
+    BSFTRecoPtr(new BSFTReco()),
     is_doTracking(true)
 {
   //InitializeHistograms(); 
@@ -73,7 +78,7 @@ AnaBFT::AnaBFT()
 
 AnaBFT::~AnaBFT()
 {
-  if (TrAna)   delete TrAna;
+  if (BSFTRecoPtr)   delete BSFTRecoPtr;
   if (rawData) delete rawData;
 }
 
@@ -124,7 +129,6 @@ static FiberHit sfiber;
 
 struct Event{
   unsigned int nevents;
-
 
   //BFT rawhit based info.
   std::vector<int> vTch;//0-128
@@ -183,8 +187,26 @@ static Cluster cluster;
 bool AnaBFT::ProcessingBegin()
 {
  //InitializeHistograms();   
- std::cout << __FUNCTION__ << std::endl;
- return true;
+ ConfMan *confMan=ConfMan::GetConfManager();
+ if(!confMan){
+   std::cout << "Can not find ConfManager !! " << std::endl;
+   return false;
+ }
+
+ GeomMan *geomMan=confMan->GetGeomManager();
+ if(!geomMan){
+   std::cout << "Can not find GeomManager !! " << std::endl;
+   return false;
+ }
+ 
+ for(int ich=0;ich<128;ich++){
+   int type = geomMan->getXUV(ich);
+   std::cout << "ch:" << ich << " layer:" << geomMan->getlayer(ich) 
+        << " " << XUV[type] << " fiber:" 
+        << geomMan->getfiber(ich) << std::endl;
+ }
+
+
 }
 
 bool AnaBFT::ProcessingNormal( std::ifstream &In )
@@ -198,7 +220,7 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
     return false;
   }
   
-  TrGeomMan *geomMan=confMan->GetTrGeomManager();
+  GeomMan *geomMan=confMan->GetGeomManager();
   if(!geomMan){
     std::cout << "Can not find GeomManager !! " << std::endl;
     return false;
@@ -241,6 +263,15 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
     sprintf(hname,"AdcToTcorr_%d",ich);
     adcToTcorr[ich] = dynamic_cast<TH2I*>(gFile->Get(hname));
   }
+  
+  TH2I* rawhitcorr_ch[NumOfLayersSFT][3];
+  for(int ilr=0; ilr<NumOfLayersSFT; ilr++){
+    for(int ifirst=0;ifirst<3;ifirst++){
+      char hname[256];
+      sprintf(hname,"rawhitcorr%d_%d",ilr,ifirst);
+      rawhitcorr_ch[ilr][ifirst] = dynamic_cast<TH2I*>(gFile->Get(hname));
+    }
+  }
 
   TH1I* hitprofile_ch[NumOfLayersSFT];//layer , type(xuv)
   for(int ilr=0; ilr<NumOfLayersSFT; ilr++){
@@ -254,6 +285,13 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
     char hname[256];
     sprintf(hname,"HitMulti%s%d",XUVorder[ilr],ilr);
     hitmulti[ilr] = dynamic_cast<TH1I*>(gFile->Get(hname));
+  }
+
+  TH2F* hX0corr[NumOfLayersSFT];
+  for(int ilr=0;ilr<NumOfLayersSFT; ilr++){
+    char hname[256];
+    sprintf(hname,"hX0corr%d",ilr);
+    hX0corr[ilr] = dynamic_cast<TH2F*>(gFile->Get(hname));
   }
 
   //SFT rawhit info.
@@ -292,30 +330,57 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
   }
 
   
-  TrAna->SetSigmaThreshold (10.);
-  TrAna->UseTOTcut(false);
-  TrAna->MakeSFTRawHits( rawData ); // name of this func. is confusing in real data analysis. change it
+  BSFTRecoPtr->SetSigmaThreshold (10.);
+  BSFTRecoPtr->UseTOTcut(false);
+  BSFTRecoPtr->MakeSFTRawHits( rawData ); // name of this func. is confusing in real data analysis. change it
   //SFT TrHit (hits above threshold)
   //TODO change name of class "TrHit", these hits are not necessarily associated track.
+   
+  const int maxmul=10;
+  int multi[NumOfLayersSFT]={-1};
+  int fibercont[NumOfLayersSFT][maxmul];
+  for(int ilr=0;ilr<NumOfLayersSFT;ilr++){
+    for(int imul =0;imul<maxmul;imul++){
+      fibercont[ilr][imul]=-1;
+    }
+  }
+
   for( int ilr=0; ilr<NumOfLayersSFT; ++ilr ){
-    const TrHitContainer trhitcont = TrAna->GetSFTTrHitContainer(ilr);
+    const TrHitContainer trhitcont = BSFTRecoPtr->GetSFTTrHitContainer(ilr);
     int nhit = trhitcont.size();
     hitmulti[ilr]->Fill(nhit);
+    multi[ilr] = nhit;
     for(int ihit=0;ihit<nhit ; ihit++){
       TrHit *hit = trhitcont[ihit];
+      //std::cout << std::endl;
+      //hit->Print();
       int layer = hit->GetLayer();
       if(layer != ilr){
         std::cout << "layer number does not match !! " << std::endl;
         return false;
       }
       int fiber = hit->GetFiber();
-      //int type = geomMan->getXUV(ch);
       hitprofile_ch[ilr]->Fill(fiber);
+      fibercont[ilr][ihit]=fiber;      
+      if(fiber<0) hit->Print();
     }
   }
-  TrAna->SortTrHits();//sort TrHits by segment ID
+
+  for( int ilr=0; ilr<NumOfLayersSFT; ++ilr ){
+    for( int ifirst=0; ifirst<3; ++ifirst){
+      for( int imul0=0; imul0<multi[ifirst]; ++imul0){
+        for( int imul=0; imul<multi[ilr]; ++imul){
+          rawhitcorr_ch[ilr][ifirst]->Fill(fibercont[ifirst][imul0],fibercont[ilr][imul]);
+        }
+      }
+    }
+  }
+
+
+
+  BSFTRecoPtr->SortTrHits();//sort TrHits by segment ID
   //TODO check the TrHits are sorted or not, here.
-  TrAna->SFTClustering();//clustering, 
+  BSFTRecoPtr->SFTClustering();//clustering, 
   
   TH1F* hitprofile[NumOfLayersSFT];//
   TH1I* hitclsmulti[NumOfLayersSFT]={NULL};
@@ -333,10 +398,12 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
     hitsize[ilr] = dynamic_cast<TH1I*>(gFile->Get(hname));
   }
 
-   
+  int nclsX0 = 0;
+  double globalx0=0;
   for( int ilr=0; ilr<NumOfLayersSFT; ++ilr ){
-    const SFTClusterContainer cluscont = TrAna->GetSFTClusterContainer(ilr);
+    const SFTClusterContainer cluscont = BSFTRecoPtr->GetSFTClusterContainer(ilr);
     int nclus = cluscont.size();
+    if(ilr==0) nclsX0 = nclus;
     event.sftnclus = nclus;
     if(nclus!=0) hitclsmulti[ilr]->Fill(nclus);
     if(Verbosity>2){
@@ -352,9 +419,19 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
       double lx = trhitclus->GetLocalX();
       hitprofile[ilr]->Fill(lx);
       double gz = trhitclus->GetGlobalZ();
-      double angle = trhitclus->GetTiltAngle();
+      double angle = trhitclus->GetTiltAngle()*Deg2Rad;//degree to radian
       double globalx = lx * cos(angle);
       double globaly = lx * sin(angle);
+      if( (ilr==0) && (nclsX0>0)) globalx0 = globalx;
+     
+     if( nclsX0>0 ){
+        hX0corr[ilr]->Fill(globalx0,globalx);
+        //std::cout << "angle " << angle << std::endl;
+        //std::cout << "cos(angle) " <<  cos(angle) << std::endl;
+        //std::cout << "lx         " << lx  << std::endl;
+        //std::cout << "globalx    " << globalx << std::endl;
+        //std::cout << "X0         " << globalx0 << std::endl;
+      }
       if(Verbosity>3){
         std::cout << "layer " << ilr << std::endl;
         std::cout << "clsID " << clsID << std::endl;
@@ -408,16 +485,16 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
 
 
   if(is_doTracking){  
-    TrAna->TrackSearchSFTT();//making index
+    BSFTRecoPtr->TrackSearchSFTT();//making index
     //This loop is for evaluating tracking performance while event matching between
     //primary info and reconstructed track info.
-    int nt=TrAna->GetNtracksSFTT();
+    int nt=BSFTRecoPtr->GetNtracksSFTT();
     event.ntr=nt;
     if(Verbosity>10){
       std::cout << __FILE__ << "  " << __LINE__ << " ntrack  " << nt << std::endl;
     }
     for( int it=0; it<nt; ++it ){
-      TrLocalTrack *tp=TrAna->GetTrackSFTT(it);
+      TrLocalTrack *tp=BSFTRecoPtr->GetTrackSFTT(it);
       int nh=tp->GetNHit();
       hnassociate->Fill(nh);
       //get chi2/ndf
@@ -680,9 +757,23 @@ bool ConfMan::InitializeHistograms()
     hitsize[ilr]->SetXTitle("cluster size");
   }
 
-  TH2I* hitcorrXX[4];
-  //TH2I* hitcorrUU[4];
-  //TH2I* hitcorrVV[4];
+  TH2I* rawhitcorr_ch[NumOfLayersSFT][3];
+  for(int ilr=0;ilr<NumOfLayersSFT;ilr++){
+    for(int ifirst = 0 ; ifirst<3 ; ifirst++){
+      rawhitcorr_ch[ilr][ifirst] = new TH2I(Form("rawhitcorr%d_%d",ilr,ifirst),
+      Form("raw Hit correlation %s layer %d - %s layer %d",XUVorder[ifirst],ifirst,XUVorder[ilr],ilr),13,0,13,13,0,13);
+      rawhitcorr_ch[ilr][ifirst]->SetXTitle("fiber #");
+      rawhitcorr_ch[ilr][ifirst]->SetYTitle("fiber #");
+    }
+  }
+
+
+  TH2F* hX0corr[NumOfLayersSFT];
+  for(int ilr=0; ilr<NumOfLayersSFT; ilr++){  
+    hX0corr[ilr] = new TH2F(Form("hX0corr%d",ilr),Form("Hit correlation X0 - %s layer %d after clustering",XUVorder[ilr],ilr), 40,-4,4,40,-4,4); 
+    hX0corr[ilr]->SetXTitle("X0 pos. [mm]");
+    hX0corr[ilr]->SetYTitle("pos. [mm]");
+  }
   
   TH1I* hnassociate = new TH1I("hnassociate","number of associated hits",15,0,15);
   hnassociate->SetXTitle("nhit");

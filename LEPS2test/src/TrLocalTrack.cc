@@ -1,8 +1,8 @@
 #include "TrLocalTrack.hh"
 //#include "TrLTrackHit.hh"
 #include "SFTCluster.hh"
-#include "TrGeomMan.hh"
-#include "TrAnalyzer.hh"
+#include "GeomMan.hh"
+#include "BSFTReco.hh"
 #include "DetectorID.hh"
 #include "MathTools.hh"
 
@@ -20,7 +20,7 @@ const double Rad2Deg = 180./acos(-1.);
 
 const int ReservedNumOfHits = 16;
 //const unsigned int TrLocalMinNHits  = 6;
-const unsigned int TrLocalMinNHits  = 8;
+const unsigned int TrLocalMinNHits  = 4;
 const unsigned int TrLocalMinNHitsVXU = 3;
 const unsigned int TrLocalMinNHitsVXU2= 4;
 const unsigned int TrLocalMinNHits2 = 8;
@@ -80,7 +80,7 @@ SFTCluster *TrLocalTrack::GetHitOfLayerNumber( int lnum ) const
 bool TrLocalTrack::DoFit( void )
 {
   const std::string funcname = "[TrLocalTrack::DoFit()]";
-  //const TrGeomMan & geomMan=TrGeomMan::GetInstance();
+  //const GeomMan & geomMan=GeomMan::GetInstance();
   
   std::size_t n = sftclusterArray_.size();
   static int state = 0;
@@ -337,7 +337,7 @@ bool TrLocalTrack::DoFit( void )
     SFTCluster *sftclusterp = sftclusterArray_[i];
     if( sftclusterp ){
       int lnum = sftclusterp->GetLayer();
-      double gz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
+      double gz = GeomMan::GetInstance().GetGlobalZ( lnum );
       /*  
           if(chisqr<2){
           std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
@@ -356,7 +356,7 @@ bool TrLocalTrack::DoFit( void )
 bool TrLocalTrack::DoFit2( void )
 {
   const std::string funcname = "[TrLocalTrack::DoFit2()]";
-  const TrGeomMan & geomMan=TrGeomMan::GetInstance();
+  const GeomMan & geomMan=GeomMan::GetInstance();
   
   std::size_t n = sftclusterArray_.size();
   
@@ -698,7 +698,7 @@ bool TrLocalTrack::DoFit2( void )
     SFTCluster *sftclusterp = sftclusterArray_[i];
     if( sftclusterp ){
       int lnum = sftclusterp->GetLayer();
-      double gz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
+      double gz = GeomMan::GetInstance().GetGlobalZ( lnum );
       /*  
 	  if(chisqr<2){
 	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
@@ -719,7 +719,7 @@ bool TrLocalTrack::DoFit2( void )
 bool TrLocalTrack::DoFitVXU( void )
 {
   const std::string funcname = "[TrLocalTrack::DoFitVXU()]";
-  const TrGeomMan & geomMan=TrGeomMan::GetInstance();
+  const GeomMan & geomMan=GeomMan::GetInstance();
 
   std::size_t n = sftclusterArray_.size();
 
@@ -782,7 +782,7 @@ bool TrLocalTrack::DoFitVXU( void )
     SFTCluster *sftclusterp = sftclusterArray_[i];
     if( sftclusterp ){
       //int lnum = sftclusterp->GetLayer();
-      //double gz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
+      //double gz = GeomMan::GetInstance().GetGlobalZ( lnum );
       /*  
 	  if(chisqr<2){
 	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;
@@ -800,7 +800,7 @@ bool TrLocalTrack::DoFitVXU( void )
 bool TrLocalTrack::DoFitVXU2( void )
 {
   const std::string funcname = "[TrLocalTrack::DoFitVXU2()]";
-  const TrGeomMan & geomMan=TrGeomMan::GetInstance();
+  const GeomMan & geomMan=GeomMan::GetInstance();
   
   std::size_t n = sftclusterArray_.size();
   
@@ -984,7 +984,7 @@ bool TrLocalTrack::DoFitVXU2( void )
     SFTCluster *sftclusterp = sftclusterArray_[i];
     if( sftclusterp ){
       //int lnum = sftclusterp->GetLayer();
-      //double gz = TrGeomMan::GetInstance().GetGlobalZ( lnum );
+      //double gz = GeomMan::GetInstance().GetGlobalZ( lnum );
       /*  
 	  if(chisqr<2){
 	  std::cout<<std::setw(10)<<"lnum = "<< lnum <<std::endl;

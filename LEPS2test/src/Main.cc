@@ -90,10 +90,10 @@ int main(int argc, char* argv[])
   int evNum=0;
   
   
-
   while( InputData ){
    // VEvent* event = gconfManager->EventAllocator();
     VEvent* event = gconfManager->EventAllocator();
+    if(evNum==0) event->ProcessingBegin();
     if ( event->ProcessingNormal( InputData ) ){
       delete event;
     }else{ 

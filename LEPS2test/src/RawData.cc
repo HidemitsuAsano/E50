@@ -15,7 +15,7 @@
 #include "SFTRawHit.hh"
 #include "TemplateLib.hh"
 #include "ConfMan.hh"
-#include "TrGeomMan.hh"
+#include "GeomMan.hh"
 
 RawData::RawData():
   SFTRawHitCont(0) //vector of data object class for a single track in SFT
@@ -77,7 +77,7 @@ bool RawData::Decode( std::ifstream &In )
 {
   clearAll();
   //ConfMan *confMan = ConfMan::GetConfManager();
-  const TrGeomMan & geomMan=TrGeomMan::GetInstance();
+  const GeomMan & geomMan=GeomMan::GetInstance();
   
   //# of total ch. hard-coded. modify later
   for(int ich=0;ich<128;ich++){
