@@ -5,7 +5,6 @@
 
 void DrawClusterInfo(string filename="20170615T144153_000015_0.root"){
 
-
   TFile *fin = new TFile(filename.c_str(),"READ");
   if(!fin) return;
   gStyle->SetOptStat("e");
@@ -57,6 +56,11 @@ void DrawClusterInfo(string filename="20170615T144153_000015_0.root"){
   picname = filename.substr(0,iext);
   picname +="_clsprof.png";
   chitprof->SaveAs(picname.c_str());
+  
+  //TCanvas *chitcorr = new TCanvas("chitcorr","chitcorr",1200,800);
+  //chitcorr->Divide(4,3);
+  //TH2I *
+
 
 }
 

@@ -9,7 +9,9 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   const int maxhist = 32;//maxhist per canvas
   //TH1::SetDefaultSumw2();
   TFile *fin = new TFile(filename.c_str());
-  
+  if(!fin->IsOpen()){
+    return;
+  }
   int ipath = filename.find_last_of("/")+1;
   cout << "path" << ipath << endl;
   int iext  = filename.find_last_of(".");
@@ -155,7 +157,8 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   picname+="_fitret.png";
   cfitresult->SaveAs(picname.c_str());
 
-
+  
+  /*
   //pedestal suppression and determination of hit threshold 
   TCanvas *chit0 = new TCanvas("chit0","ADC high gain0",1500,800);
   TCanvas *chit1 = new TCanvas("chit1","ADC high gain1",1500,800);
@@ -166,7 +169,14 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   chit1->Divide(8,4);
   chit2->Divide(8,4);
   chit3->Divide(8,4);
+  */
   
+  TCanvas *chit[8];
+  for(int ic=0;ic<8;ic++){
+    chit[ic] = new TCanvas(Form("chit%d",ic),"ADC high gain",1500,800);
+    chit[ic]->Divide(4,4);
+  }
+
   TGraphErrors *grhitmean[4];
   TGraphErrors *grhitsigma[4];
   for(int i=0;i<4;i++){
@@ -182,11 +192,15 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   Double_t hitsigma[maxhist*4];
   Double_t hitsigmaerr[maxhist*4];
   for(int ich = 0; ich < maxhist*4; ich++){
-    if(ich< 32) chit0->cd(ich+1);
+    int canvasid = (int)ich/16;
+    int padid = (int) ich%16;
+    chit[canvasid]->cd(1+padid);
+    /*
+    if(ich< 16) chit->cd(ich+1);
     else if(32<= ich && ich < 64) chit1->cd(ich+1-32);
     else if(64<= ich && ich < 96) chit2->cd(ich+1-64);
     else if(96<= ich && ich < 128) chit3->cd(ich+1-96);
-    //if(ich == 47) cex->cd();
+    */
 
     char histname[256];
     sprintf(histname,"ADC_HIGH_%d",ich);
@@ -244,6 +258,7 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
     }
   }
   
+  /*
   picname = filename.substr(0,iext);
   picname+="_hit0.png";
   chit0->SaveAs(picname.c_str());
@@ -259,7 +274,14 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   picname = filename.substr(0,iext);
   picname+="_hit3.png";
   chit3->SaveAs(picname.c_str());
-  
+  */
+  for(int ic=0;ic<8;ic++){
+    picname = filename.substr(0,iext);
+    char suffix[128];
+    sprintf(suffix,"_hit%d.png",ic);
+    picname += suffix;
+    chit[ic]->SaveAs(picname.c_str());
+  }
   
   grhitmean[0]->SetMarkerColor(2);
   grhitmean[1]->SetMarkerColor(3);
@@ -278,9 +300,9 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   grhitsigma[2]->SetMarkerStyle(20);
   grhitsigma[3]->SetMarkerStyle(20);
   
-  TCanvas *chit = new TCanvas("chit","hit mean and sigma");
-  chit->Divide(2,1);
-  chit->cd(1);
+  TCanvas *chits = new TCanvas("chits","hit mean and sigma");
+  chits->Divide(2,1);
+  chits->cd(1);
   TMultiGraph *mg3 = new TMultiGraph();
   mg3->SetTitle("hit mean;readout ch. ; ADC (ch)"); 
   mg3->Add(grhitmean[0],"p");
@@ -289,7 +311,7 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   mg3->Add(grhitmean[3],"p");
   mg3->Draw("a");
   
-  chit->cd(2);
+  chits->cd(2);
   TMultiGraph *mg4 = new TMultiGraph();
   mg4->SetTitle("hit sigma;readout ch. ; ADC (ch)"); 
   mg4->Add(grhitsigma[0],"p");
@@ -299,7 +321,7 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   mg4->Draw("a");
   picname = filename.substr(0,iext);
   picname+="_pedestalsuppresion.png";
-  chit->SaveAs(picname.c_str());
+  chits->SaveAs(picname.c_str());
   
 
   TCanvas *ctot0 = new TCanvas("ctot0","ctot0",1000,1000);
@@ -335,9 +357,9 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   TH1I* htotadc_padc=NULL;
   TH1I* htotadc_ptot=NULL;
   TH1I* hnhitadc = new TH1I("hnhitadc","nhit adc",128,0,128);
-  hnhitadc->Sumw2(false);
+  //hnhitadc->Sumw2(false);
   TH1I* hnhittot = new TH1I("hnhittdc","nhit tdc",128,0,128);
-  hnhittot->Sumw2(false);
+  //hnhittot->Sumw2(false);
   ctotadc0->Divide(8,4);
   ctotadc1->Divide(8,4);
   ctotadc2->Divide(8,4);
@@ -423,6 +445,77 @@ void rawhitana(string filename="20170615T144153_000015_0.root")
   picname = filename.substr(0,iext);
   picname+="_ceff.png";
   ceff->SaveAs(picname.c_str());
+  
+  
+  const char XUVorder[12][2] = {"X","U","V","X","U","V","U","V","X","U","V","X"};
+  TCanvas *chitprochX = new TCanvas("chitprochX","hit ch. profile X");
+  TCanvas *chitprochU = new TCanvas("chitprochU","hit ch. profile U");
+  TCanvas *chitprochV = new TCanvas("chitprochV","hit ch. profile V");
+  chitprochX->Divide(2,2);
+  chitprochU->Divide(2,2);
+  chitprochV->Divide(2,2);
+  TH1I *hitproch;
+  int cidx =0;
+  int cidu =0;
+  int cidv =0;
+  for(int ilr=0;ilr<12;ilr++){
+    char histname[256];
+    sprintf(histname,"Hitproflayer_ch%s%d",XUVorder[ilr],ilr);
+    hitproch = (TH1I*)fin->Get(histname);
+    gPad->SetLogy(0);
+    hitproch->SetMinimum(0);
+    if(!strcmp(XUVorder[ilr],"X")){
+      chitprochX->cd(1+cidx);
+      hitproch->Draw();
+      cidx++;
+    }else if(!strcmp(XUVorder[ilr],"U")){
+      chitprochU->cd(1+cidu);
+      hitproch->Draw();
+      cidu++;
+    }else if(!strcmp(XUVorder[ilr],"V")){
+      chitprochV->cd(1+cidv);
+      hitproch->Draw();
+      cidv++;
+    }
+  }
+  
+  picname = filename.substr(0,iext);
+  picname+="_chipprofchX.png";
+  chitprochX->SaveAs(picname.c_str());
+  
+  picname = filename.substr(0,iext);
+  picname+="_chipprofchU.png";
+  chitprochU->SaveAs(picname.c_str());
+  
+  picname = filename.substr(0,iext);
+  picname+="_chipprofchV.png";
+  chitprochV->SaveAs(picname.c_str());
+  
+  TCanvas *crawhitcorr[3];
+  TH2I* hrawhitcorr=NULL;
+  for(int ifirst=0;ifirst<3;ifirst++){
+    crawhitcorr[ifirst] = new TCanvas(Form("crawhitcorr%d",ifirst),Form("crawhitcorr%d",ifirst),1000,800);
+    crawhitcorr[ifirst]->Divide(4,3);
+    for(int ilr=0;ilr<12;ilr++){
+      char histname[256];
+      sprintf(histname,"rawhitcorr%d_%d",ilr,ifirst);
+      hrawhitcorr = (TH2I*)fin->Get(histname);
+      crawhitcorr[ifirst]->cd(ilr+1);
+      hrawhitcorr->Draw("colz");
+    }
+  }
+
+  picname = filename.substr(0,iext);
+  picname +="_rawhitcorrX.png";
+  crawhitcorr[0]->SaveAs(picname.c_str());
+
+  picname = filename.substr(0,iext);
+  picname +="_rawhitcorrU.png";
+  crawhitcorr[1]->SaveAs(picname.c_str());
+
+  picname = filename.substr(0,iext);
+  picname +="_rawhitcorrV.png";
+  crawhitcorr[2]->SaveAs(picname.c_str());
 }
 
 

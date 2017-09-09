@@ -7,7 +7,7 @@ void DrawTrackInfo(string filename="19.root"){
 
   TFile *fin = new TFile(filename.c_str(),"READ");
   if(!fin) return;
-  gStyle->SetOptStat("e");
+  gStyle->SetOptStat("emr");
   gStyle->SetStatY(0.9);
   
   const char XUVorder[12][2] = {"X","U","V","X","U","V","U","V","X","U","V","X"};
