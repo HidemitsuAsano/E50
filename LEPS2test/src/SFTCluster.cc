@@ -16,8 +16,9 @@ SFTCluster::SFTCluster( ):
   clusterlzsize_(0),
   clusterID_(-1),
   localx_(-9999.),
+  adcsum_(-9999),
   tiltangle_(0.),
-  globalz_(-9999.),//,adcsum_(-9999)
+  globalz_(-9999.),
   layer_(-1),
   AssociatedLocalTrack_(-1),
   ProjectedPosX_(-9999.),
@@ -47,6 +48,7 @@ void SFTCluster::Print( void )
    std::cout << "lz size     :" << clusterlzsize_ << std::endl; 
    std::cout << "cluster ID  :" << clusterID_ << std::endl;
    std::cout << "local x     :" << localx_    << std::endl;
+   std::cout << "ADC sum     :" << adcsum_    << std::endl;
    std::cout << "tiltangle   :" << tiltangle_ << std::endl;
    std::cout << "global z    :" << globalz_   << std::endl;
    std::cout << "layer       :" << layer_  << std::endl;

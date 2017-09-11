@@ -20,16 +20,15 @@ private:
   int clusterlzsize_; // 1 or 2 (max number = number of sublayer)
   unsigned int clusterID_; // assigned layer by layer , start from 0
   float localx_;//center position of the cluster. The coordinate system is defined in each layer
-  // float adcsum_;//sum of adc of each MPPC
+  int adcsum_;//sum of ADC values after clustering
                  //TODO : how to deal with TDC info ?
-  float tiltangle_; // maybe don't need to implement here, since tiltangle and z position can be obtained from the confmanager (unit : degree)
+  float tiltangle_; //(unit : degree) maybe don't need to implement here, since tiltangle and z position can be obtained from the confmanager 
   float globalz_;    //
   int layer_;
   int AssociatedLocalTrack_;//pointer to the associated local track (TrLocalTrack);
                             //if -1 , there is no associated track
   double ProjectedPosX_;//projected position from tracking x in global coordinate
   double ProjectedPosY_;//projected position from tracking y in global coordinate
-  
   
 public:
   unsigned int GetClusterID(void) const { return clusterID_; }
@@ -55,8 +54,8 @@ public:
   void SetProjectedPosition(double xpos,double ypos)  {ProjectedPosX_ = xpos; ProjectedPosY_ = ypos;}
   double GetProjectedLocalX( void ) const;
   double GetResidual( void ) const { return localx_ - GetProjectedLocalX() ; }
-  //  float GetAdcSum( void ) const { return adcsum_; }
-  //  void SetAdcSum(float adc )  { adcsum_=adc; }
+  int GetAdcSum( void ) const { return adcsum_; }
+  void SetAdcSum(float adc )  { adcsum_=adc; }
   void Print( void );
 
 };

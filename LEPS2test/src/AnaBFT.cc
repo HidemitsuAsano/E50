@@ -239,8 +239,8 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
   
   TTree *tree=NULL;
   if(is_maketree){
-    tree = dynamic_cast<TTree *>(gFile->Get("tree"));
-  }//TTree *ctree = dynamic_cast<TTree *>(gFile->Get("ctree"));
+    tree = static_cast<TTree *>(gFile->Get("tree"));
+  }//TTree *ctree = static_cast<TTree *>(gFile->Get("ctree"));
   
   const int totalch = 128;
   TH1I* adcHigh[totalch];
@@ -253,15 +253,15 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
   for(int ich = 0; ich < totalch; ++ich) {
     char hname[256];
     sprintf(hname,"ADC_HIGH_%d", ich);
-    adcHigh[ich] = dynamic_cast<TH1I*>(gFile->Get(hname)); 
+    adcHigh[ich] = static_cast<TH1I*>(gFile->Get(hname)); 
     sprintf(hname,"TDC_LEADING_%d", ich);
-    tdcLeading[ich] = dynamic_cast<TH1I*>(gFile->Get(hname));  
+    tdcLeading[ich] = static_cast<TH1I*>(gFile->Get(hname));  
     sprintf(hname,"TDC_TRAILING_%d", ich);
-    tdcTrailing[ich] = dynamic_cast<TH1I*>(gFile->Get(hname));  
+    tdcTrailing[ich] = static_cast<TH1I*>(gFile->Get(hname));  
     sprintf(hname,"TDC_TOT_%d",ich);
-    tdcToT[ich] = dynamic_cast<TH1I*>(gFile->Get(hname));
+    tdcToT[ich] = static_cast<TH1I*>(gFile->Get(hname));
     sprintf(hname,"AdcToTcorr_%d",ich);
-    adcToTcorr[ich] = dynamic_cast<TH2I*>(gFile->Get(hname));
+    adcToTcorr[ich] = static_cast<TH2I*>(gFile->Get(hname));
   }
   
   TH2I* rawhitcorr_ch[NumOfLayersSFT][3];
@@ -269,7 +269,7 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
     for(int ifirst=0;ifirst<3;ifirst++){
       char hname[256];
       sprintf(hname,"rawhitcorr%d_%d",ilr,ifirst);
-      rawhitcorr_ch[ilr][ifirst] = dynamic_cast<TH2I*>(gFile->Get(hname));
+      rawhitcorr_ch[ilr][ifirst] = static_cast<TH2I*>(gFile->Get(hname));
     }
   }
 
@@ -277,21 +277,28 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
   for(int ilr=0; ilr<NumOfLayersSFT; ilr++){
     char hname[256];
     sprintf(hname,"Hitproflayer_ch%s%d",XUVorder[ilr],ilr);
-    hitprofile_ch[ilr] = dynamic_cast<TH1I*>(gFile->Get(hname));
+    hitprofile_ch[ilr] = static_cast<TH1I*>(gFile->Get(hname));
   }
   
   TH1I* hitmulti[NumOfLayersSFT];//
   for(int ilr=0; ilr<NumOfLayersSFT; ilr++){
     char hname[256];
     sprintf(hname,"HitMulti%s%d",XUVorder[ilr],ilr);
-    hitmulti[ilr] = dynamic_cast<TH1I*>(gFile->Get(hname));
+    hitmulti[ilr] = static_cast<TH1I*>(gFile->Get(hname));
   }
 
   TH2F* hX0corr[NumOfLayersSFT];
   for(int ilr=0;ilr<NumOfLayersSFT; ilr++){
     char hname[256];
     sprintf(hname,"hX0corr%d",ilr);
-    hX0corr[ilr] = dynamic_cast<TH2F*>(gFile->Get(hname));
+    hX0corr[ilr] = static_cast<TH2F*>(gFile->Get(hname));
+  }
+
+  TH1I* hclsadc[NumOfLayersSFT];
+  for(int ilr=0; ilr<NumOfLayersSFT; ilr++){
+    char hname[256];
+    sprintf(hname,"hclsadc%d",ilr);
+    hclsadc[ilr] = static_cast<TH1I*>(gFile->Get(hname));
   }
 
   //SFT rawhit info.
@@ -389,13 +396,13 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
   for(int ilr =0; ilr<NumOfLayersSFT; ilr++){
     char hname[256];
     sprintf(hname,"Hitproflayer%s%d",XUVorder[ilr],ilr);
-    hitprofile[ilr] = dynamic_cast<TH1F*>(gFile->Get(hname));
+    hitprofile[ilr] = static_cast<TH1F*>(gFile->Get(hname));
 
     sprintf(hname,"HitClsMulti%s%d",XUVorder[ilr],ilr);
-    hitclsmulti[ilr] = dynamic_cast<TH1I*>(gFile->Get(hname));
+    hitclsmulti[ilr] = static_cast<TH1I*>(gFile->Get(hname));
     
     sprintf(hname,"HitSize%s%d",XUVorder[ilr],ilr);
-    hitsize[ilr] = dynamic_cast<TH1I*>(gFile->Get(hname));
+    hitsize[ilr] = static_cast<TH1I*>(gFile->Get(hname));
   }
 
   int nclsX0 = 0;
@@ -410,16 +417,21 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
       std::cout << __FILE__ << "  " << __LINE__ << " nclus " << nclus << std::endl;
     }
     for( int iclus=0; iclus<nclus;iclus++){
-      SFTCluster *trhitclus = cluscont[iclus];
-      unsigned int clsID = trhitclus->GetClusterID();
-      int clustersize = trhitclus->GetClusterSize();
+      SFTCluster *clus = cluscont[iclus];
+      int layer = clus->GetLayer();
+      if(layer != ilr){
+        std::cout << "invalid layer ID !! something is wrong" << std::endl;
+        return -1;
+      }
+      unsigned int clsID = clus->GetClusterID();
+      int clustersize = clus->GetClusterSize();
       hitsize[ilr]->Fill(clustersize);
-      double clusterlxsize = trhitclus->GetClusterLxSize();
-      double clusterlzsize = trhitclus->GetClusterLzSize();
-      double lx = trhitclus->GetLocalX();
+      double clusterlxsize = clus->GetClusterLxSize();
+      double clusterlzsize = clus->GetClusterLzSize();
+      double lx = clus->GetLocalX();
       hitprofile[ilr]->Fill(lx);
-      double gz = trhitclus->GetGlobalZ();
-      double angle = trhitclus->GetTiltAngle()*Deg2Rad;//degree to radian
+      double gz = clus->GetGlobalZ();
+      double angle = clus->GetTiltAngle()*Deg2Rad;//degree to radian
       double globalx = lx * cos(angle);
       double globaly = lx * sin(angle);
       if( (ilr==0) && (nclsX0>0)) globalx0 = globalx;
@@ -432,6 +444,9 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
         //std::cout << "globalx    " << globalx << std::endl;
         //std::cout << "X0         " << globalx0 << std::endl;
       }
+      int adcsum = clus->GetAdcSum();
+      hclsadc[ilr]->Fill(adcsum);
+
       if(Verbosity>3){
         std::cout << "layer " << ilr << std::endl;
         std::cout << "clsID " << clsID << std::endl;
@@ -439,7 +454,7 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
         std::cout << "global z " << gz << std::endl;
       }
       cluster.nevents = event.nevents;
-      //double adc = trhitclus->GetAdcSum();
+      //double adc = clus->GetAdcSum();
       event.sftlayerc.push_back(ilr);
       event.sftclssize.push_back(clustersize);
       event.sftclssizelx.push_back(clusterlxsize);
@@ -472,14 +487,14 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
   }//for ilr
 
     
-  TH2F* hxy0 = dynamic_cast<TH2F*>(gFile->Get("hxy0"));
-  TH1I* hnassociate = dynamic_cast<TH1I*>(gFile->Get("hnassociate"));
-  TH1F* hchi2 = dynamic_cast<TH1F*>(gFile->Get("hchi2"));
+  TH2F* hxy0 = static_cast<TH2F*>(gFile->Get("hxy0"));
+  TH1I* hnassociate = static_cast<TH1I*>(gFile->Get("hnassociate"));
+  TH1F* hchi2 = static_cast<TH1F*>(gFile->Get("hchi2"));
   TH1F* hresi[NumOfLayersSFT];
   for(int ilr=0;ilr<NumOfLayersSFT;ilr++){
     char hname[256];
     sprintf(hname,"hresi%s%d",XUVorder[ilr],ilr);
-    hresi[ilr] = dynamic_cast<TH1F*>(gFile->Get(hname));
+    hresi[ilr] = static_cast<TH1F*>(gFile->Get(hname));
   }
   
 
@@ -626,7 +641,7 @@ bool ConfMan::InitializeHistograms()
   //SFT cluster based tree
   if(is_maketree){
     HBTree("ctree","cluster based tree");
-    TTree *ctree = dynamic_cast<TTree *>(gFile->Get("ctree"));
+    TTree *ctree = static_cast<TTree *>(gFile->Get("ctree"));
     ctree->Branch("event", &cluster.nevents);
     ctree->Branch("sftlayerc", &cluster.sftlayerc);
     ctree->Branch("sftclssize", &cluster.sftclssize);//cluster size = number of hit segment
@@ -638,7 +653,7 @@ bool ConfMan::InitializeHistograms()
     ctree->Branch("sftposgyc", &cluster.sftposgyc);//global hit position of cluster
 
     HBTree("tree","event wise tree");
-    TTree *tree = dynamic_cast<TTree *>(gFile->Get("tree"));
+    TTree *tree = static_cast<TTree *>(gFile->Get("tree"));
     //tree = new TTree("tree","event wise tree");
     tree->Branch("event", &event.nevents);
     //SFT rawhit
@@ -737,6 +752,16 @@ bool ConfMan::InitializeHistograms()
     hitmulti[ilr] = new TH1I(Form("HitMulti%s%d",XUVorder[ilr],ilr),Form("Hit Multiplicity %s layer %d",XUVorder[ilr],ilr), 12,0,12); 
     hitmulti[ilr]->SetXTitle("hit multiplicity");
   }
+  
+  TH2I* rawhitcorr_ch[NumOfLayersSFT][3];
+  for(int ilr=0;ilr<NumOfLayersSFT;ilr++){
+    for(int ifirst = 0 ; ifirst<3 ; ifirst++){
+      rawhitcorr_ch[ilr][ifirst] = new TH2I(Form("rawhitcorr%d_%d",ilr,ifirst),
+      Form("raw Hit correlation %s layer %d - %s layer %d",XUVorder[ifirst],ifirst,XUVorder[ilr],ilr),13,0,13,13,0,13);
+      rawhitcorr_ch[ilr][ifirst]->SetXTitle("fiber #");
+      rawhitcorr_ch[ilr][ifirst]->SetYTitle("fiber #");
+    }
+  }
 
   //cluster information
   TH1F* hitprofile[NumOfLayersSFT];//
@@ -757,23 +782,20 @@ bool ConfMan::InitializeHistograms()
     hitsize[ilr]->SetXTitle("cluster size");
   }
 
-  TH2I* rawhitcorr_ch[NumOfLayersSFT][3];
-  for(int ilr=0;ilr<NumOfLayersSFT;ilr++){
-    for(int ifirst = 0 ; ifirst<3 ; ifirst++){
-      rawhitcorr_ch[ilr][ifirst] = new TH2I(Form("rawhitcorr%d_%d",ilr,ifirst),
-      Form("raw Hit correlation %s layer %d - %s layer %d",XUVorder[ifirst],ifirst,XUVorder[ilr],ilr),13,0,13,13,0,13);
-      rawhitcorr_ch[ilr][ifirst]->SetXTitle("fiber #");
-      rawhitcorr_ch[ilr][ifirst]->SetYTitle("fiber #");
-    }
-  }
-
-
+  //cluste position correlation btw X0 - other layers
   TH2F* hX0corr[NumOfLayersSFT];
   for(int ilr=0; ilr<NumOfLayersSFT; ilr++){  
     hX0corr[ilr] = new TH2F(Form("hX0corr%d",ilr),Form("Hit correlation X0 - %s layer %d after clustering",XUVorder[ilr],ilr), 40,-4,4,40,-4,4); 
     hX0corr[ilr]->SetXTitle("X0 pos. [mm]");
     hX0corr[ilr]->SetYTitle("pos. [mm]");
   }
+
+  TH1I* hclsadc[NumOfLayersSFT];
+  for(int ilr=0; ilr<NumOfLayersSFT; ilr++){
+    hclsadc[ilr] = new TH1I(Form("hclsadc%d",ilr),Form("ADC sum distibution layer %d %s", ilr,XUVorder[ilr]),1000,0,10000);  
+    hclsadc[ilr]->SetXTitle("ADC sum [ch]");
+  }
+
   
   TH1I* hnassociate = new TH1I("hnassociate","number of associated hits",15,0,15);
   hnassociate->SetXTitle("nhit");

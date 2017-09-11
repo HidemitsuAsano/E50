@@ -13,13 +13,13 @@
 
 
 TrHit::TrHit()
-  : layer_(-1), fiber_(-1),localx_(0),angle_(0)
+  : layer_(-1), fiber_(-1),adc_(-1),tot_(-1),localx_(-9999.),angle_(-100.)
 {
   hitcounter_ = 0 ;
 }
 
 TrHit::TrHit( int layer, int ch )
-  : layer_(layer), fiber_(ch),localx_(0),angle_(0)
+  : layer_(layer), fiber_(ch),adc_(-1),tot_(-1),localx_(-9999.),angle_(-100.)
 {
   hitcounter_ = 0 ;
 }
@@ -38,6 +38,8 @@ void TrHit::Print()
   std::cout << "Layer:   " << layer_ << std::endl; 
   std::cout << "fiber:      " << fiber_ << std::endl; 
   std::cout << "hitcount " << hitcounter_ << std::endl;
+  std::cout << "adc      " << adc_ << std::endl;
+  std::cout << "tot      " << tot_ << std::endl;
   std::cout << "Local X  " << localx_ << std::endl;
   std::cout << "angle    " << angle_ << std::endl;
 }
