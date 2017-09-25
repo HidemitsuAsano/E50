@@ -32,6 +32,7 @@ public:
   //void SetResolution( int lnum, double res ) const;
   //
   //void SetVertex( int lnum, ThreeVector vertex ) const;
+  void SetChPattern( int pat ){ chpattern_ = pat;}
 
   double GetTiltAngle( int lnum ) const;
   double GetRotAngle1( int lnum ) const;
@@ -64,13 +65,14 @@ public:
   int getbiglayer(int ch) const;
   int getfiber(int ch) const;
   int geteasiroc(int ch) const;
-  
+  int ChPattern(int ch) const; 
+
 private:
   static GeomMan *geomMan_;
   std::string filename_;
   mutable std::map <int, GeomRecord *> geomRecord_;
   int chpattern_;
-private:
+  
   void clearElements( void );
 };
 

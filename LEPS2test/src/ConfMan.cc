@@ -16,10 +16,11 @@ ConfMan::ConfMan( const std::string & filename, const std::string tablename)
   : ConfFileName_(filename),
     PedetableName_(tablename),
     anaMode_(0), 
-    TrGeomFileName_(defDCGeomFile),
+    GeomFileName_(defDCGeomFile),
     GeomManager_(0),
     SFTResol_(0.0),
     T0Resol_(0.0)
+    //,ChMapPattern_(0)
 {
   static const std::string funcname="[ConfMan::ConfMan]";
   if( confManager_ ){
@@ -59,7 +60,7 @@ bool ConfMan::Initialize()
       }
       // Geometry
       else if( sscanf(buf,"TRGEO: %s",buf1)==1 ){
-	TrGeomFileName_=buf1;
+	GeomFileName_=buf1;
       }
       //Resolution
       else if( sscanf(buf,"SFTRESOL: %lf", &val1)==1 )
@@ -84,8 +85,8 @@ bool ConfMan::Initialize()
 bool ConfMan::InitializeParameterFiles( void )
 {
   GeomManager_ = & GeomMan::GetInstance();
-  GeomManager_->Initialize(TrGeomFileName_);
-  
+  //GeomManager_->SetChPattern(ChMapPattern_);
+  GeomManager_->Initialize(GeomFileName_);
   std::ifstream ftable;
   ftable.open(PedetableName_.c_str());
   if(!ftable){

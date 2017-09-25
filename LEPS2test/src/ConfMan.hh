@@ -20,7 +20,7 @@ private:
   int anaMode_;
 
   //Geometry files  
-  std::string TrGeomFileName_;
+  std::string GeomFileName_;
   GeomMan *GeomManager_;
 
   //Tracker position resolution
@@ -28,6 +28,9 @@ private:
 
   //Counter time resolution
   double T0Resol_;
+  
+  //not used now
+  //int ChMapPattern_;
   
   double pedestalmean_[128];
   double pedestalsigma_[128];
@@ -48,6 +51,7 @@ public:
   int AnaMode( void ) const { return anaMode_; }
 
   GeomMan *GetGeomManager( void ) { return GeomManager_; }
+  //void SetChMap(int pat) { ChMapPattern_ = pat;}
 
   double GetSFTResol( void ) const { return SFTResol_; }
 

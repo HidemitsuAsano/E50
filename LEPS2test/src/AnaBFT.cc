@@ -206,7 +206,7 @@ bool AnaBFT::ProcessingBegin()
         << geomMan->getfiber(ich) << std::endl;
  }
 
-
+  return true;
 }
 
 bool AnaBFT::ProcessingNormal( std::ifstream &In )
@@ -338,7 +338,7 @@ bool AnaBFT::ProcessingNormal( std::ifstream &In )
 
   
   BSFTRecoPtr->SetSigmaThreshold (10.);
-  BSFTRecoPtr->UseTOTcut(false);
+  BSFTRecoPtr->UseTOTcut(true);
   BSFTRecoPtr->MakeSFTRawHits( rawData ); // name of this func. is confusing in real data analysis. change it
   //SFT TrHit (hits above threshold)
   //TODO change name of class "TrHit", these hits are not necessarily associated track.

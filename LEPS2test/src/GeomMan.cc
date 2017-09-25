@@ -12,7 +12,7 @@
 // 0: default ch. map
 //    0-63
 //
-// 1: reverse MPPC board
+// 1: correct flat cable pin assign
 //   0-15 -> 15-0
 //  16-31 -> 31-16
 //  32-47 -> 47-32
@@ -22,7 +22,11 @@
 //   0-31 -> 31-0
 //  32-63 -> 63-32
 //
-//
+// 3: rotate MPPC board (another roration)
+//   0-15 -> 16-31
+//  16-31 ->  0-15
+//  32-47 -> 48-63
+//  48-63 -> 32-47
 
 
 const int MaxChar = 200;
@@ -30,10 +34,10 @@ const int MaxChar = 200;
 GeomMan *GeomMan::geomMan_=0;
 
 GeomMan::GeomMan():
-chpattern_(2)
+chpattern_(1)
 {
    if(chpattern_ > 0){
-     std::cout << "GeomMan:: " <<  "ch. map is reversed: "<< chpattern_ << std::endl;
+     std::cout << "GeomMan:: " <<  "ch. map pattern : "<< chpattern_ << std::endl;
    }
 }
 
@@ -327,38 +331,7 @@ int GeomMan::getXUV(int ch = -1) const
   
   if(64<= ch) ch -= 64;
   
-  /*
-  if(chpattern_){
-    // 0-31 -> 31-0
-    //32-63 -> 63-32
-    if(ch<32)  ch = 31 - ch; 
-    else       ch = 95 - ch;
-  }*/
-
-  if(chpattern_ == 1){
-    //  0-15 -> 15-0
-    // 16-31 -> 31-16
-    // 32-47 -> 47-32
-    // 48-63 -> 63-48
-    if(0<= ch && ch <=15)  ch = 15 - ch; 
-    else if(16<= ch && ch<=31) ch = 47 - ch;
-    else if(32<= ch && ch<=47) ch = 79 - ch;
-    else if(48<= ch && ch<=63) ch = 111- ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
-  
-  if(chpattern_ == 2){
-    //  0-31 -> 31-0
-    // 32-63 -> 63-32
-    if(0<=ch && ch<= 31) ch = 31 - ch;
-    else if(32<= ch && ch <=63) ch = 95 - ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
-
+  ch = ChPattern(ch);
 
   if(0 <= ch && ch <= 7){
     return 1;   //U (8 fibers)
@@ -389,37 +362,7 @@ int GeomMan::getsublayer(int ch = -1) const
 {
   if(64<= ch) ch -= 64;
   
-  /*
-  if(chpattern_){
-    // 0-31 -> 31-0
-    //32-63 -> 63-32
-    if(ch<32)  ch = 31 - ch; 
-    else       ch = 95 - ch;
-  }*/
-  
-  if(chpattern_ == 1){
-    //  0-15 -> 15-0
-    // 16-31 -> 31-16
-    // 32-47 -> 47-32
-    // 48-63 -> 63-48
-    if(0<= ch && ch <=15)  ch = 15 - ch; 
-    else if(16<= ch && ch<=31) ch = 47 - ch;
-    else if(32<= ch && ch<=47) ch = 79 - ch;
-    else if(48<= ch && ch<=63) ch = 111- ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
-  
-  if(chpattern_ == 2){
-    //  0-31 -> 31-0
-    // 32-63 -> 63-32
-    if(0<=ch && ch<= 31) ch = 31 - ch;
-    else if(32<= ch && ch <=63) ch = 95 - ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
+  ch = ChPattern(ch);
 
   int type = getXUV(ch);
   int sublayer = -1;
@@ -458,37 +401,8 @@ int GeomMan::getlayer(int ch = -1) const
   }
   
   int type = getXUV(ch);
-  /*
-  if(chpattern_){
-    // 0-31 -> 31-0
-    //32-63 -> 63-32
-    if(ch<32)  ch = 31 - ch; 
-    else       ch = 95 - ch;
-  }*/
   
-  if(chpattern_ == 1){
-    //  0-15 -> 15-0
-    // 16-31 -> 31-16
-    // 32-47 -> 47-32
-    // 48-63 -> 63-48
-    if(0<= ch && ch <=15)  ch = 15 - ch; 
-    else if(16<= ch && ch<=31) ch = 47 - ch;
-    else if(32<= ch && ch<=47) ch = 79 - ch;
-    else if(48<= ch && ch<=63) ch = 111- ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
-  
-  if(chpattern_ == 2){
-    //  0-31 -> 31-0
-    // 32-63 -> 63-32
-    if(0<=ch && ch<= 31) ch = 31 - ch;
-    else if(32<= ch && ch <=63) ch = 95 - ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
+  ch = ChPattern(ch);
 
   int layer = -1;
   if(type==1){//U
@@ -527,37 +441,7 @@ int GeomMan::getfiber(int ch = -1) const
   if(64<= ch) ch = ch - 64;
   int type = getXUV(ch);
   
-  /*
-  if(chpattern_){
-    // 0-31 -> 31-0
-    //32-63 -> 63-32
-    if(ch<32)  ch = 31 - ch; 
-    else       ch = 95 - ch;
-  }*/
-  
-  if(chpattern_ == 1){
-    //  0-15 -> 15-0
-    // 16-31 -> 31-16
-    // 32-47 -> 47-32
-    // 48-63 -> 63-48
-    if(0<= ch && ch <=15)  ch = 15 - ch; 
-    else if(16<= ch && ch<=31) ch = 47 - ch;
-    else if(32<= ch && ch<=47) ch = 79 - ch;
-    else if(48<= ch && ch<=63) ch = 111- ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
-  
-  if(chpattern_ == 2){
-    //  0-31 -> 31-0
-    // 32-63 -> 63-32
-    if(0<=ch && ch<= 31) ch = 31 - ch;
-    else if(32<= ch && ch <=63) ch = 95 - ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
+  ch = ChPattern(ch);
 
   int fiber = -1;
   //U type
@@ -595,37 +479,7 @@ int GeomMan::getbiglayer(int ch = -1) const
   
   int type = getXUV(ch);
   
-  /*
-  if(chpattern_){
-    // 0-31 -> 31-0
-    //32-63 -> 63-32
-    if(ch<32)  ch = 31 - ch; 
-    else       ch = 95 - ch;
-  }*/
-  
-  if(chpattern_ == 1){
-    //  0-15 -> 15-0
-    // 16-31 -> 31-16
-    // 32-47 -> 47-32
-    // 48-63 -> 63-48
-    if(0<= ch && ch <=15)  ch = 15 - ch; 
-    else if(16<= ch && ch<=31) ch = 47 - ch;
-    else if(32<= ch && ch<=47) ch = 79 - ch;
-    else if(48<= ch && ch<=63) ch = 111- ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
-  
-  if(chpattern_ == 2){
-    //  0-31 -> 31-0
-    // 32-63 -> 63-32
-    if(0<=ch && ch<= 31) ch = 31 - ch;
-    else if(32<= ch && ch <=63) ch = 95 - ch;
-    else{
-      std::cout << "Invalid channel number !: " << ch << std::endl;
-    }
-  }
+  ch =  ChPattern(ch);
 
   int layer = -1;
   if(type==1){//U
@@ -656,7 +510,25 @@ int GeomMan::getbiglayer(int ch = -1) const
 int GeomMan::geteasiroc(int ch = -1) const
 {
 
-  if(chpattern_ == 1){
+  ch = ChPattern(ch);
+
+  int easiroc = -1;
+  if(0 <= ch && ch <= 31) easiroc = 0;
+  else if(32<= ch && ch <= 63) easiroc = 1;
+  else if(64<= ch && ch <= 95) easiroc = 2;
+  else if(96<= ch && ch <= 127) easiroc = 3;
+  else std::cout << "ivalid ch" << ch << std::endl;
+  return easiroc;
+
+}
+
+
+int GeomMan::ChPattern(int ch = -1) const 
+{
+
+  if(chpattern_ == 0){
+    return ch;
+  }else if(chpattern_ == 1){
     //  0-15 -> 15-0
     // 16-31 -> 31-16
     // 32-47 -> 47-32
@@ -668,9 +540,7 @@ int GeomMan::geteasiroc(int ch = -1) const
     else{
       std::cout << "Invalid channel number !: " << ch << std::endl;
     }
-  }
-  
-  if(chpattern_ == 2){
+  }else if(chpattern_ == 2){
     //  0-31 -> 31-0
     // 32-63 -> 63-32
     if(0<=ch && ch<= 31) ch = 31 - ch;
@@ -678,14 +548,24 @@ int GeomMan::geteasiroc(int ch = -1) const
     else{
       std::cout << "Invalid channel number !: " << ch << std::endl;
     }
+  }else if(chpattern_ == 3){
+    //  0-15 -> 16-31
+    // 16-31 ->  0-15
+    // 32-47 -> 48-63
+    // 48-63 -> 32-47
+    if(0<=ch && ch<=15) ch  = ch + 16;
+    else if(16<=ch && ch<=31) ch = ch - 16;
+    else if(32<=ch && ch<=47) ch = ch + 16;
+    else if(48<=ch && ch<=63) ch = ch - 16;
+    else{
+      std::cout << "Invalid channel number !: " << ch << std::endl;
+    }
+  }else{
+    std::cout << "invalid ch. pattern !: " << chpattern_ << std::endl;
   }
 
-  int easiroc = -1;
-  if(0 <= ch && ch <= 31) easiroc = 0;
-  else if(32<= ch && ch <= 63) easiroc = 1;
-  else if(64<= ch && ch <= 95) easiroc = 2;
-  else if(96<= ch && ch <= 127) easiroc = 3;
-  else std::cout << "ivalid ch" << ch << std::endl;
-  return easiroc;
-
+  return ch;
 }
+
+
+

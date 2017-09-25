@@ -75,8 +75,8 @@ int main(int argc, char* argv[])
   //}
 
 
-  ConfMan* gconfManager =new ConfMan(confFile,table_dir);
-
+  ConfMan* gconfManager = new ConfMan(confFile,table_dir);
+  //gconfManager->SetChMap(1);
   signal(SIGINT,closeFile);
 
   TFile f(rootFile.c_str(), "recreate");
